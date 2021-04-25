@@ -98,7 +98,7 @@ public class SkyrimIngameGui extends AbstractGui
     private void renderMagicka() {
         LazyOptional<IMagicka> magickaLazyOptional = mc.player.getCapability(IMagickaProvider.MAGICKA_CAPABILITY);
         magickaLazyOptional.ifPresent((magicka) -> {
-            float magickaPercentage = magicka.get() / 20.0f;
+            float magickaPercentage = magicka.get() / magicka.getMaxMagicka();
             this.blit(this.matrixStack, 20, this.height - 40, 0, 51, 102, 10);
             this.blit(this.matrixStack, 31, this.height - 38, 11, 64, (int)(80 * magickaPercentage), 6);
         });

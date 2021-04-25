@@ -3,6 +3,7 @@ package com.ryankshah.skyrimcraft.capability;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.network.PacketUpdateMagicka;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.ServerPlayerEntity;
 
 public class Magicka implements IMagicka
 {
@@ -36,7 +37,8 @@ public class Magicka implements IMagicka
         if(this.magicka >= maxMagicka)
             this.magicka = maxMagicka;
 
-        Networking.sendToClient(new PacketUpdateMagicka(magicka), Minecraft.getInstance().player);
+        if(IMagickaProvider.getPlayerEntity() instanceof ServerPlayerEntity)
+            Networking.sendToClient(new PacketUpdateMagicka(magicka), (ServerPlayerEntity)IMagickaProvider.getPlayerEntity());
     }
 
     @Override

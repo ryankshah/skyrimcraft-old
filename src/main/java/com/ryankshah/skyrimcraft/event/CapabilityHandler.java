@@ -18,6 +18,6 @@ public class CapabilityHandler
     public static void attachCapability(AttachCapabilitiesEvent<Entity> event) {
         if(!(event.getObject() instanceof PlayerEntity))
             return;
-        event.addCapability(MAGICKA_CAPABILITY, new IMagickaProvider());
+        event.addCapability(MAGICKA_CAPABILITY, new IMagickaProvider((PlayerEntity)event.getObject()));
     }
 }
