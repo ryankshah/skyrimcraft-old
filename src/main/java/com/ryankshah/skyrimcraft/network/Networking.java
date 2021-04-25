@@ -1,6 +1,8 @@
 package com.ryankshah.skyrimcraft.network;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkDirection;
@@ -22,6 +24,12 @@ public class Networking
                 s -> true,
                 s -> true);
 
+        INSTANCE.messageBuilder(PacketUpdateMagicka.class, nextID())
+                .encoder(PacketUpdateMagicka::toBytes)
+                .decoder(PacketUpdateMagicka::new) // buf -> new PacketUpdateMagicka(buf)
+                .consumer(PacketUpdateMagicka::handle)
+                .add();
+
         INSTANCE.messageBuilder(PacketReplenishMagicka.class, nextID())
                 .encoder(PacketReplenishMagicka::toBytes)
                 .decoder(PacketReplenishMagicka::new) // buf -> new PacketReplenishMagicka(buf)
@@ -35,8 +43,8 @@ public class Networking
                 .add();
     }
 
-    public static void sendToClient(Object packet, ServerPlayerEntity player) {
-        INSTANCE.sendTo(packet, player.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+    public static void sendToClient(Object packet, PlayerEntity player) {
+        INSTANCE.sendTo(packet, ((ServerPlayerEntity)player).connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
     }
 
     public static void sendToServer(Object packet) {

@@ -9,15 +9,15 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class PacketConsumeMagicka
+public class PacketUpdateMagicka
 {
     private float magicka;
 
-    public PacketConsumeMagicka(PacketBuffer buf) {
+    public PacketUpdateMagicka(PacketBuffer buf) {
         this.magicka = buf.readFloat();
     }
 
-    public PacketConsumeMagicka(float magicka) {
+    public PacketUpdateMagicka(float magicka) {
         this.magicka = magicka;
     }
 
@@ -28,7 +28,7 @@ public class PacketConsumeMagicka
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             Minecraft.getInstance().player.getCapability(IMagickaProvider.MAGICKA_CAPABILITY).ifPresent((cap) -> {
-                cap.consume(this.magicka);
+                cap.set(this.magicka);
             });
         });
         return true;
