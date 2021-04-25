@@ -9,7 +9,7 @@ public class Magicka implements IMagicka
     public void consume(float amount) {
         this.magicka -= amount;
 
-        if(this.magicka < 0.0f)
+        if(this.magicka <= 0.0f)
             this.magicka = 0.0f;
     }
 
@@ -17,7 +17,7 @@ public class Magicka implements IMagicka
     public void replenish(float amount) {
         this.magicka += amount;
 
-        if(this.magicka > maxMagicka)
+        if(this.magicka >= maxMagicka)
             this.magicka = maxMagicka;
     }
 
@@ -29,5 +29,10 @@ public class Magicka implements IMagicka
     @Override
     public float get() {
         return this.magicka;
+    }
+
+    @Override
+    public float getMaxMagicka() {
+        return this.maxMagicka;
     }
 }

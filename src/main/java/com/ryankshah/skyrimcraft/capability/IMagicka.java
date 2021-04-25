@@ -6,4 +6,5 @@ public interface IMagicka {
     public void set(float amount);
 
     public float get();
+    public float getMaxMagicka();
 }

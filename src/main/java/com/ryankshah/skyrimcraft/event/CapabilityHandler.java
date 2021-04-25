@@ -15,7 +15,7 @@ public class CapabilityHandler
     public static final ResourceLocation MAGICKA_CAPABILITY = new ResourceLocation(Skyrimcraft.MODID, "magicka");
 
     @SubscribeEvent
-    public void attachCapability(AttachCapabilitiesEvent<Entity> event) {
+    public static void attachCapability(AttachCapabilitiesEvent<Entity> event) {
         if(!(event.getObject() instanceof PlayerEntity))
             return;
         event.addCapability(MAGICKA_CAPABILITY, new IMagickaProvider());
