@@ -4,6 +4,7 @@ public interface IMagicka {
     public void consume(float amount);
     public void replenish(float amount);
     public void set(float amount);
+    public void setForNBT(float amount);
 
     public float getMagicka();
     public float getMaxMagicka();

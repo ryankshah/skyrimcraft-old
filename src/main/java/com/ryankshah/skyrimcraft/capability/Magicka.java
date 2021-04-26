@@ -50,6 +50,11 @@ public class Magicka implements IMagicka
     }
 
     @Override
+    public void setForNBT(float amount) {
+        this.magicka = amount;
+    }
+
+    @Override
     public float getMagicka() {
         return this.magicka;
     }

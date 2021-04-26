@@ -46,7 +46,7 @@ public class MagickaPotion extends SkyrimItem
 //            });
             playerEntity.getCapability(IMagickaProvider.MAGICKA_CAPABILITY).ifPresent((cap) -> {
                 //playerEntity.sendStatusMessage(new StringTextComponent("Magicka : " + cap.getMagicka() + " / " + cap.getMaxMagicka()), false);
-                cap.replenish(replenishValue);
+                cap.consume(replenishValue);
                 //playerEntity.sendStatusMessage(new StringTextComponent("Magicka : " + cap.getMagicka() + " / " + cap.getMaxMagicka()), false);
             });
         }

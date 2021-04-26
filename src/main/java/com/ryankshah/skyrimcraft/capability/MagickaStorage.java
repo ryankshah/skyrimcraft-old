@@ -20,6 +20,6 @@ public class MagickaStorage implements Capability.IStorage<IMagicka>
     @Override
     public void readNBT(Capability<IMagicka> capability, IMagicka instance, Direction side, INBT nbt) {
         float magicka = ((CompoundNBT) nbt).getFloat("magicka");
-        instance.set(magicka);
+        instance.setForNBT(magicka);
     }
 }
