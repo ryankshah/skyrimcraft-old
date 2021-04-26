@@ -1,12 +1,7 @@
 package com.ryankshah.skyrimcraft.item;
 
-import com.ryankshah.skyrimcraft.capability.IMagicka;
 import com.ryankshah.skyrimcraft.capability.IMagickaProvider;
-import com.ryankshah.skyrimcraft.network.Networking;
-import com.ryankshah.skyrimcraft.network.PacketConsumeMagicka;
-import com.ryankshah.skyrimcraft.network.PacketReplenishMagicka;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,8 +9,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.UseAction;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.PotionUtils;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DrinkHelper;
@@ -24,8 +17,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -54,9 +45,9 @@ public class MagickaPotion extends SkyrimItem
 //                }
 //            });
             playerEntity.getCapability(IMagickaProvider.MAGICKA_CAPABILITY).ifPresent((cap) -> {
-                playerEntity.sendStatusMessage(new StringTextComponent("Magicka : " + cap.get() + " / " + cap.getMaxMagicka()), false);
+                playerEntity.sendStatusMessage(new StringTextComponent("Magicka : " + cap.getMagicka() + " / " + cap.getMaxMagicka()), false);
                 cap.consume(replenishValue);
-                playerEntity.sendStatusMessage(new StringTextComponent("Magicka : " + cap.get() + " / " + cap.getMaxMagicka()), false);
+                playerEntity.sendStatusMessage(new StringTextComponent("Magicka : " + cap.getMagicka() + " / " + cap.getMaxMagicka()), false);
             });
         }
 

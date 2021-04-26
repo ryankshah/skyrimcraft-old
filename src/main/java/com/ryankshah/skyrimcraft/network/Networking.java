@@ -28,18 +28,6 @@ public class Networking
                 .decoder(PacketUpdateMagicka::new) // buf -> new PacketUpdateMagicka(buf)
                 .consumer(PacketUpdateMagicka::handle)
                 .add();
-
-        INSTANCE.messageBuilder(PacketReplenishMagicka.class, nextID())
-                .encoder(PacketReplenishMagicka::toBytes)
-                .decoder(PacketReplenishMagicka::new) // buf -> new PacketReplenishMagicka(buf)
-                .consumer(PacketReplenishMagicka::handle)
-                .add();
-
-        INSTANCE.messageBuilder(PacketConsumeMagicka.class, nextID())
-                .encoder(PacketConsumeMagicka::toBytes)
-                .decoder(PacketConsumeMagicka::new) // buf -> new PacketConsumeMagicka(buf)
-                .consumer(PacketConsumeMagicka::handle)
-                .add();
     }
 
     public static void sendToClient(Object packet, ServerPlayerEntity player) {

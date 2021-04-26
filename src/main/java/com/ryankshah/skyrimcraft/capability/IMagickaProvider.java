@@ -1,5 +1,6 @@
 package com.ryankshah.skyrimcraft.capability;
 
+import com.ryankshah.skyrimcraft.event.CapabilityHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.FloatNBT;
@@ -19,10 +20,12 @@ public class IMagickaProvider implements ICapabilitySerializable<FloatNBT>
     public static final Capability<IMagicka> MAGICKA_CAPABILITY = null;
     private static PlayerEntity playerEntity;
 
-    private LazyOptional<IMagicka> instance = LazyOptional.of(MAGICKA_CAPABILITY::getDefaultInstance);
+    private LazyOptional<IMagicka> instance;
 
     public IMagickaProvider(PlayerEntity obj) {
-        playerEntity = obj;
+        instance = LazyOptional.of(() -> {
+            return new Magicka(obj);
+        });
     }
 
     public static PlayerEntity getPlayerEntity() {
@@ -32,7 +35,7 @@ public class IMagickaProvider implements ICapabilitySerializable<FloatNBT>
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        return MAGICKA_CAPABILITY.orEmpty(cap, instance);
+        return instance.cast();
     }
 
     @Override

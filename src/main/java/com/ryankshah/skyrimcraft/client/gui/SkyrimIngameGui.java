@@ -19,13 +19,12 @@ public class SkyrimIngameGui extends AbstractGui
 {
     protected static final ResourceLocation OVERLAY_ICONS = new ResourceLocation(Skyrimcraft.MODID, "textures/gui/overlay_icons_current.png");
 
+    private LazyOptional<IMagicka> magickaLazyOptional;
+
     private Minecraft mc;
     private MatrixStack matrixStack;
     private FontRenderer fontRenderer;
     private int width, height;
-
-    @CapabilityInject(IMagicka.class)
-    private Capability<IMagicka> MAGICKA_CAPABILITY = null;
 
     public SkyrimIngameGui(MatrixStack ms, int width, int height) {
         this.width = width;
@@ -34,6 +33,9 @@ public class SkyrimIngameGui extends AbstractGui
         this.mc = Minecraft.getInstance();
         this.matrixStack = ms;
         this.fontRenderer = mc.fontRenderer;
+
+        if(IMagickaProvider.MAGICKA_CAPABILITY != null)
+            this.magickaLazyOptional = mc.player.getCapability(IMagickaProvider.MAGICKA_CAPABILITY, null);
 
         render();
     }
@@ -96,9 +98,8 @@ public class SkyrimIngameGui extends AbstractGui
     }
 
     private void renderMagicka() {
-        LazyOptional<IMagicka> magickaLazyOptional = mc.player.getCapability(IMagickaProvider.MAGICKA_CAPABILITY);
         magickaLazyOptional.ifPresent((magicka) -> {
-            float magickaPercentage = magicka.get() / magicka.getMaxMagicka();
+            float magickaPercentage = magicka.getMagicka() / magicka.getMaxMagicka();
             this.blit(this.matrixStack, 20, this.height - 40, 0, 51, 102, 10);
             this.blit(this.matrixStack, 31, this.height - 38, 11, 64, (int)(80 * magickaPercentage), 6);
         });

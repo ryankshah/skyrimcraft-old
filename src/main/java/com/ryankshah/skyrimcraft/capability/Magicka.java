@@ -3,12 +3,20 @@ package com.ryankshah.skyrimcraft.capability;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.network.PacketUpdateMagicka;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 
 public class Magicka implements IMagicka
 {
     private float magicka = 20.0f;
     private final float maxMagicka = 20.0f;
+    private PlayerEntity playerEntity;
+
+    public Magicka() {}
+
+    public Magicka(PlayerEntity playerEntity) {
+        this.playerEntity = playerEntity;
+    }
 
     @Override
     public void consume(float amount) {
@@ -42,7 +50,7 @@ public class Magicka implements IMagicka
     }
 
     @Override
-    public float get() {
+    public float getMagicka() {
         return this.magicka;
     }
 

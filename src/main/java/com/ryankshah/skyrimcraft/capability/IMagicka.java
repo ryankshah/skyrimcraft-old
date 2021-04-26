@@ -5,6 +5,6 @@ public interface IMagicka {
     public void replenish(float amount);
     public void set(float amount);
 
-    public float get();
+    public float getMagicka();
     public float getMaxMagicka();
 }

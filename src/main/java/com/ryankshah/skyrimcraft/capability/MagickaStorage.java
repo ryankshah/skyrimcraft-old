@@ -12,7 +12,7 @@ public class MagickaStorage implements Capability.IStorage<IMagicka>
     @Nullable
     @Override
     public INBT writeNBT(Capability<IMagicka> capability, IMagicka instance, Direction side) {
-        return FloatNBT.valueOf(instance.get());
+        return FloatNBT.valueOf(instance.getMagicka());
     }
 
     @Override
