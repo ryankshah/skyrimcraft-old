@@ -61,8 +61,8 @@ public class Skyrimcraft
     }
 
     public static void setup(final FMLCommonSetupEvent event) {
-        CapabilityManager.INSTANCE.register(IMagicka.class, new MagickaStorage(), Magicka::new);
         Networking.registerMessages();
+        CapabilityManager.INSTANCE.register(IMagicka.class, new MagickaStorage(), Magicka::new);
     }
 
 //    @SubscribeEvent

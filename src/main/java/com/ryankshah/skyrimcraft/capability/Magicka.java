@@ -45,8 +45,8 @@ public class Magicka implements IMagicka
         if(this.magicka >= maxMagicka)
             this.magicka = maxMagicka;
 
-        if(IMagickaProvider.getPlayerEntity() instanceof ServerPlayerEntity)
-            Networking.sendToClient(new PacketUpdateMagicka(magicka), (ServerPlayerEntity)IMagickaProvider.getPlayerEntity());
+        if(playerEntity instanceof ServerPlayerEntity)
+            Networking.sendToClient(new PacketUpdateMagicka(magicka), (ServerPlayerEntity)playerEntity);
     }
 
     @Override

@@ -3,23 +3,17 @@ package com.ryankshah.skyrimcraft.client.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import com.ryankshah.skyrimcraft.capability.IMagicka;
 import com.ryankshah.skyrimcraft.capability.IMagickaProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.Direction;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.common.util.LazyOptional;
 
 public class SkyrimIngameGui extends AbstractGui
 {
     protected static final ResourceLocation OVERLAY_ICONS = new ResourceLocation(Skyrimcraft.MODID, "textures/gui/overlay_icons_current.png");
-
-    private LazyOptional<IMagicka> magickaLazyOptional;
 
     private Minecraft mc;
     private MatrixStack matrixStack;
@@ -34,13 +28,13 @@ public class SkyrimIngameGui extends AbstractGui
         this.matrixStack = ms;
         this.fontRenderer = mc.fontRenderer;
 
-        if(IMagickaProvider.MAGICKA_CAPABILITY != null)
-            this.magickaLazyOptional = mc.player.getCapability(IMagickaProvider.MAGICKA_CAPABILITY, null);
-
         render();
     }
 
     protected void render() {
+        RenderSystem.defaultAlphaFunc();
+        RenderSystem.defaultBlendFunc();
+
         this.mc.getTextureManager().bindTexture(OVERLAY_ICONS);
 
         renderHealth();
@@ -98,8 +92,8 @@ public class SkyrimIngameGui extends AbstractGui
     }
 
     private void renderMagicka() {
-        magickaLazyOptional.ifPresent((magicka) -> {
-            float magickaPercentage = magicka.getMagicka() / magicka.getMaxMagicka();
+        mc.player.getCapability(IMagickaProvider.MAGICKA_CAPABILITY).ifPresent(m -> {
+            float magickaPercentage = m.getMagicka() / m.getMaxMagicka();
             this.blit(this.matrixStack, 20, this.height - 40, 0, 51, 102, 10);
             this.blit(this.matrixStack, 31, this.height - 38, 11, 64, (int)(80 * magickaPercentage), 6);
         });
