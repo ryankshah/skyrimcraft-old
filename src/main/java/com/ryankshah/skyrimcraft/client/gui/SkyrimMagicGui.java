@@ -87,8 +87,8 @@ public class SkyrimMagicGui extends Screen
         fillGradient(matrixStack, 0, this.height * 3 / 4 + 22, this.width, this.height * 3 / 4 + 23, 0xAAFFFFFF, 0xAAFFFFFF);
 
         // Draw "buttons" for keys for selecting spells
-        drawGradientRect(matrixStack, 17, this.height - 29, 32, this.height - 11, 0xAA000000, 0xAA000000, 0xAAFFFFFF);
-        drawGradientRect(matrixStack, 37, this.height - 29, 52, this.height - 11, 0xAA000000, 0xAA000000, 0xAAFFFFFF);
+        drawGradientRect(matrixStack, 17, this.height - 29, 32, this.height - 14, 0xAA000000, 0xAA000000, 0xAAFFFFFF);
+        drawGradientRect(matrixStack, 37, this.height - 29, 52, this.height - 14, 0xAA000000, 0xAA000000, 0xAAFFFFFF);
         drawCenteredString(matrixStack, font, "Z", 25, this.height - 25, 0x00FFFFFF);
         drawCenteredString(matrixStack, font, "X", 45, this.height - 25, 0x00FFFFFF);
         drawCenteredString(matrixStack, font, "Equip", 70, this.height - 25, 0x00FFFFFF);

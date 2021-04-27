@@ -30,6 +30,9 @@ import software.bernie.geckolib3.GeckoLib;
  *   - Continue working on the ingame GUI overlay (mob indicators in compass + current target/enemy health bar)
  *   - Fix the positioning of the text + icons in SkyrimMenuScreen
  *   - Set XP rates for SkyrimOreBlock and tool types for mining them
+ *   - Set selected spells when keybind in pressed in SkyrimMagicGui
+ *     - Check if the player has already selected the same spell before and switch keybinds (if needed)
+ *     - Add the selected icon (same as those used in SkyrimMenuScreen) for selected spell(s).
  */
 @Mod(Skyrimcraft.MODID)
 public class Skyrimcraft

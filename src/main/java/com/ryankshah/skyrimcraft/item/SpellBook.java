@@ -39,14 +39,22 @@ public class SpellBook extends SkyrimItem
     }
 
     @Override
+    public boolean hasEffect(ItemStack stack) {
+        return true;
+    }
+
+    @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
 
         if(!worldIn.isRemote) {
             playerIn.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((cap) -> {
-                cap.addToKnownSpells(spell.get());
+                if(!cap.getKnownSpells().contains(spell.get())) {
+                    cap.addToKnownSpells(spell.get());
+                    playerIn.sendStatusMessage(new StringTextComponent("You have just learnt " + TextFormatting.RED + spell.get().getName() + TextFormatting.RED + "!"), false);
+                    worldIn.playSound(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.BLOCK_END_PORTAL_SPAWN, SoundCategory.PLAYERS, 1f, 1f, false);
+                }
             });
-            playerIn.playSound(SoundEvents.BLOCK_END_PORTAL_FRAME_FILL, 0.8f, 1.0f);
         }
 
         if (playerIn != null) {
@@ -61,7 +69,7 @@ public class SpellBook extends SkyrimItem
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new StringTextComponent("Grants you use of the " + TextFormatting.RED + spell.get().getName() + " spell!"));
+        tooltip.add(new StringTextComponent("Grants you use of the " + TextFormatting.RED + spell.get().getName() + TextFormatting.RESET + " spell!"));
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 }
