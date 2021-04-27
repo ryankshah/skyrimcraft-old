@@ -1,4 +1,4 @@
-<img src="src/main/resources/skyrimcraftlogo.png" alt="Skyrimcraft Logo" width="200" height="200" />
+<img src="src/main/resources/skyrimcraftlogo.png" alt="Skyrimcraft Logo" width="200%" height="200%" />
 
 # Skyrimcraft
 
