@@ -2,25 +2,18 @@ package com.ryankshah.skyrimcraft;
 
 import com.ryankshah.skyrimcraft.capability.*;
 import com.ryankshah.skyrimcraft.network.Networking;
+import com.ryankshah.skyrimcraft.spell.SpellRegistry;
 import com.ryankshah.skyrimcraft.util.ModBlocks;
 import com.ryankshah.skyrimcraft.util.ModEntityType;
 import com.ryankshah.skyrimcraft.util.ModItems;
 import com.ryankshah.skyrimcraft.worldgen.WorldGen;
-import net.minecraft.block.Blocks;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,7 +31,7 @@ import software.bernie.geckolib3.GeckoLib;
  *   - Fix the positioning of the text + icons in SkyrimMenuScreen
  *   - Set XP rates for SkyrimOreBlock and tool types for mining them
  */
-@Mod("skyrimcraft")
+@Mod(Skyrimcraft.MODID)
 public class Skyrimcraft
 {
     // Directly reference a log4j logger.
@@ -50,6 +43,7 @@ public class Skyrimcraft
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(Skyrimcraft::setup);
 
+        SpellRegistry.SPELLS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModBlocks.BLOCK_ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
@@ -62,7 +56,7 @@ public class Skyrimcraft
 
     public static void setup(final FMLCommonSetupEvent event) {
         Networking.registerMessages();
-        CapabilityManager.INSTANCE.register(IMagicka.class, new MagickaStorage(), Magicka::new);
+        CapabilityManager.INSTANCE.register(ISkyrimPlayerData.class, new SkyrimPlayerDataStorage(), SkyrimPlayerData::new);
     }
 
 //    @SubscribeEvent

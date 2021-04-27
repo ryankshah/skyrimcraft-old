@@ -25,8 +25,20 @@ public class Networking
 
         INSTANCE.messageBuilder(PacketUpdateMagicka.class, nextID())
                 .encoder(PacketUpdateMagicka::toBytes)
-                .decoder(PacketUpdateMagicka::new) // buf -> new PacketUpdateMagicka(buf)
+                .decoder(PacketUpdateMagicka::new)
                 .consumer(PacketUpdateMagicka::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketUpdateKnownSpells.class, nextID())
+                .encoder(PacketUpdateKnownSpells::toBytes)
+                .decoder(PacketUpdateKnownSpells::new) // buf -> new PacketUpdateMagicka(buf)
+                .consumer(PacketUpdateKnownSpells::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketUpdateSelectedSpells.class, nextID())
+                .encoder(PacketUpdateSelectedSpells::toBytes)
+                .decoder(PacketUpdateSelectedSpells::new) // buf -> new PacketUpdateMagicka(buf)
+                .consumer(PacketUpdateSelectedSpells::handle)
                 .add();
     }
 

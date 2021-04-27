@@ -1,6 +1,6 @@
 package com.ryankshah.skyrimcraft.item;
 
-import com.ryankshah.skyrimcraft.capability.IMagickaProvider;
+import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerDataProvider;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
@@ -38,16 +38,9 @@ public class MagickaPotion extends SkyrimItem
             CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayerEntity)playerEntity, stack);
 
         if(!worldIn.isRemote) {
-//            playerEntity.getCapability(IMagickaProvider.MAGICKA_CAPABILITY).ifPresent((cap) -> {
-//                if(cap.get() < cap.getMaxMagicka()) {
-//                    Networking.sendToClient(new PacketConsumeMagicka(replenishValue), (ServerPlayerEntity) playerEntity);
-//                    playerEntity.sendStatusMessage(new StringTextComponent("Magicka : " + cap.get() + " / " + cap.getMaxMagicka()), false);
-//                }
-//            });
-            playerEntity.getCapability(IMagickaProvider.MAGICKA_CAPABILITY).ifPresent((cap) -> {
-                //playerEntity.sendStatusMessage(new StringTextComponent("Magicka : " + cap.getMagicka() + " / " + cap.getMaxMagicka()), false);
-                cap.consume(replenishValue);
-                //playerEntity.sendStatusMessage(new StringTextComponent("Magicka : " + cap.getMagicka() + " / " + cap.getMaxMagicka()), false);
+            playerEntity.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((cap) -> {
+                if(cap.getMagicka() != cap.getMaxMagicka())
+                    cap.replenishMagicka(replenishValue);
             });
         }
 
@@ -78,7 +71,8 @@ public class MagickaPotion extends SkyrimItem
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        //PotionUtils.addPotionTooltip(stack, tooltip, 1.0F);
+        tooltip.add(new StringTextComponent("Replenishes " + replenishValue + " Magicka"));
+        super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
     @Override

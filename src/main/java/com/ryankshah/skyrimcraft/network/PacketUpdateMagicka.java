@@ -1,10 +1,8 @@
 package com.ryankshah.skyrimcraft.network;
 
-import com.ryankshah.skyrimcraft.capability.IMagickaProvider;
+import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerDataProvider;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -27,8 +25,8 @@ public class PacketUpdateMagicka
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            Minecraft.getInstance().player.getCapability(IMagickaProvider.MAGICKA_CAPABILITY).ifPresent((cap) -> {
-                cap.set(this.magicka);
+            Minecraft.getInstance().player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((cap) -> {
+                cap.setMagicka(this.magicka);
             });
         });
         return true;

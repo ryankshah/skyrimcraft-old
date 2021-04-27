@@ -1,31 +1,27 @@
 package com.ryankshah.skyrimcraft.capability;
 
-import com.ryankshah.skyrimcraft.event.CapabilityHandler;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.FloatNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class IMagickaProvider implements ICapabilitySerializable<CompoundNBT>
+public class ISkyrimPlayerDataProvider implements ICapabilitySerializable<CompoundNBT>
 {
-    @CapabilityInject(IMagicka.class)
-    public static final Capability<IMagicka> MAGICKA_CAPABILITY = null;
+    @CapabilityInject(ISkyrimPlayerData.class)
+    public static final Capability<ISkyrimPlayerData> SKYRIM_PLAYER_DATA_CAPABILITY = null;
     private static PlayerEntity playerEntity;
 
-    private LazyOptional<IMagicka> instance;
+    private LazyOptional<ISkyrimPlayerData> instance;
 
-    public IMagickaProvider(PlayerEntity obj) {
+    public ISkyrimPlayerDataProvider(PlayerEntity obj) {
         instance = LazyOptional.of(() -> {
-            return new Magicka(obj);
+            return new SkyrimPlayerData(obj);
         });
     }
 
@@ -36,7 +32,7 @@ public class IMagickaProvider implements ICapabilitySerializable<CompoundNBT>
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if(cap != MAGICKA_CAPABILITY) return LazyOptional.empty();
+        if(cap != SKYRIM_PLAYER_DATA_CAPABILITY) return LazyOptional.empty();
         return instance.cast();
     }
 
@@ -46,16 +42,16 @@ public class IMagickaProvider implements ICapabilitySerializable<CompoundNBT>
 
     @Override
     public CompoundNBT serializeNBT() {
-        if(MAGICKA_CAPABILITY == null)
+        if(SKYRIM_PLAYER_DATA_CAPABILITY == null)
             return new CompoundNBT();
         else
-            return (CompoundNBT)MAGICKA_CAPABILITY.writeNBT(instance.orElseThrow(() -> new IllegalArgumentException("at serialise")), null);
+            return (CompoundNBT)SKYRIM_PLAYER_DATA_CAPABILITY.writeNBT(instance.orElseThrow(() -> new IllegalArgumentException("at serialise")), null);
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        if (MAGICKA_CAPABILITY != null) {
-            MAGICKA_CAPABILITY.readNBT(instance.orElseThrow(() -> new IllegalArgumentException("at deserialise")), null, nbt);
+        if (SKYRIM_PLAYER_DATA_CAPABILITY != null) {
+            SKYRIM_PLAYER_DATA_CAPABILITY.readNBT(instance.orElseThrow(() -> new IllegalArgumentException("at deserialise")), null, nbt);
         }
     }
 }

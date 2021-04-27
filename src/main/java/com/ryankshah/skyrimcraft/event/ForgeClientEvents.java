@@ -5,7 +5,9 @@ import com.ryankshah.skyrimcraft.client.gui.SkyrimMenuScreen;
 import com.ryankshah.skyrimcraft.util.ModBlocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -19,9 +21,9 @@ public class ForgeClientEvents
 {
     private static final String CATEGORY = "key.categories." + Skyrimcraft.MODID;
 
-    private static final KeyBinding toggleSkyrimMenu = new KeyBinding("key.toggleMenu", GLFW_KEY_M, CATEGORY);
-    private static final KeyBinding toggleSpellSlot1 = new KeyBinding("key.toggleSpellSlot1", GLFW_KEY_X, CATEGORY);
-    private static final KeyBinding toggleSpellSlot2 = new KeyBinding("key.toggleSpellSlot2", GLFW_KEY_Z, CATEGORY);
+    private static final KeyBinding toggleSkyrimMenu = new KeyBinding("key.toggleMenu", KeyConflictContext.UNIVERSAL, InputMappings.Type.KEYSYM, GLFW_KEY_M, CATEGORY);
+    private static final KeyBinding toggleSpellSlot1 = new KeyBinding("key.toggleSpellSlot1", KeyConflictContext.UNIVERSAL, InputMappings.Type.KEYSYM, GLFW_KEY_Z, CATEGORY);
+    private static final KeyBinding toggleSpellSlot2 = new KeyBinding("key.toggleSpellSlot2", KeyConflictContext.UNIVERSAL, InputMappings.Type.KEYSYM, GLFW_KEY_X, CATEGORY);
 
     @SubscribeEvent
     public static void onClientTickEvent(TickEvent.ClientTickEvent event) {

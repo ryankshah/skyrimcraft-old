@@ -3,17 +3,18 @@ package com.ryankshah.skyrimcraft.client.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import com.ryankshah.skyrimcraft.capability.IMagickaProvider;
+import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerDataProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
 public class SkyrimIngameGui extends AbstractGui
 {
     protected static final ResourceLocation OVERLAY_ICONS = new ResourceLocation(Skyrimcraft.MODID, "textures/gui/overlay_icons_current.png");
+
+    private final int PLAYER_BAR_MAX_WIDTH = 80;
 
     private Minecraft mc;
     private MatrixStack matrixStack;
@@ -32,8 +33,11 @@ public class SkyrimIngameGui extends AbstractGui
     }
 
     protected void render() {
-        RenderSystem.defaultAlphaFunc();
+        RenderSystem.enableAlphaTest();
+        RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
+        RenderSystem.defaultAlphaFunc();
+        RenderSystem.disableDepthTest();
 
         this.mc.getTextureManager().bindTexture(OVERLAY_ICONS);
 
@@ -42,6 +46,10 @@ public class SkyrimIngameGui extends AbstractGui
         renderMagicka();
         renderCompass();
 
+        RenderSystem.disableAlphaTest();
+        RenderSystem.disableBlend();
+        RenderSystem.enableDepthTest();
+
         this.mc.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
     }
 
@@ -49,7 +57,7 @@ public class SkyrimIngameGui extends AbstractGui
         blit(this.matrixStack, this.width / 2 - 110, 10, 0, 37, 221, 14);
 
         int rot;
-        boolean f0 = mc.player.rotationYaw < 0;
+        boolean f0 = mc.player.rotationYaw < 0.0f;
 
         if(f0) rot = -MathHelper.floor(this.mc.player.rotationYaw % 360);
         else rot = MathHelper.floor(this.mc.player.rotationYaw % 360);
@@ -57,7 +65,6 @@ public class SkyrimIngameGui extends AbstractGui
         boolean f1 = rot > 0 && rot < 180;
         boolean f2 = rot <= 270 && rot >= 90;
         boolean f3 = rot <= 180 && rot >= 0;
-        boolean f4 = rot <= 1 && rot >= 0;
 
         if (rot == 0) {
             drawCenteredString(matrixStack, fontRenderer, "S", this.width / 2, 13, 16777215);
@@ -80,20 +87,24 @@ public class SkyrimIngameGui extends AbstractGui
 
     private void renderHealth() {
         float healthPercentage = mc.player.getHealth() / mc.player.getMaxHealth();
+        float healthBarWidth = PLAYER_BAR_MAX_WIDTH * healthPercentage;
+        float healthBarStartX = (this.width / 2 - 39) + (PLAYER_BAR_MAX_WIDTH - healthBarWidth) / 2.0f;
 
         blit(this.matrixStack, this.width / 2 - 50, this.height - 40, 0, 51, 102, 10);
-        blit(this.matrixStack, this.width / 2 - (int)(39 * healthPercentage), this.height - 38, 11, 72, (int)(80 * healthPercentage), 6);
+        blit(this.matrixStack, (int)healthBarStartX, this.height - 38, 11, 72, (int)healthBarWidth, 6);
     }
 
     private void renderStamina() {
         float staminaPercentage = mc.player.getFoodStats().getFoodLevel() / 20.0f; // 20.0f is the max food value (this is apparently hardcoded...)
+        float staminaBarWidth = PLAYER_BAR_MAX_WIDTH * staminaPercentage;
+        float staminaBarStartX = (float)(width - 109) + (PLAYER_BAR_MAX_WIDTH - staminaBarWidth);
         this.blit(this.matrixStack, this.width - 120, this.height - 40, 0, 51, 102, 10);
-        this.blit(this.matrixStack, this.width - 109, this.height - 38, 11, 80, (int)(80 * staminaPercentage), 6);
+        this.blit(this.matrixStack, (int)staminaBarStartX, this.height - 38, 11, 80, (int)staminaBarWidth, 6);
     }
 
     private void renderMagicka() {
-        mc.player.getCapability(IMagickaProvider.MAGICKA_CAPABILITY).ifPresent(m -> {
-            float magickaPercentage = m.getMagicka() / m.getMaxMagicka();
+        mc.player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent(cap -> {
+            float magickaPercentage = cap.getMagicka() / cap.getMaxMagicka();
             this.blit(this.matrixStack, 20, this.height - 40, 0, 51, 102, 10);
             this.blit(this.matrixStack, 31, this.height - 38, 11, 64, (int)(80 * magickaPercentage), 6);
         });

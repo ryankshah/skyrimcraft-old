@@ -1,11 +1,13 @@
 package com.ryankshah.skyrimcraft.spell;
 
 
-public class UnrelentingForce implements ISpell
-{
-    @Override
-    public int getID() {
-        return 0;
+import com.ryankshah.skyrimcraft.Skyrimcraft;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.IForgeRegistryEntry;
+
+public class UnrelentingForce extends ISpell implements IForgeRegistryEntry<ISpell> {
+    public UnrelentingForce(int identifier) {
+        super(identifier);
     }
 
     @Override
@@ -25,7 +27,7 @@ public class UnrelentingForce implements ISpell
 
     @Override
     public SpellType getType() {
-        return SpellType.SHOUT;
+        return ISpell.SpellType.SHOUT;
     }
 
     @Override
@@ -35,6 +37,7 @@ public class UnrelentingForce implements ISpell
 
     @Override
     public void onCast() {
-
+        // Do stuff...
+        super.onCast();
     }
 }

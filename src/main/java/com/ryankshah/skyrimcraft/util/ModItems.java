@@ -3,6 +3,9 @@ package com.ryankshah.skyrimcraft.util;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.item.MagickaPotion;
 import com.ryankshah.skyrimcraft.item.SkyrimItem;
+import com.ryankshah.skyrimcraft.item.SpellBook;
+import com.ryankshah.skyrimcraft.spell.SpellFireball;
+import com.ryankshah.skyrimcraft.spell.SpellRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -25,6 +28,9 @@ public class ModItems
     public static final RegistryObject<Item> DAEDRA_HEART = ITEMS.register("daedra_heart", () -> new SkyrimItem(new Item.Properties().group(Skyrimcraft.TAB), "Daedra Heart"));
     public static final RegistryObject<Item> MAGICKA_POTION = ITEMS.register("magicka_potion", () -> new MagickaPotion(new Item.Properties().group(Skyrimcraft.TAB), "Magicka Potion", 6.0f));
     public static final RegistryObject<Item> MINOR_MAGICKA_POTION = ITEMS.register("minor_magicka_potion", () -> new MagickaPotion(new Item.Properties().group(Skyrimcraft.TAB), "Minor Magicka Potion", 4.0f));
+
+    // Spell books
+    public static final RegistryObject<Item> FIREBALL_SPELLBOOK = ITEMS.register("fireball_spellbook", () -> new SpellBook(new Item.Properties().group(Skyrimcraft.TAB).maxStackSize(1), "Fireball Spellbook", SpellRegistry.FIREBALL));
 
     public static class Items extends ItemModelProvider {
         public Items(DataGenerator generator, ExistingFileHelper existingFileHelper) {
@@ -49,6 +55,8 @@ public class ModItems
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/magicka_potion"));
             singleTexture(MINOR_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/minor_magicka_potion"));
+            singleTexture(FIREBALL_SPELLBOOK.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/spellbook"));
         }
     }
 }
