@@ -50,7 +50,7 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
      * @return name
      */
     public String getName() {
-        return null;
+        return "";
     }
 
     /**
@@ -85,14 +85,6 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
     }
 
     /**
-     * Gets whether this ISpell instance is a spell or a shout.
-     * @return true if shout
-     */
-    public boolean getIsShout() {
-        return false;
-    }
-
-    /**
      * Get the cooldown (seconds) of the spell
      *
      * @return cooldown
@@ -107,7 +99,7 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
      * @return {@link SpellType}
      */
     public SpellType getType() {
-        return null;
+        return SpellType.DESTRUCTION;
     }
 
     /**
@@ -116,19 +108,23 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
      * @return {@link SpellDifficulty}
      */
     public SpellDifficulty getDifficulty() {
-        return null;
+        return SpellDifficulty.NA;
     }
 
-    private boolean canCast() {
+    private CastResult canCast() {
         ISkyrimPlayerData cap = caster.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("spell onCast"));
-        return cap.getMagicka() >= getCost() || getCost() == 0f;
+        if(getType() == SpellType.SHOUT) {
+            return cap.getShoutCooldown() <= 0f ? CastResult.SUCCESS : CastResult.COOLDOWN;
+        } else {
+            return (cap.getMagicka() >= getCost() || getCost() == 0f) ? CastResult.SUCCESS : CastResult.MAGICKA;
+        }
     }
 
     public void cast() {
-        if(canCast())
+        if(canCast() == CastResult.SUCCESS)
             onCast();
         else
-            getCaster().sendStatusMessage(new StringTextComponent(TextFormatting.RED + "Not enough magicka!" + TextFormatting.RESET), false);
+            getCaster().sendStatusMessage(new StringTextComponent(TextFormatting.RED + (canCast() == CastResult.MAGICKA ? "Not enough magicka!" : "Your shouts are still on cooldown") + TextFormatting.RESET), false);
     }
 
     /**
@@ -136,7 +132,9 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
      */
     public void onCast() {
         ISkyrimPlayerData cap = caster.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("spell onCast"));
-        if(getCost() > 0)
+        if(getType() == SpellType.SHOUT)
+            cap.setShoutCooldown(getCooldown());
+        else
             cap.consumeMagicka(getCost());
     }
 
@@ -184,5 +182,17 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
         public int getDifficulty() {
             return this.difficulty;
         }
+    }
+
+    private enum CastResult {
+        SUCCESS(0),
+        COOLDOWN(1),
+        MAGICKA(2);
+
+        private int id;
+
+        CastResult(int id) { this.id = id; }
+
+        public int getId() { return this.id; }
     }
 }

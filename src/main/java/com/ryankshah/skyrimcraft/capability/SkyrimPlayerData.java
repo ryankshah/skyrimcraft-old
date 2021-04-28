@@ -18,26 +18,29 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
     private PlayerEntity playerEntity;
 
     private List<ISpell> knownSpells;
-    private Map<Integer, ISpell> selectedSpells;
+    private ISpell[] selectedSpells;
     private LivingEntity targetEntity;
 
     private float magicka = 20.0f;
     private final float maxMagicka = 20.0f;
+    private float shoutCooldown = 0.0f;
 
     public SkyrimPlayerData() {
         knownSpells = new ArrayList<>();
-        selectedSpells = new HashMap<>();
+        selectedSpells = new ISpell[2];
         targetEntity = null;
-        selectedSpells.put(1, SpellRegistry.FIREBALL.get());
+        selectedSpells[0] = SpellRegistry.FIREBALL.get();
+        selectedSpells[1] = SpellRegistry.UNRELENTING_FORCE.get();
     }
 
     public SkyrimPlayerData(PlayerEntity playerEntity) {
         this.playerEntity = playerEntity;
         knownSpells = new ArrayList<>();
-        selectedSpells = new HashMap<>();
+        selectedSpells = new ISpell[2];
         targetEntity = null;
 
-        selectedSpells.put(1, SpellRegistry.FIREBALL.get());
+        selectedSpells[0] = SpellRegistry.FIREBALL.get();
+        selectedSpells[1] = SpellRegistry.UNRELENTING_FORCE.get();
     }
 
     @Override
@@ -52,7 +55,7 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
     public void setSelectedSpell(int pos, ISpell spell) {
         // only allow 2 selected spells at a time.
         if(pos >= 0 && pos < 2) {
-            selectedSpells.put(pos, spell);
+            selectedSpells[pos] = spell;
             setSelectedSpells(selectedSpells);
         }
     }
@@ -71,7 +74,7 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
     }
 
     @Override
-    public void setSelectedSpells(Map<Integer, ISpell> selectedSpells) {
+    public void setSelectedSpells(ISpell[] selectedSpells) {
         this.selectedSpells = selectedSpells;
 
         if(playerEntity instanceof ServerPlayerEntity)
@@ -79,7 +82,7 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
     }
 
     @Override
-    public void setSelectedSpellsForNBT(Map<Integer, ISpell> selectedSpells) {
+    public void setSelectedSpellsForNBT(ISpell[] selectedSpells) {
         this.selectedSpells = selectedSpells;
     }
 
@@ -89,8 +92,26 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
     }
 
     @Override
-    public Map<Integer, ISpell> getSelectedSpells() {
+    public ISpell[] getSelectedSpells() {
         return this.selectedSpells;
+    }
+
+    @Override
+    public float getShoutCooldown() {
+        return this.shoutCooldown;
+    }
+
+    @Override
+    public void setShoutCooldown(float cooldown) {
+        this.shoutCooldown = cooldown;
+
+        if(playerEntity instanceof ServerPlayerEntity)
+            Networking.sendToClient(new PacketUpdateShoutCooldown(this.shoutCooldown), (ServerPlayerEntity)playerEntity);
+    }
+
+    @Override
+    public void setShoutCooldownForNBT(float cooldown) {
+        this.shoutCooldown = cooldown;
     }
 
     @Override

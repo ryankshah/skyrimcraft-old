@@ -16,22 +16,22 @@ import java.util.function.Supplier;
 
 public class PacketUpdateSelectedSpells
 {
-    private Map<Integer, ISpell> selectedSpells = new HashMap<>();
+    private ISpell[] selectedSpells = new ISpell[2];
 
     public PacketUpdateSelectedSpells(PacketBuffer buf) {
         int size = buf.readInt();
         for(int i = 0; i < size; i++) {
-            this.selectedSpells.put(i, SpellRegistry.SPELLS_REGISTRY.get().getValue(buf.readResourceLocation()));
+            this.selectedSpells[i] = SpellRegistry.SPELLS_REGISTRY.get().getValue(buf.readResourceLocation());
         }
     }
 
-    public PacketUpdateSelectedSpells(Map<Integer, ISpell> selectedSpells) {
+    public PacketUpdateSelectedSpells(ISpell[] selectedSpells) {
         this.selectedSpells = selectedSpells;
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeInt(selectedSpells.size());
-        for(ISpell spell : selectedSpells.values()) {
+        buf.writeInt(selectedSpells.length);
+        for(ISpell spell : selectedSpells) {
             buf.writeResourceLocation(SpellRegistry.SPELLS_REGISTRY.get().getKey(spell));
         }
     }

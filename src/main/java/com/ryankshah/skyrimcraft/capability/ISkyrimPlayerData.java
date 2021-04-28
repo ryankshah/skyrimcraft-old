@@ -13,10 +13,13 @@ public interface ISkyrimPlayerData
     public void setSelectedSpell(int pos, ISpell spell);
     public void setKnownSpells(List<ISpell> knownSpells);
     public void setKnownSpellsForNBT(List<ISpell> knownSpells);
-    public void setSelectedSpells(Map<Integer, ISpell> selectedSpells);
-    public void setSelectedSpellsForNBT(Map<Integer, ISpell> selectedSpells);
+    public void setSelectedSpells(ISpell[] selectedSpells);
+    public void setSelectedSpellsForNBT(ISpell[] selectedSpells);
     public List<ISpell> getKnownSpells();
-    public Map<Integer, ISpell> getSelectedSpells();
+    public ISpell[] getSelectedSpells();
+    public float getShoutCooldown();
+    public void setShoutCooldown(float cooldown);
+    public void setShoutCooldownForNBT(float cooldown);
 
     /* MAGICKA FIELDS */
     public void consumeMagicka(float amount);

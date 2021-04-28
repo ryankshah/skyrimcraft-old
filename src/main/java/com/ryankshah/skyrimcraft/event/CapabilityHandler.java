@@ -37,6 +37,7 @@ public class CapabilityHandler
             Networking.sendToClient(new PacketUpdateKnownSpells(cap.getKnownSpells()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdateSelectedSpells(cap.getSelectedSpells()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdatePlayerTarget((LivingEntity) null), (ServerPlayerEntity)event.getEntity());
+            Networking.sendToClient(new PacketUpdateShoutCooldown(cap.getShoutCooldown()), (ServerPlayerEntity)event.getEntity());
         }
     }
 
@@ -54,6 +55,7 @@ public class CapabilityHandler
                     newCap.setKnownSpells(originalPlayerCapability.getKnownSpells());
                     newCap.setSelectedSpells(originalPlayerCapability.getSelectedSpells());
                     newCap.setMagicka(newCap.getMaxMagicka());
+                    newCap.setShoutCooldown(0);
                     newCap.setCurrentTarget(null);
                 });
             }

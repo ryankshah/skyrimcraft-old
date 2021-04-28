@@ -24,6 +24,7 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
         CompoundNBT tag = new CompoundNBT();
 
         tag.putFloat("magicka", instance.getMagicka());
+        tag.putFloat("cooldown", instance.getShoutCooldown());
 
         List<ISpell> knownSpells = instance.getKnownSpells();
         int counter = 0;
@@ -41,8 +42,9 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
         List<ISpell> knownSpells = new ArrayList<>();
 
         float magicka = tag.getFloat("magicka");
-        int size = ((CompoundNBT) nbt).getInt("size");
+        float cooldown = tag.getFloat("cooldown");
 
+        int size = ((CompoundNBT) nbt).getInt("size");
         int counter = 0;
         for(int i = 0; i < size; i++) {
             ResourceLocation loc = new ResourceLocation(tag.getString("" + counter++));
@@ -51,5 +53,6 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
 
         instance.setMagickaForNBT(magicka);
         instance.setKnownSpellsForNBT(knownSpells);
+        instance.setShoutCooldownForNBT(cooldown);
     }
 }

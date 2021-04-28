@@ -25,32 +25,38 @@ public class Networking
 
         INSTANCE.messageBuilder(PacketUpdateMagicka.class, nextID())
                 .encoder(PacketUpdateMagicka::toBytes)
-                .decoder(PacketUpdateMagicka::new)
+                .decoder(PacketUpdateMagicka::new) // buf -> new PacketUpdateMagicka(buf)
                 .consumer(PacketUpdateMagicka::handle)
                 .add();
 
         INSTANCE.messageBuilder(PacketUpdateKnownSpells.class, nextID())
                 .encoder(PacketUpdateKnownSpells::toBytes)
-                .decoder(PacketUpdateKnownSpells::new) // buf -> new PacketUpdateMagicka(buf)
+                .decoder(PacketUpdateKnownSpells::new)
                 .consumer(PacketUpdateKnownSpells::handle)
                 .add();
 
         INSTANCE.messageBuilder(PacketUpdateSelectedSpells.class, nextID())
                 .encoder(PacketUpdateSelectedSpells::toBytes)
-                .decoder(PacketUpdateSelectedSpells::new) // buf -> new PacketUpdateMagicka(buf)
+                .decoder(PacketUpdateSelectedSpells::new)
                 .consumer(PacketUpdateSelectedSpells::handle)
                 .add();
 
         INSTANCE.messageBuilder(PacketUpdatePlayerTarget.class, nextID())
                 .encoder(PacketUpdatePlayerTarget::toBytes)
-                .decoder(PacketUpdatePlayerTarget::new) // buf -> new PacketUpdateMagicka(buf)
+                .decoder(PacketUpdatePlayerTarget::new)
                 .consumer(PacketUpdatePlayerTarget::handle)
                 .add();
 
         INSTANCE.messageBuilder(PacketCastSpell.class, nextID())
                 .encoder(PacketCastSpell::toBytes)
-                .decoder(PacketCastSpell::new) // buf -> new PacketUpdateMagicka(buf)
+                .decoder(PacketCastSpell::new)
                 .consumer(PacketCastSpell::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketUpdateShoutCooldown.class, nextID())
+                .encoder(PacketUpdateShoutCooldown::toBytes)
+                .decoder(PacketUpdateShoutCooldown::new)
+                .consumer(PacketUpdateShoutCooldown::handle)
                 .add();
     }
 

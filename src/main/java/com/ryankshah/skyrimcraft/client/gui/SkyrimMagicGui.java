@@ -144,7 +144,7 @@ public class SkyrimMagicGui extends Screen
         for(int i = 1; i < spell.getDescription().size()+1; i++)
             drawCenteredString(matrixStack, font, spell.getDescription().get(i-1), 120, (this.height) / 2 + (8 * i), 0x00FFFFFF); // Spell description
 
-        if(!spell.getIsShout())
+        if(spell.getType() != ISpell.SpellType.SHOUT)
             drawString(matrixStack, font, "Cost: " + (int)spell.getCost(), 50, (this.height) / 2 + 40, 0x00FFFFFF);
 
         // Draw the spell entity?

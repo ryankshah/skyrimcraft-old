@@ -8,23 +8,23 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpellFireball extends ISpell implements IForgeRegistryEntry<ISpell>
+public class ShoutUnrelentingForce extends ISpell implements IForgeRegistryEntry<ISpell>
 {
-    public SpellFireball(int identifier) {
+    public ShoutUnrelentingForce(int identifier) {
         super(identifier);
     }
 
     @Override
     public String getName() {
-        return "Fireball";
+        return "Unrelenting Force";
     }
 
     @Override
     public List<String> getDescription() {
         List<String> desc = new ArrayList<>();
-        desc.add("A fiery explosion for 4");
-        desc.add("points of damage in a 15");
-        desc.add("block radius");
+        desc.add("Your voice is raw power,");
+        desc.add("pushing aside anything");
+        desc.add("that stands in your path");
         return desc;
     }
 
@@ -35,17 +35,17 @@ public class SpellFireball extends ISpell implements IForgeRegistryEntry<ISpell>
 
     @Override
     public float getCost() {
-        return 6.0f;
+        return 0f;
     }
 
     @Override
     public float getCooldown() {
-        return 10.0f;
+        return 20.0f;
     }
 
     @Override
     public SpellType getType() {
-        return SpellType.DESTRUCTION;
+        return SpellType.SHOUT;
     }
 
     @Override
