@@ -3,6 +3,8 @@ package com.ryankshah.skyrimcraft.event;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.client.gui.SkyrimMenuScreen;
+import com.ryankshah.skyrimcraft.network.Networking;
+import com.ryankshah.skyrimcraft.network.PacketCastSpell;
 import com.ryankshah.skyrimcraft.spell.ISpell;
 import com.ryankshah.skyrimcraft.util.ModBlocks;
 import net.minecraft.client.Minecraft;
@@ -41,19 +43,15 @@ public class ForgeClientEvents
 
             if(toggleSpellSlot1.isPressed()) {
                 mc.player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent(cap -> {
-                    if(cap.getSelectedSpells().get(1) != null) {
-                        ISpell spell = cap.getSelectedSpells().get(1);
-                        spell.onCast();
-                    }
+                    if(cap.getSelectedSpells().get(0) != null)
+                        Networking.sendToServer(new PacketCastSpell(cap.getSelectedSpells().get(0)));
                 });
             }
 
             if(toggleSpellSlot2.isPressed()) {
                 mc.player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent(cap -> {
-                    if(cap.getSelectedSpells().get(1) != null) {
-                        ISpell spell = cap.getSelectedSpells().get(2);
-                        spell.onCast();
-                    }
+                    if(cap.getSelectedSpells().get(1) != null)
+                        Networking.sendToServer(new PacketCastSpell(cap.getSelectedSpells().get(1)));
                 });
             }
         }

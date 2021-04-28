@@ -46,6 +46,12 @@ public class Networking
                 .decoder(PacketUpdatePlayerTarget::new) // buf -> new PacketUpdateMagicka(buf)
                 .consumer(PacketUpdatePlayerTarget::handle)
                 .add();
+
+        INSTANCE.messageBuilder(PacketCastSpell.class, nextID())
+                .encoder(PacketCastSpell::toBytes)
+                .decoder(PacketCastSpell::new) // buf -> new PacketUpdateMagicka(buf)
+                .consumer(PacketCastSpell::handle)
+                .add();
     }
 
     public static void sendToClient(Object packet, ServerPlayerEntity player) {

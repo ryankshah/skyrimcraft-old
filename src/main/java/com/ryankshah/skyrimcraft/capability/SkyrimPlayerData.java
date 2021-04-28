@@ -2,6 +2,7 @@ package com.ryankshah.skyrimcraft.capability;
 
 import com.ryankshah.skyrimcraft.network.*;
 import com.ryankshah.skyrimcraft.spell.ISpell;
+import com.ryankshah.skyrimcraft.spell.SpellRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -27,6 +28,7 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
         knownSpells = new ArrayList<>();
         selectedSpells = new HashMap<>();
         targetEntity = null;
+        selectedSpells.put(1, SpellRegistry.FIREBALL.get());
     }
 
     public SkyrimPlayerData(PlayerEntity playerEntity) {
@@ -34,6 +36,8 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
         knownSpells = new ArrayList<>();
         selectedSpells = new HashMap<>();
         targetEntity = null;
+
+        selectedSpells.put(1, SpellRegistry.FIREBALL.get());
     }
 
     @Override

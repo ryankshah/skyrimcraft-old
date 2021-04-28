@@ -1,6 +1,8 @@
 package com.ryankshah.skyrimcraft.util;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
+import com.ryankshah.skyrimcraft.spell.entity.FireballEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
@@ -11,6 +13,15 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class ModEntityType
 {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, Skyrimcraft.MODID);
+
+    // Spell entity types
+    public static final RegistryObject<EntityType<?>> SPELL_FIREBALL_ENTITY = ENTITY_TYPES.register("spell_fireball",
+            () -> EntityType.Builder.create(FireballEntity::new, EntityClassification.MISC)
+                    .size(1.25f, 1.0f) // Hitbox Size
+                    .setTrackingRange(64)
+                    .setShouldReceiveVelocityUpdates(true)
+                    .setUpdateInterval(3)
+                    .build(new ResourceLocation(Skyrimcraft.MODID, "spell_fireball").toString()));
 
     // Entity Types
 //    public static final RegistryObject<EntityType<OrcaEntity>> ORCA = ENTITY_TYPES.register("orca",

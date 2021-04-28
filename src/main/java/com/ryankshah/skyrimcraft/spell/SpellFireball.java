@@ -1,6 +1,7 @@
 package com.ryankshah.skyrimcraft.spell;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
+import com.ryankshah.skyrimcraft.spell.entity.FireballEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
@@ -54,7 +55,10 @@ public class SpellFireball extends ISpell implements IForgeRegistryEntry<ISpell>
 
     @Override
     public void onCast() {
-        // Do stuff...
+        FireballEntity fireball = new FireballEntity(getCaster().getEntityWorld(), getCaster(), getCaster().getLookVec().x * 1, getCaster().getLookVec().y * 1, getCaster().getLookVec().z * 1);
+        fireball.setPosition(fireball.getPosX(), getCaster().getPosY() + getCaster().getEyeHeight(), getCaster().getPosZ());
+        getCaster().getEntityWorld().addEntity(fireball);
+
         super.onCast();
     }
 }

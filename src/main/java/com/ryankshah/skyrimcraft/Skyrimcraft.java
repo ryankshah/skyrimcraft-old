@@ -22,7 +22,8 @@ import software.bernie.geckolib3.GeckoLib;
 /**
  * TODO:
  *   - Continue working on the shouts and spells system:
- *     - Work on spell casting and what happens on spell cast
+ *     - Add a shout cooldown tracker (from what I know, spells have no cooldown just magicka cost)
+ *       - See {@link net.minecraft.util.CooldownTracker}
  *   - Get started with adding some items, food, weapons and armour into the game
  *   - Continue working on the ingame GUI overlay:
  *     - Mob indicators and *known* structures indicators in compass

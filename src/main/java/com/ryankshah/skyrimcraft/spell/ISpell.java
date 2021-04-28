@@ -1,5 +1,6 @@
 package com.ryankshah.skyrimcraft.spell;
 
+import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerDataProvider;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -7,6 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -116,15 +119,25 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
         return null;
     }
 
+    private boolean canCast() {
+        ISkyrimPlayerData cap = caster.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("spell onCast"));
+        return cap.getMagicka() >= getCost() || getCost() == 0f;
+    }
+
+    public void cast() {
+        if(canCast())
+            onCast();
+        else
+            getCaster().sendStatusMessage(new StringTextComponent(TextFormatting.RED + "Not enough magicka!" + TextFormatting.RESET), false);
+    }
+
     /**
      * Specifies what happens on spell cast
      */
     public void onCast() {
-        if(getCost() > 0) {
-            caster.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((cap) -> {
-                cap.consumeMagicka(getCost());
-            });
-        }
+        ISkyrimPlayerData cap = caster.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("spell onCast"));
+        if(getCost() > 0)
+            cap.consumeMagicka(getCost());
     }
 
     public enum SpellType {
