@@ -3,11 +3,9 @@ package com.ryankshah.skyrimcraft.event;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerDataProvider;
-import com.ryankshah.skyrimcraft.network.Networking;
-import com.ryankshah.skyrimcraft.network.PacketUpdateKnownSpells;
-import com.ryankshah.skyrimcraft.network.PacketUpdateMagicka;
-import com.ryankshah.skyrimcraft.network.PacketUpdateSelectedSpells;
+import com.ryankshah.skyrimcraft.network.*;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
@@ -38,6 +36,7 @@ public class CapabilityHandler
             Networking.sendToClient(new PacketUpdateMagicka(cap.getMagicka()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdateKnownSpells(cap.getKnownSpells()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdateSelectedSpells(cap.getSelectedSpells()), (ServerPlayerEntity)event.getEntity());
+            Networking.sendToClient(new PacketUpdatePlayerTarget((LivingEntity) null), (ServerPlayerEntity)event.getEntity());
         }
     }
 
@@ -55,6 +54,7 @@ public class CapabilityHandler
                     newCap.setKnownSpells(originalPlayerCapability.getKnownSpells());
                     newCap.setSelectedSpells(originalPlayerCapability.getSelectedSpells());
                     newCap.setMagicka(newCap.getMaxMagicka());
+                    newCap.setCurrentTarget(null);
                 });
             }
         }

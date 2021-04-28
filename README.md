@@ -37,8 +37,6 @@ and shouts found in Skyrim!
     - [ ] Add spells and shouts:
         - [ ] Spells
             - [x] Fireball
-            - [ ] 
-            - [ ] 
             - [ ] ...
         - [ ] Shouts
             - [ ] Unrelenting Force (Fus Ro Dah)
@@ -58,9 +56,9 @@ Skyrim into your Minecraft world!
 
 ## Screenshots
 
-![In-Game GUI](run/screenshots/blocks+ingame.png)
+![In-Game GUI](screenshots/blocks+ingame.png)
 
-![Magic GUI](run/screenshots/magic_gui.png)
+![Magic GUI](screenshots/magic_gui.png)
 
 
 ![separator](separator.png)
@@ -74,10 +72,10 @@ Coming soon...
 
 ## Frequently Asked Questions
 
-#### How can I report an issue?
+### How can I report an issue?
 You can report an issue [right here](https://github.com/ryankshah/skyrimcraft/issues)!
 
-#### Can I use this mod in my modpack?
+### Can I use this mod in my modpack?
 Go ahead! Just make ensure you abide by the following conditions:
 1. You cannot claim that you own the entire mod or any parts of this mod
 2. You must cite the author(s) of this mod

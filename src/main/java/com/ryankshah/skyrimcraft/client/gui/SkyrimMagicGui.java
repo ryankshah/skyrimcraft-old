@@ -18,7 +18,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class SkyrimMagicGui extends Screen
 {
-    protected static final ResourceLocation OVERLAY_ICONS = new ResourceLocation(Skyrimcraft.MODID, "textures/gui/overlay_icons_current.png");
+    protected static final ResourceLocation OVERLAY_ICONS = new ResourceLocation(Skyrimcraft.MODID, "textures/gui/overlay_icons.png");
     private static final int PADDING = 7;
 
     private Map<ISpell.SpellType, ArrayList<ISpell>> spellsAndTypes;
@@ -137,12 +137,15 @@ public class SkyrimMagicGui extends Screen
     }
 
     private void drawSpellInformation(MatrixStack matrixStack, ISpell spell, float partialTicks) {
-        drawGradientRect(matrixStack, 40, (this.height) / 2, 200, (this.height) / 2 + 60, 0xAA000000, 0xAA000000, 0xAAFFFFFF);
-        fillGradient(matrixStack, 50, (this.height) / 2 + 20, 190, (this.height) / 2 + 21, 0xAAFFFFFF, 0xAAFFFFFF); // Line under spell name
+        drawGradientRect(matrixStack, 40, (this.height) / 2 - 20, 200, (this.height) / 2 + 60, 0xAA000000, 0xAA000000, 0xAAFFFFFF);
+        fillGradient(matrixStack, 50, (this.height) / 2, 190, (this.height) / 2 + 1, 0xAAFFFFFF, 0xAAFFFFFF); // Line under spell name
 
-        drawCenteredString(matrixStack, font, spell.getName(), 120, (this.height) / 2 + 10, 0x00FFFFFF); // Spell name
+        drawCenteredString(matrixStack, font, spell.getName(), 120, (this.height) / 2 - 10, 0x00FFFFFF); // Spell name
         for(int i = 1; i < spell.getDescription().size()+1; i++)
-            drawCenteredString(matrixStack, font, spell.getDescription().get(i-1), 120, (this.height) / 2 + 20 + (8 * i), 0x00FFFFFF); // Spell description
+            drawCenteredString(matrixStack, font, spell.getDescription().get(i-1), 120, (this.height) / 2 + (8 * i), 0x00FFFFFF); // Spell description
+
+        if(!spell.getIsShout())
+            drawString(matrixStack, font, "Cost: " + (int)spell.getCost(), 50, (this.height) / 2 + 40, 0x00FFFFFF);
 
         // Draw the spell entity?
         minecraft.getTextureManager().bindTexture(spell.getDisplayAnimation());

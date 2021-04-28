@@ -82,6 +82,14 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
     }
 
     /**
+     * Gets whether this ISpell instance is a spell or a shout.
+     * @return true if shout
+     */
+    public boolean getIsShout() {
+        return false;
+    }
+
+    /**
      * Get the cooldown (seconds) of the spell
      *
      * @return cooldown

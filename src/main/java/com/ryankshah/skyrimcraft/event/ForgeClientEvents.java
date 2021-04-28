@@ -1,7 +1,9 @@
 package com.ryankshah.skyrimcraft.event;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
+import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.client.gui.SkyrimMenuScreen;
+import com.ryankshah.skyrimcraft.spell.ISpell;
 import com.ryankshah.skyrimcraft.util.ModBlocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -35,6 +37,24 @@ public class ForgeClientEvents
         {
             if(toggleSkyrimMenu.isPressed()) {
                 mc.displayGuiScreen(new SkyrimMenuScreen());
+            }
+
+            if(toggleSpellSlot1.isPressed()) {
+                mc.player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent(cap -> {
+                    if(cap.getSelectedSpells().get(1) != null) {
+                        ISpell spell = cap.getSelectedSpells().get(1);
+                        spell.onCast();
+                    }
+                });
+            }
+
+            if(toggleSpellSlot2.isPressed()) {
+                mc.player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent(cap -> {
+                    if(cap.getSelectedSpells().get(1) != null) {
+                        ISpell spell = cap.getSelectedSpells().get(2);
+                        spell.onCast();
+                    }
+                });
             }
         }
     }

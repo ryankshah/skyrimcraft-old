@@ -1,6 +1,7 @@
 package com.ryankshah.skyrimcraft.capability;
 
 import com.ryankshah.skyrimcraft.spell.ISpell;
+import net.minecraft.entity.LivingEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -24,4 +25,9 @@ public interface ISkyrimPlayerData
     public void setMagickaForNBT(float amount);
     public float getMagicka();
     public float getMaxMagicka();
+
+    /* TARGET FIELDS */
+    public void setCurrentTarget(LivingEntity entity);
+    public void setCurrentTargetForNBT(LivingEntity entity);
+    public LivingEntity getCurrentTarget();
 }

@@ -1,12 +1,11 @@
 package com.ryankshah.skyrimcraft.capability;
 
-import com.ryankshah.skyrimcraft.network.Networking;
-import com.ryankshah.skyrimcraft.network.PacketUpdateKnownSpells;
-import com.ryankshah.skyrimcraft.network.PacketUpdateMagicka;
-import com.ryankshah.skyrimcraft.network.PacketUpdateSelectedSpells;
+import com.ryankshah.skyrimcraft.network.*;
 import com.ryankshah.skyrimcraft.spell.ISpell;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +18,7 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
 
     private List<ISpell> knownSpells;
     private Map<Integer, ISpell> selectedSpells;
+    private LivingEntity targetEntity;
 
     private float magicka = 20.0f;
     private final float maxMagicka = 20.0f;
@@ -26,12 +26,14 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
     public SkyrimPlayerData() {
         knownSpells = new ArrayList<>();
         selectedSpells = new HashMap<>();
+        targetEntity = null;
     }
 
     public SkyrimPlayerData(PlayerEntity playerEntity) {
         this.playerEntity = playerEntity;
         knownSpells = new ArrayList<>();
         selectedSpells = new HashMap<>();
+        targetEntity = null;
     }
 
     @Override
@@ -123,5 +125,25 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
     @Override
     public float getMaxMagicka() {
         return this.maxMagicka;
+    }
+
+    @Override
+    public void setCurrentTarget(LivingEntity entity) {
+        this.targetEntity = entity;
+
+        if(playerEntity instanceof ServerPlayerEntity) {
+            ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity)playerEntity;
+            Networking.sendToClient(new PacketUpdatePlayerTarget(targetEntity), serverPlayerEntity);
+        }
+    }
+
+    @Override
+    public void setCurrentTargetForNBT(LivingEntity entity) {
+        this.targetEntity = entity;
+    }
+
+    @Override
+    public LivingEntity getCurrentTarget() {
+        return this.targetEntity;
     }
 }

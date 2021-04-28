@@ -30,7 +30,7 @@ public class ModItems
     public static final RegistryObject<Item> MINOR_MAGICKA_POTION = ITEMS.register("minor_magicka_potion", () -> new MagickaPotion(new Item.Properties().group(Skyrimcraft.TAB), "Minor Magicka Potion", 4.0f));
 
     // Spell books
-    public static final RegistryObject<Item> FIREBALL_SPELLBOOK = ITEMS.register("fireball_spellbook", () -> new SpellBook(new Item.Properties().group(Skyrimcraft.TAB).maxStackSize(1), "Fireball Spellbook", SpellRegistry.FIREBALL));
+    public static final RegistryObject<Item> FIREBALL_SPELLBOOK = ITEMS.register("fireball_spellbook", () -> new SpellBook(new Item.Properties().group(Skyrimcraft.TAB).maxStackSize(1), "Spellbook", SpellRegistry.FIREBALL));
 
     public static class Items extends ItemModelProvider {
         public Items(DataGenerator generator, ExistingFileHelper existingFileHelper) {

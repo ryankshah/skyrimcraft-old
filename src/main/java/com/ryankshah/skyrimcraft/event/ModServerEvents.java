@@ -13,8 +13,4 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 @Mod.EventBusSubscriber(modid = Skyrimcraft.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.DEDICATED_SERVER)
 public class ModServerEvents
 {
-    @SubscribeEvent
-    public void commonSetup(FMLCommonSetupEvent event) {
-
-    }
 }

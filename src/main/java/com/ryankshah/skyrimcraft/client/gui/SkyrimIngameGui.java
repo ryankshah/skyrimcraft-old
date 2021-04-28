@@ -7,12 +7,14 @@ import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerDataProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 
 public class SkyrimIngameGui extends AbstractGui
 {
-    protected static final ResourceLocation OVERLAY_ICONS = new ResourceLocation(Skyrimcraft.MODID, "textures/gui/overlay_icons_current.png");
+    protected static final ResourceLocation OVERLAY_ICONS = new ResourceLocation(Skyrimcraft.MODID, "textures/gui/overlay_icons.png");
 
     private final int PLAYER_BAR_MAX_WIDTH = 80;
 
@@ -46,11 +48,13 @@ public class SkyrimIngameGui extends AbstractGui
         renderMagicka();
         renderCompass();
 
+        this.mc.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
+
+        renderTargetHealth();
+
         RenderSystem.disableAlphaTest();
         RenderSystem.disableBlend();
         RenderSystem.enableDepthTest();
-
-        this.mc.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
     }
 
     private void renderCompass() {
@@ -108,5 +112,34 @@ public class SkyrimIngameGui extends AbstractGui
             this.blit(this.matrixStack, 20, this.height - 40, 0, 51, 102, 10);
             this.blit(this.matrixStack, 31, this.height - 38, 11, 64, (int)(80 * magickaPercentage), 6);
         });
+    }
+
+    private void renderTargetHealth() {
+        this.mc.getTextureManager().bindTexture(OVERLAY_ICONS);
+
+        mc.player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent(cap -> {
+            if(cap.getCurrentTarget() != null && cap.getCurrentTarget().isAlive()) {
+                LivingEntity target = cap.getCurrentTarget();
+                String entityName = target.getDisplayName().getString();
+
+                if(!mc.player.isEntityInRange(target, 16.0D))
+                    return;
+
+                float healthPercentage = target.getHealth() / target.getMaxHealth();
+                float healthBarWidth = 142 * healthPercentage;
+                float healthBarStartX = (this.width / 2 - 87) + (142 - healthBarWidth) / 2.0f;
+
+                this.blit(this.matrixStack, (this.width / 2) - 78, 28, 3, 88, 156, 8);
+                this.blit(this.matrixStack, (int)healthBarStartX, 31, 10, 102, (int)healthBarWidth, 2);
+
+                // left banner
+                this.blit(this.matrixStack, (this.width / 2) - 69, 38, 25, 107, 41, 12);
+                // right banner
+                this.blit(this.matrixStack, (this.width / 2) + 28, 38, 84, 107, 41, 12);
+                drawCenteredString(matrixStack, fontRenderer, entityName , this.width / 2, 40, 0x00FFFFFF);
+            }
+        });
+
+        this.mc.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
     }
 }

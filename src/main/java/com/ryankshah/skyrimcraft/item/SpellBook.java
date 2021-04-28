@@ -52,7 +52,7 @@ public class SpellBook extends SkyrimItem
                 if(!cap.getKnownSpells().contains(spell.get())) {
                     cap.addToKnownSpells(spell.get());
                     playerIn.sendStatusMessage(new StringTextComponent("You have just learnt " + TextFormatting.RED + spell.get().getName() + TextFormatting.RED + "!"), false);
-                    worldIn.playSound(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.BLOCK_END_PORTAL_SPAWN, SoundCategory.PLAYERS, 1f, 1f, false);
+                    worldIn.playSound(null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.BLOCK_END_PORTAL_SPAWN, SoundCategory.BLOCKS, 1f, 1f);
                 }
             });
         }

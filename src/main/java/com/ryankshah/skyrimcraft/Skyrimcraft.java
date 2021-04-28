@@ -21,17 +21,17 @@ import software.bernie.geckolib3.GeckoLib;
 
 /**
  * TODO:
- *   - Have the player's magicka capability persist over login (PlayerLoggedInEvent and changed
- *     dimensions (PlayerChangedDimensionEvent)
- *   - Sync the player's magicka between client and server whenever it changes (i.e. when a spell/shout
- *     is cast, on login, on changed dimension, on respawn (PlayerRespawnEvent))
- *   - Work on a shouts and spells system
+ *   - Continue working on the shouts and spells system:
+ *     - Work on spell casting and what happens on spell cast
  *   - Get started with adding some items, food, weapons and armour into the game
- *   - Continue working on the ingame GUI overlay (mob indicators in compass + current target/enemy health bar)
+ *   - Continue working on the ingame GUI overlay:
+ *     - Mob indicators and *known* structures indicators in compass
+ *     - Fix positioning of target health bar
+ *     - Fix positioning etc. of the health, magicka and stamina bars (the glow in bar should show on value decrease)
  *   - Fix the positioning of the text + icons in SkyrimMenuScreen
  *   - Set XP rates for SkyrimOreBlock and tool types for mining them
  *   - Set selected spells when keybind in pressed in SkyrimMagicGui
- *     - Check if the player has already selected the same spell before and switch keybinds (if needed)
+ *     - Check if the player has already selected the same spell before and switch keybinds etc. (if needed)
  *     - Add the selected icon (same as those used in SkyrimMenuScreen) for selected spell(s).
  */
 @Mod(Skyrimcraft.MODID)
