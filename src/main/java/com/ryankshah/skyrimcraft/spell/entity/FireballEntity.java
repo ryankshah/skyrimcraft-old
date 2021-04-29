@@ -48,11 +48,11 @@ public class FireballEntity extends Entity
         this.setPosition(this.getPosX(), this.getPosY(), this.getPosZ());
         this.setMotion(Vector3d.ZERO);
 
-        double d0 = MathHelper.sqrt(accelX * accelX + accelY * accelY + accelZ * accelZ);
+        double u = MathHelper.sqrt(accelX * accelX + accelY * accelY + accelZ * accelZ);
 
-        this.accelerationX = accelX / d0 * 0.1D;
-        this.accelerationY = accelY / d0 * 0.1D;
-        this.accelerationZ = accelZ / d0 * 0.1D;
+        this.accelerationX = accelX / u * 0.1D;
+        this.accelerationY = accelY / u * 0.1D;
+        this.accelerationZ = accelZ / u * 0.1D;
     }
 
     public FireballEntity(FMLPlayMessages.SpawnEntity packet, World world) {
@@ -70,13 +70,13 @@ public class FireballEntity extends Entity
     @OnlyIn(Dist.CLIENT)
     @Override
     public boolean isInRangeToRenderDist(double distance) {
-        double d0 = this.getBoundingBox().getAverageEdgeLength() * 4.0D;
-        if (Double.isNaN(d0)) {
-            d0 = 4.0D;
+        double u = this.getBoundingBox().getAverageEdgeLength() * 4.0D;
+        if (Double.isNaN(u)) {
+            u = 4.0D;
         }
 
-        d0 = d0 * 64.0D;
-        return distance < d0 * d0;
+        u = u * 64.0D;
+        return distance < u * u;
     }
 
     @Override
@@ -91,26 +91,37 @@ public class FireballEntity extends Entity
             }
 
             Vector3d vec3d = this.getMotion();
-            this.setPosition(getPosX() + vec3d.x, getPosY() + (vec3d.y - 0.01), getPosZ() + vec3d.z);
-            ProjectileHelper.rotateTowardsMovement(this, 0.2F);
+            this.setPosition(getPosX() + vec3d.x, getPosY() + vec3d.y, getPosZ() + vec3d.z);
+            //ProjectileHelper.rotateTowardsMovement(this, 0.2f);
 
             float f = this.getMotionFactor();
 
-            if (this.isInWater()) {
-                for (int i = 0; i < 4; ++i) {
-                    this.world.addParticle(ParticleTypes.BUBBLE, this.getPosX() - vec3d.x * 0.25D, this.getPosY() - vec3d.y * 0.25D, this.getPosZ() - vec3d.z * 0.25D, vec3d.x, vec3d.y, vec3d.z);
-                }
-                f = 0.8F;
+            float radius = 2f;
+            // Get origins
+            double u = this.getPosX() - vec3d.x;
+            double v = this.getPosY() - vec3d.y;
+            double w = this.getPosZ() - vec3d.z;
+
+            Vector3d facing = new Vector3d(getPosX(), getPosY(), getPosZ());
+
+            for(double angle = 0.0D; angle < 2 * Math.PI; angle += 4d / 180d * (2 * Math.PI)) {
+                double c = (u * facing.x) + (v * facing.y) + (w * facing.z); // constant
+                double vx = u * c * (1d - MathHelper.cos((float)angle)) + facing.x * MathHelper.cos((float)angle) + (-w * facing.y + v*facing.z) * MathHelper.sin((float)angle);
+                double vy = v * c * (1d - MathHelper.cos((float)angle)) + facing.y * MathHelper.cos((float)angle) + (w * facing.x - u*facing.z) * MathHelper.sin((float)angle);
+                double vz = w * c * (1d - MathHelper.cos((float)angle)) + facing.z * MathHelper.cos((float)angle) + (-v * facing.x + u*facing.y) * MathHelper.sin((float)angle);
+
+                this.world.addParticle(ParticleTypes.SMOKE, getPosX() + vx * radius, getPosY() + vy * radius, getPosZ() + vz * radius, vec3d.x, vec3d.y, vec3d.z);
             }
+
             this.setMotion(vec3d.add(this.accelerationX, this.accelerationY, this.accelerationZ).scale(f));
-            this.setPosition(this.getPosX(), this.getPosY(), this.getPosZ());
+            //this.setPosition(this.getPosX(), this.getPosY(), this.getPosZ());
         } else {
             this.remove();
         }
     }
 
     protected float getMotionFactor() {
-        return 0.95F;
+        return 1f;
     }
 
 
@@ -219,5 +230,27 @@ public class FireballEntity extends Entity
             }
 
         }
+    }
+
+    private Vector3d rotateX(Vector3d v, double angle) {
+        angle = Math.toRadians(angle);
+        double y, z;
+        y = v.getY() * Math.cos(angle) - v.getZ() * Math.sin(angle);
+        z = v.getY() * Math.sin(angle) + v.getZ() * Math.cos(angle);
+        return v.add(0, y, z);
+    }
+    private Vector3d rotateY(Vector3d v, double angle) {
+        angle = -angle;
+        angle = Math.toRadians(angle);
+        double x, z;
+        x = v.getX() * Math.cos(angle) + v.getZ() * Math.sin(angle);
+        z = v.getX() * -Math.sin(angle) + v.getZ() * Math.cos(angle);
+        return v.add(x, 0, z);
+    }
+    private Vector3d rotateZ(Vector3d v, double angle) {
+        double x, y;
+        x = v.getX() * Math.cos(angle) - v.getY() * Math.sin(angle);
+        y = v.getY() * Math.cos(angle) + v.getX() * Math.sin(angle);
+        return v.add(x, y, 0);
     }
 }

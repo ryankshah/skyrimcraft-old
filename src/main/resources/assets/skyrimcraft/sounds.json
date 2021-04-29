@@ -1,0 +1,12 @@
+{
+  "unrelenting_force": {
+    "category": "record",
+    "subtitle": "Unrelenting Force",
+    "sounds": [
+      {
+        "name": "skyrimcraft:sounds/unrelenting_force",
+        "stream": true
+      }
+    ]
+  }
+}

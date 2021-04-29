@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -100,6 +101,14 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
      */
     public SpellType getType() {
         return SpellType.DESTRUCTION;
+    }
+
+    /**
+     * Gets the sound to play before the spell is cast
+     * @return {@link SoundEvent}
+     */
+    public SoundEvent getShoutSound() {
+        return null;
     }
 
     /**

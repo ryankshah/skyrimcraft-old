@@ -1,4 +1,4 @@
-![Banner](banner.jpg)
+![Banner](https://www.dropbox.com/s/kusftemamao8obz/banner.jpg?raw=1)
 
 # Skyrimcraft
 
@@ -8,7 +8,7 @@ world of Skyrim into Minecraft!
 NB: This mod is currently in a pre-release state and thus, you may encounter some bugs.
 If this is the case, please feel free to [report an issue](https://github.com/ryankshah/skyrimcraft/issues).
 
-![separator](separator.png)
+![separator](https://www.dropbox.com/s/jpqoo1gm73f8280/separator.png?raw=1)
 
 ## Features
 
@@ -17,10 +17,10 @@ This feature brings the Skyrim in-game GUI right to your Minecraft client!
 ##### What's included?
 - [x] Magicka, health and stamina displays
 - [x] Skyrim compass
+- [x] Add enemy target health bar to in-game GUI
 - [ ] **TODO:**
     - [ ] Include aggressive enemies to the in-game compass
     - [ ] Include **known** structures (i.e. villages) to the in-game compass
-    - [ ] Add enemy target health bar to the in-game GUI
 
 ### Magicka, Spells and Shouts
 This feature brings your world a magicka system which allows you to cast spells
@@ -54,14 +54,17 @@ Skyrim into your Minecraft world!
 
 ![separator](separator.png)
 
+## Known Issues
+- [ ] ...
+
+![separator](separator.png)
+
 ## Screenshots
 
 ![In-Game GUI](screenshots/blocks+ingame.png)
 
 ![Magic GUI](screenshots/magic_gui.png)
 
-
-![separator](separator.png)
 
 ## Videos
 

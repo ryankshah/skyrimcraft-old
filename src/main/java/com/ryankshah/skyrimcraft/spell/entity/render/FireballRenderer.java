@@ -14,7 +14,7 @@ import net.minecraft.util.math.vector.Matrix4f;
 
 public class FireballRenderer extends EntityRenderer<FireballEntity>
 {
-    private static final ResourceLocation SPELL_FIREBALL_TEXTURE = new ResourceLocation(Skyrimcraft.MODID, "textures/effect/fireball.png");
+    private static final ResourceLocation SPELL_FIREBALL_TEXTURE = new ResourceLocation(Skyrimcraft.MODID, "textures/effect/fireball2.png");
 
     public FireballRenderer(EntityRendererManager renderManager) {
         super(renderManager);

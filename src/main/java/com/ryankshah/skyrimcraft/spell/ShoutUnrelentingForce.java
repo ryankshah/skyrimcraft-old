@@ -30,7 +30,7 @@ public class ShoutUnrelentingForce extends ISpell implements IForgeRegistryEntry
 
     @Override
     public ResourceLocation getDisplayAnimation() {
-        return new ResourceLocation(Skyrimcraft.MODID, "spells/fireball.png");
+        return new ResourceLocation(Skyrimcraft.MODID, "spells/fireball2.png");
     }
 
     @Override

@@ -1,16 +1,19 @@
 package com.ryankshah.skyrimcraft.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerDataProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.IngameGui;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import org.lwjgl.opengl.GL11;
 
 public class SkyrimIngameGui extends AbstractGui
 {
@@ -35,11 +38,11 @@ public class SkyrimIngameGui extends AbstractGui
     }
 
     protected void render() {
-        RenderSystem.enableAlphaTest();
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.defaultAlphaFunc();
-        RenderSystem.disableDepthTest();
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA );
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthMask(false);
 
         this.mc.getTextureManager().bindTexture(OVERLAY_ICONS);
 
@@ -52,9 +55,9 @@ public class SkyrimIngameGui extends AbstractGui
 
         renderTargetHealth();
 
-        RenderSystem.disableAlphaTest();
-        RenderSystem.disableBlend();
-        RenderSystem.enableDepthTest();
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthMask(true);
     }
 
     private void renderCompass() {

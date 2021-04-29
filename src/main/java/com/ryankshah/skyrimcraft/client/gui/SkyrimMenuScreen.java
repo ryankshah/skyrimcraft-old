@@ -8,6 +8,7 @@ import com.ryankshah.skyrimcraft.spell.ISpell;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -87,12 +88,15 @@ public class SkyrimMenuScreen extends Screen
         else if(keyCode == GLFW_KEY_DOWN)
             currentDirection = Direction.SOUTH;
         else if(keyCode == GLFW_KEY_ENTER) {
-            if(currentDirection == Direction.NORTH)
-                minecraft.player.sendChatMessage("[Skyrimcraft] - Skills Unavailable!");
-            else if(currentDirection == Direction.SOUTH)
-                minecraft.player.sendChatMessage("[Skyrimcraft] - Map Unavailable!");
-            else if(currentDirection == Direction.WEST) {
-                minecraft.player.sendChatMessage("[Skyrimcraft] - Items Unavailable!");
+            if(currentDirection == Direction.NORTH) {
+                minecraft.displayGuiScreen(null);
+                minecraft.player.sendChatMessage("[Skyrimcraft] - Skills Currently Unavailable!");
+            } else if(currentDirection == Direction.SOUTH) {
+                minecraft.displayGuiScreen(null);
+                minecraft.player.sendChatMessage("[Skyrimcraft] - Map Currently Unavailable!");
+            } else if(currentDirection == Direction.WEST) {
+                minecraft.displayGuiScreen(null);
+                minecraft.displayGuiScreen(new InventoryScreen(minecraft.player));
             } else if(currentDirection == Direction.EAST) {
                 AtomicReference<List<ISpell>> knownSpells = new AtomicReference<List<ISpell>>();
                 minecraft.player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent(cap -> {

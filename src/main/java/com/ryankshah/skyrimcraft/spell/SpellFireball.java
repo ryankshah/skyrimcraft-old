@@ -2,7 +2,10 @@ package com.ryankshah.skyrimcraft.spell;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.spell.entity.FireballEntity;
+import com.ryankshah.skyrimcraft.util.ModSounds;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.ArrayList;
@@ -30,7 +33,12 @@ public class SpellFireball extends ISpell implements IForgeRegistryEntry<ISpell>
 
     @Override
     public ResourceLocation getDisplayAnimation() {
-        return new ResourceLocation(Skyrimcraft.MODID, "spells/fireball.png");
+        return new ResourceLocation(Skyrimcraft.MODID, "spells/fireball2.png");
+    }
+
+    @Override
+    public SoundEvent getShoutSound() {
+        return ModSounds.UNRELENTING_FORCE.get();
     }
 
     @Override

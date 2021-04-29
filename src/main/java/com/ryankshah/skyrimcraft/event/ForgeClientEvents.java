@@ -25,11 +25,11 @@ import static org.lwjgl.glfw.GLFW.*;
 @Mod.EventBusSubscriber(modid = Skyrimcraft.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ForgeClientEvents
 {
-    private static final String CATEGORY = "key.categories." + Skyrimcraft.MODID;
+    public static final String CATEGORY = "key.categories." + Skyrimcraft.MODID;
 
-    private static final KeyBinding toggleSkyrimMenu = new KeyBinding("key.toggleMenu", KeyConflictContext.UNIVERSAL, InputMappings.Type.KEYSYM, GLFW_KEY_M, CATEGORY);
-    private static final KeyBinding toggleSpellSlot1 = new KeyBinding("key.toggleSpellSlot1", KeyConflictContext.UNIVERSAL, InputMappings.Type.KEYSYM, GLFW_KEY_V, CATEGORY);
-    private static final KeyBinding toggleSpellSlot2 = new KeyBinding("key.toggleSpellSlot2", KeyConflictContext.UNIVERSAL, InputMappings.Type.KEYSYM, GLFW_KEY_B, CATEGORY);
+    public static final KeyBinding toggleSkyrimMenu = new KeyBinding("key.togglemenu", KeyConflictContext.UNIVERSAL, InputMappings.Type.KEYSYM, GLFW_KEY_M, CATEGORY);
+    public static final KeyBinding toggleSpellSlot1 = new KeyBinding("key.togglespellslot1", KeyConflictContext.UNIVERSAL, InputMappings.Type.KEYSYM, GLFW_KEY_V, CATEGORY);
+    public static final KeyBinding toggleSpellSlot2 = new KeyBinding("key.togglespellslot2", KeyConflictContext.UNIVERSAL, InputMappings.Type.KEYSYM, GLFW_KEY_B, CATEGORY);
 
     @SubscribeEvent
     public static void onClientTickEvent(TickEvent.ClientTickEvent event) {
@@ -57,14 +57,5 @@ public class ForgeClientEvents
                     Networking.sendToServer(new PacketCastSpell(cap.getSelectedSpells()[1]));
             });
         }
-    }
-
-    @SubscribeEvent
-    public static void onClientSetupEvent(FMLClientSetupEvent event) {
-        ClientRegistry.registerKeyBinding(toggleSkyrimMenu);
-        ClientRegistry.registerKeyBinding(toggleSpellSlot1);
-        ClientRegistry.registerKeyBinding(toggleSpellSlot2);
-
-        ModBlocks.blockRenders();
     }
 }

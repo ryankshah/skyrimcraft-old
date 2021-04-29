@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerDataProvider;
+import com.ryankshah.skyrimcraft.event.ForgeClientEvents;
 import com.ryankshah.skyrimcraft.spell.ISpell;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
@@ -89,8 +90,8 @@ public class SkyrimMagicGui extends Screen
         // Draw "buttons" for keys for selecting spells
         drawGradientRect(matrixStack, 17, this.height - 29, 32, this.height - 14, 0xAA000000, 0xAA000000, 0xAAFFFFFF);
         drawGradientRect(matrixStack, 37, this.height - 29, 52, this.height - 14, 0xAA000000, 0xAA000000, 0xAAFFFFFF);
-        drawCenteredString(matrixStack, font, "Z", 25, this.height - 25, 0x00FFFFFF);
-        drawCenteredString(matrixStack, font, "X", 45, this.height - 25, 0x00FFFFFF);
+        drawCenteredString(matrixStack, font, glfwGetKeyName(ForgeClientEvents.toggleSpellSlot1.getKey().getKeyCode(), 0).toUpperCase(), 25, this.height - 25, 0x00FFFFFF);
+        drawCenteredString(matrixStack, font, glfwGetKeyName(ForgeClientEvents.toggleSpellSlot2.getKey().getKeyCode(), 0).toUpperCase(), 45, this.height - 25, 0x00FFFFFF);
         drawCenteredString(matrixStack, font, "Equip", 70, this.height - 25, 0x00FFFFFF);
 
         renderMagicka(matrixStack);
@@ -150,9 +151,9 @@ public class SkyrimMagicGui extends Screen
         // Draw the spell entity?
         minecraft.getTextureManager().bindTexture(spell.getDisplayAnimation());
         currentSpellFrame = (int)(lastTick + (currentTick - lastTick) * partialTicks) / 64;
-        int uOffset = 64 * (currentSpellFrame % 5), vOffset = 0;
+        int uOffset = 64 * (currentSpellFrame % 10), vOffset = 0;
         matrixStack.push();
-            blit(matrixStack, 88, (this.height / 2) - 84, uOffset, vOffset, 64, 64, 320, 64);
+            blit(matrixStack, 88, (this.height / 2) - 84, uOffset, vOffset, 64, 64, 640, 64);
         matrixStack.pop();
         minecraft.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
     }
