@@ -32,7 +32,7 @@ public class SkyrimMenuScreen extends Screen
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        minecraft.getTextureManager().bindTexture(MENU_ICONS);
+        minecraft.getTextureManager().bind(MENU_ICONS);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.renderBackground(matrixStack);
 
@@ -69,7 +69,7 @@ public class SkyrimMenuScreen extends Screen
             drawCenteredString(matrixStack, font, "Magic", this.width / 2 - 115, this.height / 2 - 4, 0x00FFFFFF);
         }
 
-        minecraft.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
+        minecraft.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
     }
 
     @Override
@@ -89,14 +89,14 @@ public class SkyrimMenuScreen extends Screen
             currentDirection = Direction.SOUTH;
         else if(keyCode == GLFW_KEY_ENTER) {
             if(currentDirection == Direction.NORTH) {
-                minecraft.displayGuiScreen(null);
-                minecraft.player.sendChatMessage("[Skyrimcraft] - Skills Currently Unavailable!");
+                minecraft.setScreen(null);
+                minecraft.player.chat("[Skyrimcraft] - Skills Currently Unavailable!");
             } else if(currentDirection == Direction.SOUTH) {
-                minecraft.displayGuiScreen(null);
-                minecraft.player.sendChatMessage("[Skyrimcraft] - Map Currently Unavailable!");
+                minecraft.setScreen(null);
+                minecraft.player.chat("[Skyrimcraft] - Map Currently Unavailable!");
             } else if(currentDirection == Direction.WEST) {
-                minecraft.displayGuiScreen(null);
-                minecraft.displayGuiScreen(new InventoryScreen(minecraft.player));
+                minecraft.setScreen(null);
+                minecraft.setScreen(new InventoryScreen(minecraft.player));
             } else if(currentDirection == Direction.EAST) {
                 AtomicReference<List<ISpell>> knownSpells = new AtomicReference<List<ISpell>>();
                 minecraft.player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent(cap -> {
@@ -104,14 +104,14 @@ public class SkyrimMenuScreen extends Screen
                 });
 
                 if(knownSpells.get().isEmpty()) {
-                    minecraft.displayGuiScreen(null);
-                    minecraft.player.sendChatMessage("[Skyrimcraft] - You have not yet learned any spells/shouts!");
+                    minecraft.setScreen(null);
+                    minecraft.player.chat("[Skyrimcraft] - You have not yet learned any spells/shouts!");
                 } else {
-                    minecraft.displayGuiScreen(null);
-                    minecraft.displayGuiScreen(new SkyrimMagicGui(knownSpells.get()));
+                    minecraft.setScreen(null);
+                    minecraft.setScreen(new SkyrimMagicGui(knownSpells.get()));
                 }
             }  else
-                minecraft.player.sendChatMessage("[Skyrimcraft] - Invalid Option!");
+                minecraft.player.chat("[Skyrimcraft] - Invalid Option!");
         }
 
         return super.keyPressed(keyCode, scanCode, modifiers);

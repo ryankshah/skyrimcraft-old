@@ -30,20 +30,52 @@ public class CapabilityHandler
     }
 
     @SubscribeEvent
-    public static void onloginPlayer(PlayerEvent.PlayerLoggedInEvent event) {
+    public static void onLoginPlayer(PlayerEvent.PlayerLoggedInEvent event) {
         if(event.getEntity() instanceof ServerPlayerEntity) {
-            ISkyrimPlayerData cap = ((ServerPlayerEntity)event.getEntity()).getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("at logged in event"));
+            ISkyrimPlayerData cap = event.getEntity().getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("at logged in event"));
+            //Networking.sendToServer(new PacketRequestCapabilityUpdate());
             Networking.sendToClient(new PacketUpdateMagicka(cap.getMagicka()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdateKnownSpells(cap.getKnownSpells()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdateSelectedSpells(cap.getSelectedSpells()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdatePlayerTarget((LivingEntity) null), (ServerPlayerEntity)event.getEntity());
-            Networking.sendToClient(new PacketUpdateShoutCooldown(cap.getShoutCooldown()), (ServerPlayerEntity)event.getEntity());
+            Networking.sendToClient(new PacketUpdateShoutCooldowns(cap.getShoutsAndCooldowns()), (ServerPlayerEntity)event.getEntity());
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLogoutPlayer(PlayerEvent.PlayerLoggedOutEvent event) {
+    }
+
+    @SubscribeEvent
+    public static void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        if(event.getEntity() instanceof ServerPlayerEntity) {
+            ISkyrimPlayerData cap = event.getEntity().getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("at logged in event"));
+            //Networking.sendToServer(new PacketRequestCapabilityUpdate());
+            Networking.sendToClient(new PacketUpdateMagicka(cap.getMagicka()), (ServerPlayerEntity)event.getEntity());
+            Networking.sendToClient(new PacketUpdateKnownSpells(cap.getKnownSpells()), (ServerPlayerEntity)event.getEntity());
+            Networking.sendToClient(new PacketUpdateSelectedSpells(cap.getSelectedSpells()), (ServerPlayerEntity)event.getEntity());
+            Networking.sendToClient(new PacketUpdatePlayerTarget((LivingEntity) null), (ServerPlayerEntity)event.getEntity());
+            Networking.sendToClient(new PacketUpdateShoutCooldowns(cap.getShoutsAndCooldowns()), (ServerPlayerEntity)event.getEntity());
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if(event.getPlayer() instanceof ServerPlayerEntity) {
+            //Networking.sendToServer(new PacketRequestCapabilityUpdate());
+            ISkyrimPlayerData cap = event.getEntity().getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("at logged in event"));
+            //Networking.sendToServer(new PacketRequestCapabilityUpdate());
+            Networking.sendToClient(new PacketUpdateMagicka(cap.getMagicka()), (ServerPlayerEntity)event.getEntity());
+            Networking.sendToClient(new PacketUpdateKnownSpells(cap.getKnownSpells()), (ServerPlayerEntity)event.getEntity());
+            Networking.sendToClient(new PacketUpdateSelectedSpells(cap.getSelectedSpells()), (ServerPlayerEntity)event.getEntity());
+            Networking.sendToClient(new PacketUpdatePlayerTarget((LivingEntity) null), (ServerPlayerEntity)event.getEntity());
+            Networking.sendToClient(new PacketUpdateShoutCooldowns(cap.getShoutsAndCooldowns()), (ServerPlayerEntity)event.getEntity());
         }
     }
 
     // TODO: On clone event we want to keep the known and selected spells -- eek!
     @SubscribeEvent
-    public static void onPlayerRespawn(PlayerEvent.Clone event) {
+    public static void onPlayerClone(PlayerEvent.Clone event) {
         if(event.isWasDeath()) {
             if(event.getOriginal() instanceof ServerPlayerEntity) {
                 PlayerEntity originalPlayer = event.getOriginal();
@@ -51,12 +83,9 @@ public class CapabilityHandler
                 ISkyrimPlayerData originalPlayerCapability = ((ServerPlayerEntity) originalPlayer).getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("at clone event"));
 
                 // For the new player add the existing cap data
-                newPlayer.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((newCap) -> {
+                newPlayer.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((ISkyrimPlayerData newCap) -> {
                     newCap.setKnownSpells(originalPlayerCapability.getKnownSpells());
                     newCap.setSelectedSpells(originalPlayerCapability.getSelectedSpells());
-                    newCap.setMagicka(newCap.getMaxMagicka());
-                    newCap.setShoutCooldown(0);
-                    newCap.setCurrentTarget(null);
                 });
             }
         }

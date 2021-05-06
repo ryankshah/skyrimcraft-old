@@ -15,7 +15,7 @@ public class ModRecipes extends RecipeProvider implements IConditionBuilder
     }
 
     @Override
-    protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
+    protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumer) {
 
     }
 }

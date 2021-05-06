@@ -2,6 +2,7 @@ package com.ryankshah.skyrimcraft.util;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.spell.entity.FireballEntity;
+import com.ryankshah.skyrimcraft.spell.entity.UnrelentingForceEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -16,12 +17,21 @@ public class ModEntityType
 
     // Spell entity types
     public static final RegistryObject<EntityType<?>> SPELL_FIREBALL_ENTITY = ENTITY_TYPES.register("spell_fireball",
-            () -> EntityType.Builder.create(FireballEntity::new, EntityClassification.MISC)
-                    .size(1.25f, 1.0f) // Hitbox Size
+            () -> EntityType.Builder.of(FireballEntity::new, EntityClassification.MISC)
+                    .sized(1.25f, 1.0f) // Hitbox Size
                     .setTrackingRange(64)
                     .setShouldReceiveVelocityUpdates(true)
                     .setUpdateInterval(3)
                     .build(new ResourceLocation(Skyrimcraft.MODID, "spell_fireball").toString()));
+
+    // Shout entity types
+    public static final RegistryObject<EntityType<?>> SHOUT_UNRELENTING_FORCE_ENTITY = ENTITY_TYPES.register("shout_unrelenting_force",
+            () -> EntityType.Builder.of(UnrelentingForceEntity::new, EntityClassification.MISC)
+                    .sized(1.25f, 1.0f) // Hitbox Size
+                    .setTrackingRange(64)
+                    .setShouldReceiveVelocityUpdates(true)
+                    .setUpdateInterval(3)
+                    .build(new ResourceLocation(Skyrimcraft.MODID, "shout_unrelenting_force").toString()));
 
     // Entity Types
 //    public static final RegistryObject<EntityType<OrcaEntity>> ORCA = ENTITY_TYPES.register("orca",

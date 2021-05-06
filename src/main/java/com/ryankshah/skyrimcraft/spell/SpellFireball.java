@@ -33,12 +33,12 @@ public class SpellFireball extends ISpell implements IForgeRegistryEntry<ISpell>
 
     @Override
     public ResourceLocation getDisplayAnimation() {
-        return new ResourceLocation(Skyrimcraft.MODID, "spells/fireball2.png");
+        return new ResourceLocation(Skyrimcraft.MODID, "spells/fireball.png");
     }
 
     @Override
-    public SoundEvent getShoutSound() {
-        return ModSounds.UNRELENTING_FORCE.get();
+    public SoundEvent getSound() {
+        return SoundEvents.ENDER_DRAGON_SHOOT;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class SpellFireball extends ISpell implements IForgeRegistryEntry<ISpell>
 
     @Override
     public float getCooldown() {
-        return 10.0f;
+        return 0f;
     }
 
     @Override
@@ -63,9 +63,9 @@ public class SpellFireball extends ISpell implements IForgeRegistryEntry<ISpell>
 
     @Override
     public void onCast() {
-        FireballEntity fireball = new FireballEntity(getCaster().getEntityWorld(), getCaster(), getCaster().getLookVec().x * 1, getCaster().getLookVec().y * 1, getCaster().getLookVec().z * 1);
-        fireball.setPosition(fireball.getPosX(), getCaster().getPosY() + getCaster().getEyeHeight(), getCaster().getPosZ());
-        getCaster().getEntityWorld().addEntity(fireball);
+        FireballEntity fireball = new FireballEntity(getCaster().getCommandSenderWorld(), getCaster(), getCaster().getLookAngle().x * 1, getCaster().getLookAngle().y * 1, getCaster().getLookAngle().z * 1);
+        fireball.setPos(fireball.getX(), getCaster().getY() + getCaster().getEyeHeight(), getCaster().getZ());
+        getCaster().getCommandSenderWorld().addFreshEntity(fireball);
 
         super.onCast();
     }

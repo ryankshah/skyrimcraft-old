@@ -4,17 +4,17 @@ import com.ryankshah.skyrimcraft.spell.ISpell;
 import com.ryankshah.skyrimcraft.spell.SpellRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.nio.charset.Charset;
+import java.util.*;
 
 public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlayerData>
 {
@@ -24,13 +24,24 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
         CompoundNBT tag = new CompoundNBT();
 
         tag.putFloat("magicka", instance.getMagicka());
-        tag.putFloat("cooldown", instance.getShoutCooldown());
 
         List<ISpell> knownSpells = instance.getKnownSpells();
-        int counter = 0;
-        tag.putInt("size", knownSpells.size());
+        ListNBT knownSpellsNBT = new ListNBT();
         for (ISpell spell : knownSpells) {
-            tag.put("" + counter++, StringNBT.valueOf(spell.getRegistryName().toString()));
+            knownSpellsNBT.add(StringNBT.valueOf(spell.getRegistryName().toString()));
+        }
+        tag.put("knownSpells", knownSpellsNBT);
+
+        Map<ISpell, Float> shoutsAndCooldowns = instance.getShoutsAndCooldowns();
+        CompoundNBT shoutsAndCooldownsNBT = new CompoundNBT();
+        for (Map.Entry<ISpell, Float> entry : shoutsAndCooldowns.entrySet()) {
+            shoutsAndCooldownsNBT.put(entry.getKey().getRegistryName().toString(), FloatNBT.valueOf(entry.getValue()));
+        }
+        tag.put("shoutsAndCooldowns", shoutsAndCooldownsNBT);
+
+        Map<Integer, ISpell> selectedSpells = instance.getSelectedSpells();
+        for (Map.Entry<Integer, ISpell> entry : selectedSpells.entrySet()) {
+            tag.put("selected" + entry.getKey(), entry.getValue() == null ? StringNBT.valueOf("null") : StringNBT.valueOf(entry.getValue().getRegistryName().toString()));
         }
 
         return tag;
@@ -40,19 +51,29 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
     public void readNBT(Capability<ISkyrimPlayerData> capability, ISkyrimPlayerData instance, Direction side, INBT nbt) {
         CompoundNBT tag = (CompoundNBT) nbt;
         List<ISpell> knownSpells = new ArrayList<>();
+        Map<Integer, ISpell> selectedSpells = new HashMap<>();
+        Map<ISpell, Float> shoutsAndCooldowns = new HashMap<>();
 
         float magicka = tag.getFloat("magicka");
-        float cooldown = tag.getFloat("cooldown");
 
-        int size = ((CompoundNBT) nbt).getInt("size");
-        int counter = 0;
-        for(int i = 0; i < size; i++) {
-            ResourceLocation loc = new ResourceLocation(tag.getString("" + counter++));
+        CompoundNBT shoutsAndCooldownsNBT = tag.getCompound("shoutsAndCooldowns");
+        for(String s : shoutsAndCooldownsNBT.getAllKeys()) {
+            shoutsAndCooldowns.put(SpellRegistry.SPELLS_REGISTRY.get().getValue(new ResourceLocation(s)), shoutsAndCooldownsNBT.getFloat(s));
+        }
+
+        ListNBT knownSpellsNBT = tag.getList("knownSpells", Constants.NBT.TAG_STRING);
+        for(INBT inbt : knownSpellsNBT) {
+            String s = inbt.getAsString();
+            ResourceLocation loc = new ResourceLocation(s);
             knownSpells.add(SpellRegistry.SPELLS_REGISTRY.get().getValue(loc));
         }
 
+        selectedSpells.put(0, tag.getString("selected0").equals("null") ? null : SpellRegistry.SPELLS_REGISTRY.get().getValue(new ResourceLocation(tag.getString("selected0"))));
+        selectedSpells.put(1, tag.getString("selected1").equals("null") ? null : SpellRegistry.SPELLS_REGISTRY.get().getValue(new ResourceLocation(tag.getString("selected1"))));
+
         instance.setMagickaForNBT(magicka);
         instance.setKnownSpellsForNBT(knownSpells);
-        instance.setShoutCooldownForNBT(cooldown);
+        instance.setShoutsWithCooldowns(shoutsAndCooldowns);
+        instance.setSelectedSpellsForNBT(selectedSpells);
     }
 }

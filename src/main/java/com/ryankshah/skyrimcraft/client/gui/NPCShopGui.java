@@ -108,22 +108,22 @@ public class NPCShopGui extends Screen
     }
 
     @Override
-    public void onClose() {
-        super.onClose();
+    public void removed() {
+        super.removed();
     }
 
     private void drawItemImage(MatrixStack matrixStack, ItemStack is, int xPos, int yPos, float spin) {
-        matrixStack.push();
-        matrixStack.rotate(new Quaternion(45.0F, 0.0F, 1.0F, 0.0F));
-        matrixStack.rotate(new Quaternion(15.0F, 0.0F, 0.0F, 1.0F));
-        matrixStack.rotate(new Quaternion(195.0F, 1.0F, 0.0F, 0.0F));
-        matrixStack.rotate(new Quaternion(spin % 360.0F, 0.0F, 1.0F, 0.0F)); // spin++
+        matrixStack.pushPose();
+        matrixStack.mulPose(new Quaternion(45.0F, 0.0F, 1.0F, 0.0F));
+        matrixStack.mulPose(new Quaternion(15.0F, 0.0F, 0.0F, 1.0F));
+        matrixStack.mulPose(new Quaternion(195.0F, 1.0F, 0.0F, 0.0F));
+        matrixStack.mulPose(new Quaternion(spin % 360.0F, 0.0F, 1.0F, 0.0F)); // spin++
         matrixStack.scale(0.45F, 0.45f, 0.45f);
-        RenderHelper.enableStandardItemLighting();
-        minecraft.getItemRenderer().zLevel = 200.0f;
-        minecraft.getItemRenderer().renderItem(minecraft.player, is, ItemCameraTransforms.TransformType.GROUND, false, matrixStack, minecraft.getRenderTypeBuffers().getBufferSource(), minecraft.player.getEntityWorld(), 0, 0);
-        matrixStack.pop();
-        minecraft.getItemRenderer().zLevel = 0.0f;
+        RenderHelper.turnBackOn();
+        minecraft.getItemRenderer().blitOffset = 200.0f;
+        minecraft.getItemRenderer().renderStatic(minecraft.player, is, ItemCameraTransforms.TransformType.GROUND, false, matrixStack, minecraft.renderBuffers().bufferSource(), minecraft.player.getCommandSenderWorld(), 0, 0);
+        matrixStack.popPose();
+        minecraft.getItemRenderer().blitOffset = 0.0f;
     }
 
     private void drawItemInformation(MatrixStack matrixStack) {
@@ -131,9 +131,9 @@ public class NPCShopGui extends Screen
     }
 
     private void categorisePlayerInventory() {
-        NonNullList<ItemStack> mainInventory = minecraft.player.inventory.mainInventory;
-        NonNullList<ItemStack> offHandInventory = minecraft.player.inventory.offHandInventory;
-        NonNullList<ItemStack> armorInventory = minecraft.player.inventory.armorInventory;
+        NonNullList<ItemStack> mainInventory = minecraft.player.inventory.items;
+        NonNullList<ItemStack> offHandInventory = minecraft.player.inventory.offhand;
+        NonNullList<ItemStack> armorInventory = minecraft.player.inventory.armor;
 
         for(ItemStack stack : mainInventory) {
             //this.itemsAndCategories.put(stack.get)
@@ -141,6 +141,6 @@ public class NPCShopGui extends Screen
     }
 
     public static void open() {
-        Minecraft.getInstance().displayGuiScreen(new NPCShopGui());
+        Minecraft.getInstance().setScreen(new NPCShopGui());
     }
 }

@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:skyrimcraft/shout/root",
+  "display": {
+    "icon": {
+      "item": "skyrimcraft:shout_block"
+    },
+    "title": {
+      "text": "Storm Call"
+    },
+    "description": {
+      "text": "Learn the Storm Call shout"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "spell_learned_storm_call": {
+      "trigger": "minecraft:learned_spell_storm_call"
+    }
+  },
+  "requirements": [
+    [
+      "spell_learned_storm_call"
+    ]
+  ]
+}

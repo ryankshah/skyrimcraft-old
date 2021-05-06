@@ -1,13 +1,25 @@
 package com.ryankshah.skyrimcraft.spell;
 
+import com.ryankshah.skyrimcraft.advancement.TriggerManager;
 import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerDataProvider;
+import com.ryankshah.skyrimcraft.event.ForgeClientEvents;
+import com.ryankshah.skyrimcraft.network.Networking;
+import com.ryankshah.skyrimcraft.network.PacketConsumeMagicka;
+import com.ryankshah.skyrimcraft.network.PacketUpdateShoutCooldownOnServer;
+import com.ryankshah.skyrimcraft.util.ClientUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ISound;
+import net.minecraft.client.audio.SimpleSound;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -107,9 +119,15 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
      * Gets the sound to play before the spell is cast
      * @return {@link SoundEvent}
      */
-    public SoundEvent getShoutSound() {
+    public SoundEvent getSound() {
         return null;
     }
+
+    /**
+     * Returns the length of the sound
+     * @return sound length
+     */
+    public float getSoundLength() { return 0f; }
 
     /**
      * Get the spell difficulty {@link SpellDifficulty}
@@ -123,17 +141,18 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
     private CastResult canCast() {
         ISkyrimPlayerData cap = caster.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("spell onCast"));
         if(getType() == SpellType.SHOUT) {
-            return cap.getShoutCooldown() <= 0f ? CastResult.SUCCESS : CastResult.COOLDOWN;
+            return cap.getShoutCooldown(this) <= 0f ? CastResult.SUCCESS : CastResult.COOLDOWN;
         } else {
             return (cap.getMagicka() >= getCost() || getCost() == 0f) ? CastResult.SUCCESS : CastResult.MAGICKA;
         }
     }
 
     public void cast() {
-        if(canCast() == CastResult.SUCCESS)
+        if(canCast() == CastResult.SUCCESS) {
             onCast();
-        else
-            getCaster().sendStatusMessage(new StringTextComponent(TextFormatting.RED + (canCast() == CastResult.MAGICKA ? "Not enough magicka!" : "Your shouts are still on cooldown") + TextFormatting.RESET), false);
+        }  else {
+            getCaster().displayClientMessage(new StringTextComponent(TextFormatting.RED + (canCast() == CastResult.MAGICKA ? "Not enough magicka!" : "This shout is still on cooldown!") + TextFormatting.RESET), false);
+        }
     }
 
     /**
@@ -141,13 +160,18 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
      */
     public void onCast() {
         ISkyrimPlayerData cap = caster.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("spell onCast"));
-        if(getType() == SpellType.SHOUT)
-            cap.setShoutCooldown(getCooldown());
-        else
-            cap.consumeMagicka(getCost());
+        if(!caster.isCreative()) {
+            if (getType() == SpellType.SHOUT)
+                Networking.sendToServer(new PacketUpdateShoutCooldownOnServer(this, getCooldown()));
+            else
+                Networking.sendToServer(new PacketConsumeMagicka(getCost()));
+        }
+        // TODO: Create a var in cap to track cast time (sound length of current cast) on use packets to sync with player tick
+        caster.getCommandSenderWorld().playSound(null, caster.getX(), caster.getY(), caster.getZ(), getSound(), SoundCategory.PLAYERS, 1f, 1f);
     }
 
     public enum SpellType {
+        ALL(-1, "ALL"),
         ALTERATION(0, "ALTERATION"),
         DESTRUCTION(1, "DESTRUCTION"),
         RESTORATION(2, "RESTORATION"),
@@ -203,5 +227,15 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
         CastResult(int id) { this.id = id; }
 
         public int getId() { return this.id; }
+    }
+
+//    @Override
+//    public int hashCode() {
+//        return getID();
+//    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof ISpell && getID() == ((ISpell) obj).getID();
     }
 }

@@ -13,15 +13,15 @@ public class GuiUtil extends Screen
 
     public static void drawSizedText(MatrixStack matrixStack, FontRenderer fr, String string, int x, int y, int big_small, int color) {
         if (big_small == 0) {
-            matrixStack.push();
+            matrixStack.pushPose();
             matrixStack.scale(0.5F, 0.5F, 0.5F);
             drawCenteredString(matrixStack, fr, string, x*2, y*2, color);
-            matrixStack.pop();
+            matrixStack.popPose();
         } else if (big_small == 1) {
-            matrixStack.push();
+            matrixStack.pushPose();
             matrixStack.scale(2.0f, 2.0f, 2.0f);
             drawCenteredString(matrixStack, fr, string, (x - 5) / 2, (y - 5) / 2, color);
-            matrixStack.pop();
+            matrixStack.popPose();
         }
 
     }

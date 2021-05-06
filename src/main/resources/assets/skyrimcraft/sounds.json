@@ -1,10 +1,10 @@
 {
   "unrelenting_force": {
-    "category": "record",
+    "category": "player",
     "subtitle": "Unrelenting Force",
     "sounds": [
       {
-        "name": "skyrimcraft:sounds/unrelenting_force",
+        "name": "skyrimcraft:unrelenting_force",
         "stream": true
       }
     ]

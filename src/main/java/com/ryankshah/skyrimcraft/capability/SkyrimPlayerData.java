@@ -3,60 +3,58 @@ package com.ryankshah.skyrimcraft.capability;
 import com.ryankshah.skyrimcraft.network.*;
 import com.ryankshah.skyrimcraft.spell.ISpell;
 import com.ryankshah.skyrimcraft.spell.SpellRegistry;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SkyrimPlayerData implements ISkyrimPlayerData
 {
     private PlayerEntity playerEntity;
 
     private List<ISpell> knownSpells;
-    private ISpell[] selectedSpells;
+    private Map<Integer, ISpell> selectedSpells;
     private LivingEntity targetEntity;
 
     private float magicka = 20.0f;
     private final float maxMagicka = 20.0f;
-    private float shoutCooldown = 0.0f;
+    private Map<ISpell, Float> shoutsOnCooldown;
 
     public SkyrimPlayerData() {
         knownSpells = new ArrayList<>();
-        selectedSpells = new ISpell[2];
+        selectedSpells = new HashMap<>();
+        shoutsOnCooldown = new HashMap<>();
         targetEntity = null;
-        selectedSpells[0] = SpellRegistry.FIREBALL.get();
-        selectedSpells[1] = SpellRegistry.UNRELENTING_FORCE.get();
+
+        selectedSpells.put(0, null);
+        selectedSpells.put(1, null);
     }
 
     public SkyrimPlayerData(PlayerEntity playerEntity) {
         this.playerEntity = playerEntity;
         knownSpells = new ArrayList<>();
-        selectedSpells = new ISpell[2];
+        selectedSpells = new HashMap<>();
+        shoutsOnCooldown = new HashMap<>();
         targetEntity = null;
 
-        selectedSpells[0] = SpellRegistry.FIREBALL.get();
-        selectedSpells[1] = SpellRegistry.UNRELENTING_FORCE.get();
+        selectedSpells.put(0, null);
+        selectedSpells.put(1, null);
     }
 
     @Override
     public void addToKnownSpells(ISpell spell) {
-        if(!knownSpells.contains(spell)) {
+        if(!knownSpells.contains(spell))
             knownSpells.add(spell);
-            setKnownSpells(knownSpells);
-        }
     }
 
     @Override
     public void setSelectedSpell(int pos, ISpell spell) {
         // only allow 2 selected spells at a time.
         if(pos >= 0 && pos < 2) {
-            selectedSpells[pos] = spell;
-            setSelectedSpells(selectedSpells);
+            selectedSpells.put(pos, spell);
         }
     }
 
@@ -64,8 +62,8 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
     public void setKnownSpells(List<ISpell> knownSpells) {
         this.knownSpells = knownSpells;
 
-        if(playerEntity instanceof ServerPlayerEntity)
-            Networking.sendToClient(new PacketUpdateKnownSpells(this.knownSpells), (ServerPlayerEntity)playerEntity);
+//        if(playerEntity instanceof ServerPlayerEntity)
+//            Networking.sendToClient(new PacketUpdateKnownSpells(this.knownSpells), (ServerPlayerEntity)playerEntity);
     }
 
     @Override
@@ -74,15 +72,15 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
     }
 
     @Override
-    public void setSelectedSpells(ISpell[] selectedSpells) {
+    public void setSelectedSpells(Map<Integer, ISpell> selectedSpells) {
         this.selectedSpells = selectedSpells;
 
-        if(playerEntity instanceof ServerPlayerEntity)
-            Networking.sendToClient(new PacketUpdateSelectedSpells(this.selectedSpells), (ServerPlayerEntity)playerEntity);
+//        if(playerEntity instanceof ServerPlayerEntity)
+//            Networking.sendToClient(new PacketUpdateSelectedSpells(this.selectedSpells), (ServerPlayerEntity)playerEntity);
     }
 
     @Override
-    public void setSelectedSpellsForNBT(ISpell[] selectedSpells) {
+    public void setSelectedSpellsForNBT(Map<Integer, ISpell> selectedSpells) {
         this.selectedSpells = selectedSpells;
     }
 
@@ -92,26 +90,28 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
     }
 
     @Override
-    public ISpell[] getSelectedSpells() {
+    public Map<Integer, ISpell> getSelectedSpells() {
         return this.selectedSpells;
     }
 
     @Override
-    public float getShoutCooldown() {
-        return this.shoutCooldown;
+    public float getShoutCooldown(ISpell shout) {
+        return shoutsOnCooldown.get(shout) != null ? shoutsOnCooldown.get(shout) : 0f;
     }
 
     @Override
-    public void setShoutCooldown(float cooldown) {
-        this.shoutCooldown = cooldown;
-
-        if(playerEntity instanceof ServerPlayerEntity)
-            Networking.sendToClient(new PacketUpdateShoutCooldown(this.shoutCooldown), (ServerPlayerEntity)playerEntity);
+    public void setShoutCooldown(ISpell shout, float cooldown) {
+        this.shoutsOnCooldown.put(shout, cooldown);
     }
 
     @Override
-    public void setShoutCooldownForNBT(float cooldown) {
-        this.shoutCooldown = cooldown;
+    public Map<ISpell, Float> getShoutsAndCooldowns() {
+        return shoutsOnCooldown;
+    }
+
+    @Override
+    public void setShoutsWithCooldowns(Map<ISpell, Float> shoutsOnCooldown) {
+        this.shoutsOnCooldown = shoutsOnCooldown;
     }
 
     @Override
@@ -133,8 +133,8 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
         if(this.magicka >= maxMagicka)
             this.magicka = maxMagicka;
 
-        if(playerEntity instanceof ServerPlayerEntity)
-            Networking.sendToClient(new PacketUpdateMagicka(magicka), (ServerPlayerEntity)playerEntity);
+//        if(playerEntity instanceof ServerPlayerEntity)
+//            Networking.sendToClient(new PacketUpdateMagicka(magicka), (ServerPlayerEntity)playerEntity);
     }
 
     @Override
@@ -156,10 +156,10 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
     public void setCurrentTarget(LivingEntity entity) {
         this.targetEntity = entity;
 
-        if(playerEntity instanceof ServerPlayerEntity) {
-            ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity)playerEntity;
-            Networking.sendToClient(new PacketUpdatePlayerTarget(targetEntity), serverPlayerEntity);
-        }
+//        if(playerEntity instanceof ServerPlayerEntity) {
+//            ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity)playerEntity;
+//            Networking.sendToClient(new PacketUpdatePlayerTarget(targetEntity), serverPlayerEntity);
+//        }
     }
 
     @Override

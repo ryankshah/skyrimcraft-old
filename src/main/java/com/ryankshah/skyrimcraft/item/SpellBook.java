@@ -1,13 +1,12 @@
 package com.ryankshah.skyrimcraft.item;
 
+import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerDataProvider;
+import com.ryankshah.skyrimcraft.network.PacketAddToKnownSpells;
+import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.spell.ISpell;
-import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.block.EndPortalBlock;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
@@ -39,37 +38,41 @@ public class SpellBook extends SkyrimItem
     }
 
     @Override
-    public boolean hasEffect(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return true;
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack itemstack = playerIn.getHeldItem(handIn);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack itemstack = playerIn.getItemInHand(handIn);
 
-        if(!worldIn.isRemote) {
-            playerIn.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((cap) -> {
-                if(!cap.getKnownSpells().contains(spell.get())) {
-                    cap.addToKnownSpells(spell.get());
-                    playerIn.sendStatusMessage(new StringTextComponent("You have just learnt " + TextFormatting.RED + spell.get().getName() + TextFormatting.RED + "!"), false);
-                    worldIn.playSound(null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.BLOCK_END_PORTAL_SPAWN, SoundCategory.BLOCKS, 1f, 1f);
-                }
-            });
+        // Dont run on server side
+        if(!worldIn.isClientSide) {
+            return ActionResult.pass(itemstack);
         }
 
-        if (playerIn != null) {
-            playerIn.addStat(Stats.ITEM_USED.get(this));
-            if (!playerIn.abilities.isCreativeMode) {
-                itemstack.shrink(1);
-            }
+
+        ISkyrimPlayerData cap = playerIn.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("spellbook use"));
+        if(!cap.getKnownSpells().contains(spell.get())) {
+            Networking.sendToServer(new PacketAddToKnownSpells(spell.get()));
+            playerIn.displayClientMessage(new StringTextComponent("You have just learnt " + TextFormatting.RED + spell.get().getName() + TextFormatting.RESET + "!"), false);
+            //worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.END_PORTAL_SPAWN, SoundCategory.BLOCKS, 1f, 1f);
+            playerIn.awardStat(Stats.ITEM_USED.get(this));
+            //if (!playerIn.abilities.instabuild) {
+            itemstack.shrink(1);
+            //}
+        } else {
+            playerIn.displayClientMessage(new StringTextComponent("You already know this spell!"), false);
         }
 
-        return ActionResult.func_233538_a_(itemstack, worldIn.isRemote());
+
+
+        return ActionResult.sidedSuccess(itemstack, worldIn.isClientSide());
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         tooltip.add(new StringTextComponent("Grants you use of the " + TextFormatting.RED + spell.get().getName() + TextFormatting.RESET + " spell!"));
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 }

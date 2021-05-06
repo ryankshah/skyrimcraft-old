@@ -1,12 +1,14 @@
 package com.ryankshah.skyrimcraft.util;
 
 import com.ryankshah.skyrimcraft.block.SkyrimBlock;
+import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.item.SkyrimBlockItem;
 import com.ryankshah.skyrimcraft.item.SkyrimItem;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.potion.Effect;
 import net.minecraftforge.common.data.LanguageProvider;
 import net.minecraftforge.fml.RegistryObject;
 
@@ -33,6 +35,10 @@ public class LangGenerator extends LanguageProvider
         for(RegistryObject<Item> item : ModItems.ITEMS.getEntries()) {
             SkyrimItem i = (SkyrimItem) item.get();
             add(i, i.getDisplayName());
+        }
+
+        for(RegistryObject<Effect> effect : ModEffects.EFFECTS.getEntries()) {
+            addEffect(effect, effect.get().getDisplayName().getString());
         }
     }
 }

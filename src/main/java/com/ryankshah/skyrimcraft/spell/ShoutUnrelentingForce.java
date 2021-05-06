@@ -2,7 +2,11 @@ package com.ryankshah.skyrimcraft.spell;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.spell.entity.FireballEntity;
+import com.ryankshah.skyrimcraft.spell.entity.UnrelentingForceEntity;
+import com.ryankshah.skyrimcraft.util.ModSounds;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.ArrayList;
@@ -23,14 +27,25 @@ public class ShoutUnrelentingForce extends ISpell implements IForgeRegistryEntry
     public List<String> getDescription() {
         List<String> desc = new ArrayList<>();
         desc.add("Your voice is raw power,");
-        desc.add("pushing aside anything");
-        desc.add("that stands in your path");
+        desc.add("pushing aside anything that");
+        desc.add("stands in your path");
         return desc;
     }
 
     @Override
+    public SoundEvent getSound() {
+        //return ModSounds.UNRELENTING_FORCE.get();
+        return SoundEvents.LIGHTNING_BOLT_IMPACT;
+    }
+
+    @Override
+    public float getSoundLength() {
+        return 2.2f;
+    }
+
+    @Override
     public ResourceLocation getDisplayAnimation() {
-        return new ResourceLocation(Skyrimcraft.MODID, "spells/fireball2.png");
+        return new ResourceLocation(Skyrimcraft.MODID, "spells/unrelenting_force.png");
     }
 
     @Override
@@ -55,9 +70,9 @@ public class ShoutUnrelentingForce extends ISpell implements IForgeRegistryEntry
 
     @Override
     public void onCast() {
-        FireballEntity fireball = new FireballEntity(getCaster().getEntityWorld(), getCaster(), getCaster().getLookVec().x * 1, getCaster().getLookVec().y * 1, getCaster().getLookVec().z * 1);
-        fireball.setPosition(fireball.getPosX(), getCaster().getPosY() + getCaster().getEyeHeight(), getCaster().getPosZ());
-        getCaster().getEntityWorld().addEntity(fireball);
+        UnrelentingForceEntity entity = new UnrelentingForceEntity(getCaster().getCommandSenderWorld(), getCaster(), getCaster().getLookAngle().x * 1, getCaster().getLookAngle().y * 1, getCaster().getLookAngle().z * 1);
+        entity.setPos(entity.getX(), getCaster().getY() + getCaster().getEyeHeight(), entity.getZ());
+        getCaster().getCommandSenderWorld().addFreshEntity(entity);
 
         super.onCast();
     }

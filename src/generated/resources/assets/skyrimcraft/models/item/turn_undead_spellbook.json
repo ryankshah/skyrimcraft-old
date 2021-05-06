@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "skyrimcraft:item/daedra_heart"
+    "layer0": "skyrimcraft:item/spellbook"
   }
 }

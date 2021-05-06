@@ -5,6 +5,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.event.ForgeClientEvents;
+import com.ryankshah.skyrimcraft.network.Networking;
+import com.ryankshah.skyrimcraft.network.PacketUpdateSelectedSpellOnServer;
 import com.ryankshah.skyrimcraft.spell.ISpell;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
@@ -14,6 +16,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -37,6 +41,7 @@ public class SkyrimMagicGui extends Screen
     public SkyrimMagicGui(List<ISpell> knownSpells) {
         super(new TranslationTextComponent(Skyrimcraft.MODID + ".magicgui.title"));
         this.spellsAndTypes = new HashMap<>();
+        spellsAndTypes.put(ISpell.SpellType.ALL, new ArrayList<>());
 
         for(ISpell spell : knownSpells) {
             if(spellsAndTypes.containsKey(spell.getType()))
@@ -46,7 +51,10 @@ public class SkyrimMagicGui extends Screen
                 temp.add(spell);
                 spellsAndTypes.put(spell.getType(), temp);
             }
+            spellsAndTypes.get(ISpell.SpellType.ALL).add(spell);
         }
+
+        spellsAndTypes = spellsAndTypes.entrySet().stream().sorted((e1,e2) -> Integer.compare(e1.getKey().getTypeID(), (e2.getKey().getTypeID()))).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
         this.currentSpellType = 0;
         this.currentSpell = 0;
@@ -90,8 +98,8 @@ public class SkyrimMagicGui extends Screen
         // Draw "buttons" for keys for selecting spells
         drawGradientRect(matrixStack, 17, this.height - 29, 32, this.height - 14, 0xAA000000, 0xAA000000, 0xAAFFFFFF);
         drawGradientRect(matrixStack, 37, this.height - 29, 52, this.height - 14, 0xAA000000, 0xAA000000, 0xAAFFFFFF);
-        drawCenteredString(matrixStack, font, glfwGetKeyName(ForgeClientEvents.toggleSpellSlot1.getKey().getKeyCode(), 0).toUpperCase(), 25, this.height - 25, 0x00FFFFFF);
-        drawCenteredString(matrixStack, font, glfwGetKeyName(ForgeClientEvents.toggleSpellSlot2.getKey().getKeyCode(), 0).toUpperCase(), 45, this.height - 25, 0x00FFFFFF);
+        drawCenteredString(matrixStack, font, glfwGetKeyName(ForgeClientEvents.toggleSpellSlot1.getKey().getValue(), 0).toUpperCase(), 25, this.height - 25, 0x0000FF00);
+        drawCenteredString(matrixStack, font, glfwGetKeyName(ForgeClientEvents.toggleSpellSlot2.getKey().getValue(), 0).toUpperCase(), 45, this.height - 25, 0x0000FFFF);
         drawCenteredString(matrixStack, font, "Equip", 70, this.height - 25, 0x00FFFFFF);
 
         renderMagicka(matrixStack);
@@ -109,24 +117,35 @@ public class SkyrimMagicGui extends Screen
             ISpell spell = spellsListForCurrentSpellType.get(j);
             String displayName = spell.getName();
 
-            if (displayName.length() >= 18) {
-                displayName = displayName.substring(0, 16) + "..";
+            if (displayName.length() >= 14) {
+                displayName = displayName.substring(0, 12) + "..";
             }
+
+            AtomicInteger color = new AtomicInteger(0x00C0C0C0);
+
+            int finalJ = j;
+            minecraft.player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent(cap -> {
+                if(cap.getSelectedSpells().get(0) != null && cap.getSelectedSpells().get(0) == spell) color.set(0x0000FF00);
+                else if(cap.getSelectedSpells().get(1) != null && cap.getSelectedSpells().get(1) == spell) color.set(0x0000FFFF);
+                else if(finalJ == this.currentSpell) {
+                    color.set(0x00FFFFFF);
+                }
+            });
 
             if (j == this.currentSpell && this.spellTypeChosen) {
                 this.currentSpellObject = spell;
                 drawSpellInformation(matrixStack, currentSpellObject, partialTicks);
-                drawCenteredString(matrixStack, font, displayName, this.width - 140, this.height / 2 + 14 * i - this.currentSpell * 7, 0x00FFFFFF);
-            } else {
-                drawCenteredString(matrixStack, font, displayName, this.width - 140, this.height / 2 + 14 * i - this.currentSpell * 7, 0x00C0C0C0);
             }
+
+            minecraft.getSoundManager().stop();
+            drawString(matrixStack, font, displayName, this.width - 183, this.height / 2 + 14 * j - this.currentSpell * 7, color.get());
         }
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
     private void drawGradientRect(MatrixStack matrixStack, int startX, int startY, int endX, int endY, int colorStart, int colorEnd, int borderColor) {
-        matrixStack.push();
+        matrixStack.pushPose();
         // Draw background
         fillGradient(matrixStack, startX, startY, endX, endY, colorStart, colorEnd);
         // Draw borders
@@ -134,9 +153,10 @@ public class SkyrimMagicGui extends Screen
         fill(matrixStack, startX, endY-1, endX, endY, borderColor); // bottom
         fill(matrixStack, startX, startY+1, startX+1, endY-1, borderColor); // left
         fill(matrixStack, endX-1, startY+1, endX, endY-1, borderColor); // right
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
+    // TODO: If spell is a shout
     private void drawSpellInformation(MatrixStack matrixStack, ISpell spell, float partialTicks) {
         drawGradientRect(matrixStack, 40, (this.height) / 2 - 20, 200, (this.height) / 2 + 60, 0xAA000000, 0xAA000000, 0xAAFFFFFF);
         fillGradient(matrixStack, 50, (this.height) / 2, 190, (this.height) / 2 + 1, 0xAAFFFFFF, 0xAAFFFFFF); // Line under spell name
@@ -145,21 +165,24 @@ public class SkyrimMagicGui extends Screen
         for(int i = 1; i < spell.getDescription().size()+1; i++)
             drawCenteredString(matrixStack, font, spell.getDescription().get(i-1), 120, (this.height) / 2 + (8 * i), 0x00FFFFFF); // Spell description
 
-        if(spell.getType() != ISpell.SpellType.SHOUT)
-            drawString(matrixStack, font, "Cost: " + (int)spell.getCost(), 50, (this.height) / 2 + 40, 0x00FFFFFF);
+        if(spell.getType() != ISpell.SpellType.SHOUT) {
+            drawString(matrixStack, font, "Cost: " + (int) spell.getCost(), 50, (this.height) / 2 + 40, 0x00FFFFFF);
+            // TODO: Draw the spell difficult (spell#getDifficulty)
+        } else
+            drawString(matrixStack, font, "Cooldown: " + (int)spell.getCooldown(), 50, (this.height) / 2 + 40, 0x00FFFFFF);
 
         // Draw the spell entity?
-        minecraft.getTextureManager().bindTexture(spell.getDisplayAnimation());
+        minecraft.getTextureManager().bind(spell.getDisplayAnimation());
         currentSpellFrame = (int)(lastTick + (currentTick - lastTick) * partialTicks) / 64;
-        int uOffset = 64 * (currentSpellFrame % 10), vOffset = 0;
-        matrixStack.push();
-            blit(matrixStack, 88, (this.height / 2) - 84, uOffset, vOffset, 64, 64, 640, 64);
-        matrixStack.pop();
-        minecraft.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
+        int uOffset = 64 * (currentSpellFrame % 60), vOffset = 0;
+        matrixStack.pushPose();
+            blit(matrixStack, 88, (this.height / 2) - 84, uOffset, vOffset, 64, 64, 3840, 64);
+        matrixStack.popPose();
+        minecraft.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
     }
 
     private void renderMagicka(MatrixStack matrixStack) {
-        minecraft.getTextureManager().bindTexture(OVERLAY_ICONS);
+        minecraft.getTextureManager().bind(OVERLAY_ICONS);
         minecraft.player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent(cap -> {
             float magickaPercentage = cap.getMagicka() / cap.getMaxMagicka();
             float magickaBarWidth = 80.0f * magickaPercentage;
@@ -167,7 +190,7 @@ public class SkyrimMagicGui extends Screen
             this.blit(matrixStack, this.width - 120, this.height - 25, 0, 51, 102, 10);
             this.blit(matrixStack, (int)magickaBarStartX, this.height - 23, 11, 64, (int)magickaBarWidth, 6);
         });
-        minecraft.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
+        minecraft.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
     }
 
     @Override
@@ -176,7 +199,7 @@ public class SkyrimMagicGui extends Screen
             currentTick = 0;
         else {
             currentTick = lastTick;
-            lastTick += 32f;
+            lastTick += 32f; // 32f
 //            if(currentSpellFrame > 14)
 //                currentSpellFrame = 0;
         }
@@ -193,10 +216,8 @@ public class SkyrimMagicGui extends Screen
                 else
                     this.currentSpellType = this.spellTypes.size()-1;
             } else {
-                if(this.currentSpell > 0 && this.currentSpell < spellsListForCurrentSpellType.size())
-                    ++this.currentSpell;
-                else
-                    this.currentSpell = 0;
+                if(this.currentSpell >= 0 && this.currentSpell < spellsListForCurrentSpellType.size()-1)
+                    this.currentSpell++;
             }
         }
 
@@ -208,9 +229,7 @@ public class SkyrimMagicGui extends Screen
                     this.currentSpellType = 0;
             } else {
                 if(this.currentSpell > 0 && this.currentSpell < spellsListForCurrentSpellType.size())
-                    --this.currentSpell;
-                else
-                    this.currentSpell = 0;
+                    this.currentSpell--;
             }
         }
 
@@ -228,10 +247,34 @@ public class SkyrimMagicGui extends Screen
             }
         }
 
-        if(keyCode == GLFW_KEY_Z) {
+        if(keyCode == ForgeClientEvents.toggleSpellSlot1.getKey().getValue()) {
+            minecraft.player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent(cap -> {
+                //System.out.println(cap.getSelectedSpells());
+                if(cap.getSelectedSpells().get(0) != currentSpellObject) {
+                    if (cap.getSelectedSpells().get(1) != currentSpellObject) {
+                        Networking.sendToServer(new PacketUpdateSelectedSpellOnServer(0, currentSpellObject));
+                    } else {
+                        Networking.sendToServer(new PacketUpdateSelectedSpellOnServer(1, cap.getSelectedSpells().get(0)));
+                        Networking.sendToServer(new PacketUpdateSelectedSpellOnServer(0, currentSpellObject));
+                    }
+                } else Networking.sendToServer(new PacketUpdateSelectedSpellOnServer(0, null));
+                //System.out.println(cap.getSelectedSpells());
+            });
         }
 
-        if(keyCode == GLFW_KEY_X) {
+        if(keyCode == ForgeClientEvents.toggleSpellSlot2.getKey().getValue()) {
+            minecraft.player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent(cap -> {
+                //System.out.println(cap.getSelectedSpells());
+                if(cap.getSelectedSpells().get(1) != currentSpellObject) {
+                    if(cap.getSelectedSpells().get(0) != currentSpellObject) {
+                        Networking.sendToServer(new PacketUpdateSelectedSpellOnServer(1, currentSpellObject));
+                    } else {
+                        Networking.sendToServer(new PacketUpdateSelectedSpellOnServer(0, cap.getSelectedSpells().get(1)));
+                        Networking.sendToServer(new PacketUpdateSelectedSpellOnServer(1, currentSpellObject));
+                    }
+                } else Networking.sendToServer(new PacketUpdateSelectedSpellOnServer(1, null));
+                //System.out.println(cap.getSelectedSpells());
+            });
         }
 
         return super.keyPressed(keyCode, scanCode, modifiers);
@@ -248,7 +291,7 @@ public class SkyrimMagicGui extends Screen
     }
 
     @Override
-    public void onClose() {
-        super.onClose();
+    public void removed() {
+        super.removed();
     }
 }

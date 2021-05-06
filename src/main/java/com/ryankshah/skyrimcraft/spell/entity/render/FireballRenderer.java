@@ -22,29 +22,29 @@ public class FireballRenderer extends EntityRenderer<FireballEntity>
 
     @Override
     public void render(FireballEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLightIn) {
-        matrixStack.push();
+        matrixStack.pushPose();
         matrixStack.scale(1.0F, 1.0F, 1.0F);
 
-        IVertexBuilder ivertexbuilder = buffer.getBuffer(RenderType.getEntityTranslucent(this.getEntityTexture(entity)));
-        MatrixStack.Entry matrixstack$entry = matrixStack.getLast();
-        Matrix4f matrix4f = matrixstack$entry.getMatrix();
+        IVertexBuilder ivertexbuilder = buffer.getBuffer(RenderType.entityTranslucent(this.getTextureLocation(entity)));
+        MatrixStack.Entry matrixstack$entry = matrixStack.last();
+        Matrix4f matrix4f = matrixstack$entry.pose();
 
         long t = System.currentTimeMillis() % 6;
 
-        matrixStack.rotate(renderManager.getCameraOrientation());
+        matrixStack.mulPose(entityRenderDispatcher.cameraOrientation());
 
 
-        ivertexbuilder.pos(matrix4f, -1, -1, 0).color(255, 255, 255, 255).tex(0, 0 +  t * (1.0f / 4.0f)).overlay(OverlayTexture.NO_OVERLAY).lightmap(packedLightIn).normal(0, 1, 0).endVertex();
-        ivertexbuilder.pos(matrix4f, -1, 1, 0).color(255, 255, 255, 255).tex(0, 0 +  t * (1.0f / 4.0f) + (1.0f / 4.0f)).overlay(OverlayTexture.NO_OVERLAY).lightmap(packedLightIn).normal(0, 1, 0).endVertex();
-        ivertexbuilder.pos(matrix4f, 1, 1, 0).color(255, 255, 255, 255).tex(1, 0 +  t * (1.0f / 4.0f) + (1.0f / 4.0f)).overlay(OverlayTexture.NO_OVERLAY).lightmap(packedLightIn).normal(0, 1, 0).endVertex();
-        ivertexbuilder.pos(matrix4f, 1, -1, 0).color(255, 255, 255, 255).tex(1, 0 +  t * (1.0f / 4.0f)).overlay(OverlayTexture.NO_OVERLAY).lightmap(packedLightIn).normal(0, 1, 0).endVertex();
+        ivertexbuilder.vertex(matrix4f, -1, -1, 0).color(255, 255, 255, 255).uv(0, 0 +  t * (1.0f / 4.0f)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLightIn).normal(0, 1, 0).endVertex();
+        ivertexbuilder.vertex(matrix4f, -1, 1, 0).color(255, 255, 255, 255).uv(0, 0 +  t * (1.0f / 4.0f) + (1.0f / 4.0f)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLightIn).normal(0, 1, 0).endVertex();
+        ivertexbuilder.vertex(matrix4f, 1, 1, 0).color(255, 255, 255, 255).uv(1, 0 +  t * (1.0f / 4.0f) + (1.0f / 4.0f)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLightIn).normal(0, 1, 0).endVertex();
+        ivertexbuilder.vertex(matrix4f, 1, -1, 0).color(255, 255, 255, 255).uv(1, 0 +  t * (1.0f / 4.0f)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLightIn).normal(0, 1, 0).endVertex();
 
-        matrixStack.pop();
+        matrixStack.popPose();
         super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLightIn);
     }
 
     @Override
-    public ResourceLocation getEntityTexture(FireballEntity entity) {
+    public ResourceLocation getTextureLocation(FireballEntity entity) {
         return SPELL_FIREBALL_TEXTURE;
     }
 }

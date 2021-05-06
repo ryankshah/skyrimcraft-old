@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:skyrimcraft/root",
+  "display": {
+    "icon": {
+      "item": "skyrimcraft:fireball_spellbook"
+    },
+    "title": {
+      "text": "Spells"
+    },
+    "description": {
+      "text": "Learned spells"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "spells_list": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "spells_list"
+    ]
+  ]
+}

@@ -15,10 +15,12 @@ import net.minecraft.world.server.ServerWorld;
 
 import java.util.Random;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class SkyrimOreBlock extends SkyrimBlock
 {
     public SkyrimOreBlock(String displayName) {
-        this(AbstractBlock.Properties.create(new Material(MaterialColor.GRAY, false, true, true, false, false, false, PushReaction.PUSH_ONLY)), displayName);
+        this(AbstractBlock.Properties.of(new Material(MaterialColor.COLOR_GRAY, false, true, true, false, false, false, PushReaction.PUSH_ONLY)), displayName);
     }
 
     public SkyrimOreBlock(Properties properties, String displayName) {
@@ -49,8 +51,8 @@ public class SkyrimOreBlock extends SkyrimBlock
      * Perform side-effects from block dropping, such as creating silverfish
      */
     @Override
-    public void spawnAdditionalDrops(BlockState state, ServerWorld worldIn, BlockPos pos, ItemStack stack) {
-        super.spawnAdditionalDrops(state, worldIn, pos, stack);
+    public void spawnAfterBreak(BlockState state, ServerWorld worldIn, BlockPos pos, ItemStack stack) {
+        super.spawnAfterBreak(state, worldIn, pos, stack);
     }
 
     @Override

@@ -24,16 +24,18 @@ public class WorldGen
 {
     public static void generateOres(final BiomeLoadingEvent event) {
         if (!(event.getCategory().equals(Biome.Category.NETHER) || event.getCategory().equals(Biome.Category.THEEND))) {
-            generateOre(event.getGeneration(), OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD,
-                    ModBlocks.EBONY_ORE.get().getDefaultState(), 5, 15, 30, 10);
+            generateOre(event.getGeneration(), OreFeatureConfig.FillerBlockType.NATURAL_STONE,
+                    ModBlocks.EBONY_ORE.get().defaultBlockState(), 5, 15, 30, 10);
         }
     }
 
+    // TODO: If we want to generate the shout wall underground (only and/or overground) we must add as feature
+
     private static void generateOre(BiomeGenerationSettingsBuilder settings, RuleTest fillerType, BlockState state,
                                     int veinSize, int minHeight, int maxHeight, int amount) {
-        settings.withFeature(GenerationStage.Decoration.UNDERGROUND_ORES,
-                Feature.ORE.withConfiguration(new OreFeatureConfig(fillerType, state, veinSize))
-                        .withPlacement(Placement.RANGE.configure(new TopSolidRangeConfig(minHeight, 0, maxHeight)))
-                        .square().count(amount));
+        settings.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES,
+                Feature.ORE.configured(new OreFeatureConfig(fillerType, state, veinSize))
+                        .decorated(Placement.RANGE.configured(new TopSolidRangeConfig(minHeight, 0, maxHeight)))
+                        .squared().count(amount));
     }
 }

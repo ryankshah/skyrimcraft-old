@@ -7,6 +7,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.block.material.PushReaction;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class SkyrimBlock extends Block
 {
     protected String displayName;
@@ -17,7 +19,7 @@ public class SkyrimBlock extends Block
     }
 
     public SkyrimBlock(String displayName) {
-        this(AbstractBlock.Properties.create(Material.ROCK).setRequiresTool().hardnessAndResistance(3.0F, 3.0F), displayName);
+        this(AbstractBlock.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(3.0F, 3.0F), displayName);
     }
 
     public String getDisplayName() {

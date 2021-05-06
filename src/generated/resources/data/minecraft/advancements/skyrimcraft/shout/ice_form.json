@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:skyrimcraft/shout/root",
+  "display": {
+    "icon": {
+      "item": "skyrimcraft:shout_block"
+    },
+    "title": {
+      "text": "Ice Form"
+    },
+    "description": {
+      "text": "Learn the Ice Form shout"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "spell_learned_ice_form": {
+      "trigger": "minecraft:learned_spell_ice_form"
+    }
+  },
+  "requirements": [
+    [
+      "spell_learned_ice_form"
+    ]
+  ]
+}
