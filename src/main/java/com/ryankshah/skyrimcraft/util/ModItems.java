@@ -2,6 +2,7 @@ package com.ryankshah.skyrimcraft.util;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.item.MagickaPotion;
+import com.ryankshah.skyrimcraft.item.SkyrimBlockItem;
 import com.ryankshah.skyrimcraft.item.SkyrimItem;
 import com.ryankshah.skyrimcraft.item.SpellBook;
 import com.ryankshah.skyrimcraft.spell.SpellFireball;
@@ -10,6 +11,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -22,8 +24,8 @@ public class ModItems
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Skyrimcraft.MODID);
 
     public static final RegistryObject<Item> EBONY_INGOT = ITEMS.register("ebony_ingot", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB), "Ebony Ingot"));
-    public static final RegistryObject<Item> MOONSTONE_INGOT = ITEMS.register("moonstone_ingot", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB), "Moonstone Ingot"));
-    public static final RegistryObject<Item> MALACHITE_INGOT = ITEMS.register("malachite_ingot", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB), "Malachite Ingot"));
+    public static final RegistryObject<Item> MOONSTONE_INGOT = ITEMS.register("moonstone_ingot", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB), "Refined Moonstone"));
+    public static final RegistryObject<Item> MALACHITE_INGOT = ITEMS.register("malachite_ingot", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB), "Refined Malachite"));
     public static final RegistryObject<Item> ORICHALCUM_INGOT = ITEMS.register("orichalcum_ingot", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB), "Orichalcum Ingot"));
     public static final RegistryObject<Item> LEATHER_STRIPS = ITEMS.register("leather_strips", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB), "Leather Strips"));
     public static final RegistryObject<Item> DAEDRA_HEART = ITEMS.register("daedra_heart", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB), "Daedra Heart"));
@@ -32,6 +34,11 @@ public class ModItems
 
     // Food
     public static final RegistryObject<Item> SWEET_ROLL = ITEMS.register("sweet_roll", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB).food(new Food.Builder().nutrition(4).saturationMod(0.4F).build()), "Sweet Roll"));
+
+    // Ingredients
+    public static final RegistryObject<Item> SALT_PILE = ITEMS.register("salt_pile", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB), "Salt Pile"));
+    public static final RegistryObject<Item> FLOUR = ITEMS.register("flour", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB), "Flour"));
+    public static final RegistryObject<Item> TOMATO = ITEMS.register("tomato", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB), "Tomato"));
 
     // Spell books
     public static final RegistryObject<Item> FIREBALL_SPELLBOOK = ITEMS.register("fireball_spellbook", () -> new SpellBook(new Item.Properties().tab(Skyrimcraft.TAB).stacksTo(1), "Spellbook", SpellRegistry.FIREBALL));
@@ -63,6 +70,14 @@ public class ModItems
 
             singleTexture(SWEET_ROLL.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/sweet_roll"));
+
+            singleTexture(TOMATO.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/tomato"));
+
+            singleTexture(SALT_PILE.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/salt_pile"));
+            singleTexture(FLOUR.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/flour"));
 
             singleTexture(FIREBALL_SPELLBOOK.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/spellbook"));

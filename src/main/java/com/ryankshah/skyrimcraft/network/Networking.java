@@ -103,12 +103,6 @@ public class Networking
                 .decoder(PacketRequestCapabilityUpdate::new)
                 .consumer(PacketRequestCapabilityUpdate::handle)
                 .add();
-
-        INSTANCE.messageBuilder(PacketStormCallOnClient.class, nextID())
-                .encoder(PacketStormCallOnClient::toBytes)
-                .decoder(PacketStormCallOnClient::new)
-                .consumer(PacketStormCallOnClient::handle)
-                .add();
     }
 
     public static void sendToClient(Object packet, ServerPlayerEntity player) {

@@ -19,7 +19,7 @@ public class SkyrimBlock extends Block
     }
 
     public SkyrimBlock(String displayName) {
-        this(AbstractBlock.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(3.0F, 3.0F), displayName);
+        this(AbstractBlock.Properties.of(Material.STONE), displayName);
     }
 
     public String getDisplayName() {

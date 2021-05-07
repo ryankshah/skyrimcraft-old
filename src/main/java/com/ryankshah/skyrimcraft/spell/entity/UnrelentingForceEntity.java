@@ -2,30 +2,21 @@ package com.ryankshah.skyrimcraft.spell.entity;
 
 import com.ryankshah.skyrimcraft.util.ClientUtil;
 import com.ryankshah.skyrimcraft.util.ModEntityType;
-import net.minecraft.block.AbstractFireBlock;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.TNTEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.FMLPlayMessages;
@@ -44,7 +35,7 @@ public class UnrelentingForceEntity extends Entity
     private double accelerationX;
     private double accelerationY;
     private double accelerationZ;
-    private Vector3d startingPosition = new Vector3d(0, 0, 0);
+    private Vector3d startingPosition;
 
     public UnrelentingForceEntity(World worldIn) {
         super(ModEntityType.SHOUT_UNRELENTING_FORCE_ENTITY.get(), worldIn);
@@ -58,7 +49,7 @@ public class UnrelentingForceEntity extends Entity
         this.setPos(this.getX(), this.getY(), this.getZ());
         this.setDeltaMovement(Vector3d.ZERO);
 
-        this.startingPosition = new Vector3d(this.getX(), this.getY(), this.getZ());
+        startingPosition = new Vector3d(getX(), getY(), getZ());
 
         double u = MathHelper.sqrt(accelX * accelX + accelY * accelY + accelZ * accelZ);
 
@@ -93,6 +84,10 @@ public class UnrelentingForceEntity extends Entity
 
     @Override
     public void tick() {
+        if(!this.level.isClientSide)
+            if(startingPosition.distanceToSqr(getX(), getY(), getZ()) >= 8D)
+                this.remove();
+
         if (this.level.isClientSide || (this.shootingEntity == null || !this.shootingEntity.removed) && this.level.hasChunkAt(new BlockPos(this.getX(), this.getY(), this.getZ()))) {
             super.tick();
             ++this.ticksInAir;
@@ -105,9 +100,6 @@ public class UnrelentingForceEntity extends Entity
             Vector3d vec3d = this.getDeltaMovement();
             this.setPos(getX() + vec3d.x, getY() + vec3d.y, getZ() + vec3d.z);
 
-//            if(startingPosition.distanceTo(new Vector3d(getX(), getY(), getZ())) >= 32D)
-//                this.remove();
-
             float f = this.getMotionFactor();
 
             float radius = 2f;
@@ -119,14 +111,6 @@ public class UnrelentingForceEntity extends Entity
             for(Vector3d point : circlePoints) {
                 this.level.addParticle(ParticleTypes.CLOUD, getForward().x + point.x, getForward().y + point.y, getForward().z + point.z, vec3d.x, vec3d.y, vec3d.z);
             }
-
-
-//            for(double angle = 0.0D; angle < 2 * Math.PI; angle += 4d / 180d * (2 * Math.PI)) {
-//                double x = Math.cos(angle) * radius;
-//                double y = Math.sin(angle) * radius;
-//                double z = facing.normalize().z * radius;
-//                this.level.addParticle(ParticleTypes.SMOKE, getX() + x, getY() + y, getZ() + z, vec3d.x, vec3d.y, vec3d.z);
-//            }
 
             this.setDeltaMovement(vec3d.add(this.accelerationX, this.accelerationY, this.accelerationZ).scale(f));
             this.setPos(this.getX(), this.getY(), this.getZ());
@@ -144,19 +128,8 @@ public class UnrelentingForceEntity extends Entity
         if (!this.level.isClientSide) {
             if (result.getType() == RayTraceResult.Type.ENTITY) {
                 Entity entity = ((EntityRayTraceResult)result).getEntity();
-                ServerWorld world = (ServerWorld) entity.level;
-                //entity.hurt(DamageSource.indirectMagic(this, this.shootingEntity), 5.5F);
-
-                // Knockback entity
-//                Vector3d v3d = new Vector3d(this.getX(), this.getY(), this.getZ());
-//                double d12 = MathHelper.sqrt(entity.distanceToSqr(v3d)) / 2d; // 2f == radius?
-//                double d5 = entity.getX() - this.getX();
-//                double d7 = entity.getEyeY() - this.getY();
-//                double d9 = entity.getZ() - this.getZ();
-//                Vector3d vec3d = this.getDeltaMovement();
-//                Vector3d vec3d1 = (new Vector3d(2D, 0.65D, 2D)).normalize().scale(1.25D);
-                entity.setDeltaMovement(entity.getDeltaMovement().multiply(0.6D, 1.0D, 0.D));
-                //entity.setDeltaMovement(entity.getDeltaMovement().add(d5 * 2D, d7 * 2D, d9 * 2D));
+                if(!entity.isInWater() || !entity.isInLava())
+                    ((LivingEntity)entity).knockback(2F, (double)MathHelper.sin(this.yRot * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(this.yRot * ((float)Math.PI / 180F))));
             }
             this.remove();
         }

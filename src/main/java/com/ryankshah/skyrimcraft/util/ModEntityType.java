@@ -21,16 +21,16 @@ public class ModEntityType
                     .sized(1.25f, 1.0f) // Hitbox Size
                     .setTrackingRange(64)
                     .setShouldReceiveVelocityUpdates(true)
-                    .setUpdateInterval(3)
+                    .setUpdateInterval(2)
                     .build(new ResourceLocation(Skyrimcraft.MODID, "spell_fireball").toString()));
 
     // Shout entity types
     public static final RegistryObject<EntityType<?>> SHOUT_UNRELENTING_FORCE_ENTITY = ENTITY_TYPES.register("shout_unrelenting_force",
             () -> EntityType.Builder.of(UnrelentingForceEntity::new, EntityClassification.MISC)
-                    .sized(1.25f, 1.0f) // Hitbox Size
+                    .sized(2f, 2f) // Hitbox Size
                     .setTrackingRange(64)
                     .setShouldReceiveVelocityUpdates(true)
-                    .setUpdateInterval(3)
+                    .setUpdateInterval(2)
                     .build(new ResourceLocation(Skyrimcraft.MODID, "shout_unrelenting_force").toString()));
 
     // Entity Types

@@ -47,15 +47,14 @@ import java.util.Map;
  * TODO:
  *   - Continue working on the shouts and spells system:
  *     - Add more shouts and spells :)
- *   - Get started with adding some items, food, weapons and armour into the game
+ *   - Continue with adding some items, food, weapons and armour into the game
+ *     - Add butter item (crafted by magma cream + bucket of milk) - possibly add churn block later or something..
+ *     - Do textures for tomato crop stages and then create and do same for lettuce crop
  *   - Continue working on the ingame GUI overlay:
  *     - Mob indicators and *known* structures indicators in compass
- *     - Fix positioning of target health bar
- *     - Fix positioning etc. of the health, magicka and stamina bars (the glow in bar should show on value decrease)
+ *       - Keep track of entities targeting the player and display these indicators in the compass
+ *       - Display indicator of target mob in the compass as well.
  *   - Fix the positioning of the text + icons in SkyrimMenuScreen
- *   - Set XP rates for SkyrimOreBlock and tool types for mining them
- *   - Fix issue with particles not showing for UndeadFleeGoal
- *   - Have ShoutBlock look for other tile entities of the same to have them all share the same data (for word wall)
  */
 @Mod(Skyrimcraft.MODID)
 public class Skyrimcraft
@@ -66,7 +65,6 @@ public class Skyrimcraft
 
     public Skyrimcraft() {
         GeckoLib.initialize();
-        //TriggerManager.init();
 
         ModBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModBlocks.BLOCK_ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
@@ -76,10 +74,11 @@ public class Skyrimcraft
         ModEntityType.ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModEffects.EFFECTS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModStructures.STRUCTURES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ModGlobalLootTableProvider.LOOT_MODIFIERS.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(Skyrimcraft::commonSetup);
 
-        MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, WorldGen::generateOres); // high for additions to worldgen
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, WorldGen::generate); // high for additions to worldgen
         MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, this::addDimensionalSpacing);
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, this::biomeModification);
 
@@ -108,7 +107,7 @@ public class Skyrimcraft
 //    }
 
     // Custom ItemGroup TAB
-    public static final ItemGroup TAB = new ItemGroup("skyrimcraftTab") {
+    public static final ItemGroup TAB = new ItemGroup("skyrimcraft") {
         @Override
         public ItemStack makeIcon() {
             return new ItemStack(ModBlocks.EBONY_ORE.get());

@@ -1,5 +1,6 @@
 package com.ryankshah.skyrimcraft.util;
 
+import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.block.SkyrimBlock;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.item.SkyrimBlockItem;
@@ -25,7 +26,7 @@ public class LangGenerator extends LanguageProvider
 //            add(b, b.getDisplayName());
 //        }
 
-        add("itemGroup.skyrimcraftTab", "Skyrimcraft");
+        add("itemGroup.skyrimcraft", "Skyrimcraft");
 
         for(RegistryObject<Item> blockItem : ModBlocks.BLOCK_ITEMS.getEntries()) {
             SkyrimBlockItem bi = (SkyrimBlockItem) blockItem.get();
@@ -40,5 +41,10 @@ public class LangGenerator extends LanguageProvider
         for(RegistryObject<Effect> effect : ModEffects.EFFECTS.getEntries()) {
             addEffect(effect, effect.get().getDisplayName().getString());
         }
+    }
+
+    @Override
+    public String getName() {
+        return Skyrimcraft.MODID+"_lang";
     }
 }

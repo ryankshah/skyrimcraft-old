@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "minecraft:malachite_ingot_from_blasting"
+    ]
+  },
+  "criteria": {
+    "has_malachite_ore": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "skyrimcraft:malachite_ore"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "minecraft:malachite_ingot_from_blasting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_malachite_ore",
+      "has_the_recipe"
+    ]
+  ]
+}

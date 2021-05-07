@@ -3,8 +3,6 @@ package com.ryankshah.skyrimcraft.block;
 import com.ryankshah.skyrimcraft.util.ModBlocks;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.OreBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.block.material.PushReaction;
@@ -16,11 +14,13 @@ import net.minecraft.world.server.ServerWorld;
 import java.util.Random;
 
 import net.minecraft.block.AbstractBlock.Properties;
+import net.minecraftforge.common.ToolType;
 
 public class SkyrimOreBlock extends SkyrimBlock
 {
     public SkyrimOreBlock(String displayName) {
-        this(AbstractBlock.Properties.of(new Material(MaterialColor.COLOR_GRAY, false, true, true, false, false, false, PushReaction.PUSH_ONLY)), displayName);
+        // For now ores will require iron pickaxe to mine.
+        this(AbstractBlock.Properties.of(new Material(MaterialColor.COLOR_GRAY, false, true, true, false, false, false, PushReaction.PUSH_ONLY)).strength(3.0F, 3.0F).requiresCorrectToolForDrops().harvestTool(ToolType.PICKAXE).harvestLevel(2), displayName);
     }
 
     public SkyrimOreBlock(Properties properties, String displayName) {

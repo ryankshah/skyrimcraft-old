@@ -257,7 +257,7 @@ public class SkyrimMagicGui extends Screen
                         Networking.sendToServer(new PacketUpdateSelectedSpellOnServer(1, cap.getSelectedSpells().get(0)));
                         Networking.sendToServer(new PacketUpdateSelectedSpellOnServer(0, currentSpellObject));
                     }
-                } else Networking.sendToServer(new PacketUpdateSelectedSpellOnServer(0, null));
+                }
                 //System.out.println(cap.getSelectedSpells());
             });
         }
@@ -272,7 +272,7 @@ public class SkyrimMagicGui extends Screen
                         Networking.sendToServer(new PacketUpdateSelectedSpellOnServer(0, cap.getSelectedSpells().get(1)));
                         Networking.sendToServer(new PacketUpdateSelectedSpellOnServer(1, currentSpellObject));
                     }
-                } else Networking.sendToServer(new PacketUpdateSelectedSpellOnServer(1, null));
+                }
                 //System.out.println(cap.getSelectedSpells());
             });
         }

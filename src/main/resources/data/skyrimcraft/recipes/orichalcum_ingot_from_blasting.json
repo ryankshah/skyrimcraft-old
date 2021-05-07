@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "skyrimcraft:orichalcum_ore"
+  },
+  "result": "skyrimcraft:orichalcum_ingot",
+  "experience": 0.7,
+  "cookingtime": 100
+}

@@ -1,0 +1,28 @@
+{
+  "conditions": [
+    {
+      "condition": "minecraft:entity_properties",
+      "predicate": {
+        "type": "minecraft:witch"
+      },
+      "entity": "this"
+    }
+  ],
+  "additional": [
+    {
+      "item": "skyrimcraft:fireball_spellbook",
+      "minItem": 0.0,
+      "maxItem": 1.0,
+      "change": 0.25,
+      "useLooting": false
+    },
+    {
+      "item": "skyrimcraft:turn_undead_spellbook",
+      "minItem": 0.0,
+      "maxItem": 1.0,
+      "change": 0.25,
+      "useLooting": false
+    }
+  ],
+  "type": "skyrimcraft:passive_entity"
+}

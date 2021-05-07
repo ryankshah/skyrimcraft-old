@@ -1,32 +1,21 @@
 package com.ryankshah.skyrimcraft.spell;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import com.ryankshah.skyrimcraft.network.Networking;
-import com.ryankshah.skyrimcraft.network.PacketStormCallOnClient;
-import com.ryankshah.skyrimcraft.util.ClientUtil;
 import com.ryankshah.skyrimcraft.util.RayTraceUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.LightningBoltEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.*;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class ShoutStormCall extends ISpell implements IForgeRegistryEntry<ISpell> {
     public ShoutStormCall(int identifier) {
@@ -92,17 +81,8 @@ public class ShoutStormCall extends ISpell implements IForgeRegistryEntry<ISpell
             double x = rayTracedEntity.getX();
             double y = rayTracedEntity.getY();
             double z = rayTracedEntity.getZ();
-            RecipeManager rm;
-            rm.getAllRecipesFor(IRecipeType.CRAFTING);
-            //Networking.sendToAllClients(() -> world.getChunkAt(new BlockPos(x, y, z)), new PacketStormCallOnClient(x, y, z));
 
-            // Add particles beneath target entity
-            Vector3d origin = new Vector3d(rayTracedEntity.getX(), rayTracedEntity.getY(), rayTracedEntity.getZ());
-            Vector3d normal = rayTracedEntity.getPosition(0f);
-            Set<Vector3d> circlePoints = ClientUtil.circle(origin, normal, 2f, 8);
-            for(Vector3d point : circlePoints) {
-                ((ServerWorld)rayTracedEntity.level).sendParticles(ParticleTypes.SMOKE, rayTracedEntity.getX() + point.x, rayTracedEntity.getY() + point.y, rayTracedEntity.getZ() + point.z,  1, 0D, 0D, 0D, 0.0D);
-            }
+            //Networking.sendToAllClients(() -> world.getChunkAt(new BlockPos(x, y, z)), new PacketStormCallOnClient(x, y, z));
 
             // Add lightning
             LightningBoltEntity lightning = new LightningBoltEntity(EntityType.LIGHTNING_BOLT, world);

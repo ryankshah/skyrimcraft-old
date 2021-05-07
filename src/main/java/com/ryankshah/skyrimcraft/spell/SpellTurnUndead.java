@@ -2,7 +2,6 @@ package com.ryankshah.skyrimcraft.spell;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
-import com.ryankshah.skyrimcraft.spell.entity.FireballEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;

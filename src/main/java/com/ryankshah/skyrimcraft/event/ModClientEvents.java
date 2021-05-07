@@ -5,12 +5,15 @@ import com.ryankshah.skyrimcraft.spell.SpellRegistry;
 import com.ryankshah.skyrimcraft.util.*;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.EntityType;
+import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
+
+import javax.annotation.Nonnull;
 
 @Mod.EventBusSubscriber(modid = Skyrimcraft.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModClientEvents
@@ -22,7 +25,10 @@ public class ModClientEvents
         if(event.includeServer()) {
             // Recipes
             gen.addProvider(new ModRecipes(gen));
-            // LootTables
+            // Loot Tables
+            gen.addProvider(new ModLootTables(gen));
+            // Global Loot Tables
+            gen.addProvider(new ModGlobalLootTableProvider(gen));
             // Advancements
             gen.addProvider(new ModAdvancementProvider(gen));
         }

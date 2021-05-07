@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "minecraft:ebony_ingot_from_blasting"
+    ]
+  },
+  "criteria": {
+    "has_ebony_ore": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "skyrimcraft:ebony_ore"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "minecraft:ebony_ingot_from_blasting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_ebony_ore",
+      "has_the_recipe"
+    ]
+  ]
+}

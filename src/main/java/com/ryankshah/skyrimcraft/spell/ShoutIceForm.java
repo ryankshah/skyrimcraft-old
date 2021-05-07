@@ -1,9 +1,16 @@
 package com.ryankshah.skyrimcraft.spell;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
+import com.ryankshah.skyrimcraft.effect.ModEffects;
+import com.ryankshah.skyrimcraft.util.RayTraceUtil;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.ArrayList;
@@ -66,8 +73,17 @@ public class ShoutIceForm extends ISpell implements IForgeRegistryEntry<ISpell>
 
     @Override
     public void onCast() {
-        // call lightning storm on target
-
-        super.onCast();
+        World world = getCaster().level;
+        Entity rayTracedEntity = RayTraceUtil.rayTrace(world, getCaster(), 20D);
+        if(rayTracedEntity instanceof LivingEntity) {
+            double x = rayTracedEntity.getX();
+            double y = rayTracedEntity.getY();
+            double z = rayTracedEntity.getZ();
+            // freeze player for 4s (80 ticks = 4 * 20)
+            ((LivingEntity) rayTracedEntity).addEffect(new EffectInstance(ModEffects.FROZEN.get(), 80, 0, false, true, true));
+            super.onCast();
+        } else {
+            getCaster().displayClientMessage(new StringTextComponent("There is nothing there to cast this shout on!"), false);
+        }
     }
 }
