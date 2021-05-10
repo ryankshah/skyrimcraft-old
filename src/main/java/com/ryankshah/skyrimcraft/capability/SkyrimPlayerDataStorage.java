@@ -2,18 +2,14 @@ package com.ryankshah.skyrimcraft.capability;
 
 import com.ryankshah.skyrimcraft.spell.ISpell;
 import com.ryankshah.skyrimcraft.spell.SpellRegistry;
-import net.minecraft.item.ItemStack;
+import com.ryankshah.skyrimcraft.util.MapFeature;
 import net.minecraft.nbt.*;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import javax.annotation.Nullable;
-import java.nio.charset.Charset;
 import java.util.*;
 
 public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlayerData>
@@ -44,6 +40,13 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
             tag.put("selected" + entry.getKey(), entry.getValue() == null ? StringNBT.valueOf("null") : StringNBT.valueOf(entry.getValue().getRegistryName().toString()));
         }
 
+        List<MapFeature> mapFeatures = instance.getMapFeatures();
+        tag.putInt("mapFeaturesSize", mapFeatures.size());
+        int counter = 0;
+        for(MapFeature feature : mapFeatures) {
+            tag.put(""+counter++, feature.serialise());
+        }
+
         return tag;
     }
 
@@ -53,6 +56,7 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
         List<ISpell> knownSpells = new ArrayList<>();
         Map<Integer, ISpell> selectedSpells = new HashMap<>();
         Map<ISpell, Float> shoutsAndCooldowns = new HashMap<>();
+        List<MapFeature> mapFeatures = new ArrayList<>();
 
         float magicka = tag.getFloat("magicka");
 
@@ -71,9 +75,16 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
         selectedSpells.put(0, tag.getString("selected0").equals("null") ? null : SpellRegistry.SPELLS_REGISTRY.get().getValue(new ResourceLocation(tag.getString("selected0"))));
         selectedSpells.put(1, tag.getString("selected1").equals("null") ? null : SpellRegistry.SPELLS_REGISTRY.get().getValue(new ResourceLocation(tag.getString("selected1"))));
 
+        int size = tag.getInt("mapFeaturesSize");
+        for(int i = 0; i < size; i++) {
+            CompoundNBT comp = tag.getCompound(""+i);
+            mapFeatures.add(MapFeature.deserialise(comp));
+        }
+
         instance.setMagickaForNBT(magicka);
         instance.setKnownSpellsForNBT(knownSpells);
         instance.setShoutsWithCooldowns(shoutsAndCooldowns);
         instance.setSelectedSpellsForNBT(selectedSpells);
+        instance.setMapFeatures(mapFeatures);
     }
 }

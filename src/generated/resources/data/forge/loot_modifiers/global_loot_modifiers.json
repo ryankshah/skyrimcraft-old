@@ -1,6 +1,24 @@
 {
   "replace": false,
   "entries": [
+    "skyrimcraft:chests/ruined_portal",
+    "skyrimcraft:parrot_modifier",
+    "skyrimcraft:evoker_modifier",
+    "skyrimcraft:chests/underwater_ruin_small",
+    "skyrimcraft:chests/bastion_treasure",
+    "skyrimcraft:chests/stronghold_crossing",
+    "skyrimcraft:chests/buried_treasure",
+    "skyrimcraft:chests/stronghold_corridor",
+    "skyrimcraft:rabbit_modifier",
+    "skyrimcraft:chests/stronghold_library",
+    "skyrimcraft:chests/pillager_outpost",
+    "skyrimcraft:chests/shipwreck_treasure",
+    "skyrimcraft:chests/simple_dungeon",
+    "skyrimcraft:chests/village/village_temple",
+    "skyrimcraft:chests/desert_pyramid",
+    "skyrimcraft:chests/jungle_temple",
+    "skyrimcraft:chests/underwater_ruin_big",
+    "skyrimcraft:chests/nether_bridge",
     "skyrimcraft:witch_modifier"
   ]
 }

@@ -1,0 +1,28 @@
+{
+  "conditions": [
+    {
+      "condition": "minecraft:entity_properties",
+      "predicate": {
+        "type": "minecraft:parrot"
+      },
+      "entity": "this"
+    }
+  ],
+  "additional": [
+    {
+      "item": "skyrimcraft:garlic",
+      "minItem": 1.0,
+      "maxItem": 2.0,
+      "change": 0.45,
+      "useLooting": false
+    },
+    {
+      "item": "skyrimcraft:tomato_seeds",
+      "minItem": 1.0,
+      "maxItem": 2.0,
+      "change": 0.45,
+      "useLooting": false
+    }
+  ],
+  "type": "skyrimcraft:passive_entity"
+}

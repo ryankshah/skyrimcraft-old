@@ -1,6 +1,7 @@
 package com.ryankshah.skyrimcraft.capability;
 
 import com.ryankshah.skyrimcraft.spell.ISpell;
+import com.ryankshah.skyrimcraft.util.MapFeature;
 import net.minecraft.entity.LivingEntity;
 
 import java.util.List;
@@ -34,4 +35,9 @@ public interface ISkyrimPlayerData
     public void setCurrentTarget(LivingEntity entity);
     public void setCurrentTargetForNBT(LivingEntity entity);
     public LivingEntity getCurrentTarget();
+
+    /* FEATURE FIELDS */
+    public void addMapFeature(MapFeature feature);
+    public void setMapFeatures(List<MapFeature> mapFeatures);
+    public List<MapFeature> getMapFeatures();
 }

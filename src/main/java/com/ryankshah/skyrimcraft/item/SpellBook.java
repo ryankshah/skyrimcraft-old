@@ -51,10 +51,11 @@ public class SpellBook extends SkyrimItem
             return ActionResult.pass(itemstack);
         }
 
-
         ISkyrimPlayerData cap = playerIn.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("spellbook use"));
         if(!cap.getKnownSpells().contains(spell.get())) {
             Networking.sendToServer(new PacketAddToKnownSpells(spell.get()));
+            // Replace with something like: new TranslationTextComponent("the.thing", new TranslationTextComponent(spell.get().getName()).withStyle(TextFormatting.RED))
+            // where the.thing in the lang file (i.e. en_us.json) is You have just learnt %s!
             playerIn.displayClientMessage(new StringTextComponent("You have just learnt " + TextFormatting.RED + spell.get().getName() + TextFormatting.RESET + "!"), false);
             //worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.END_PORTAL_SPAWN, SoundCategory.BLOCKS, 1f, 1f);
             playerIn.awardStat(Stats.ITEM_USED.get(this));

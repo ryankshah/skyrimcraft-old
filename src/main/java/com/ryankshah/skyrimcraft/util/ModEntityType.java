@@ -1,9 +1,9 @@
 package com.ryankshah.skyrimcraft.util;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
+import com.ryankshah.skyrimcraft.spell.entity.DisarmEntity;
 import com.ryankshah.skyrimcraft.spell.entity.FireballEntity;
 import com.ryankshah.skyrimcraft.spell.entity.UnrelentingForceEntity;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
@@ -32,6 +32,13 @@ public class ModEntityType
                     .setShouldReceiveVelocityUpdates(true)
                     .setUpdateInterval(2)
                     .build(new ResourceLocation(Skyrimcraft.MODID, "shout_unrelenting_force").toString()));
+    public static final RegistryObject<EntityType<?>> SHOUT_DISARM_ENTITY = ENTITY_TYPES.register("shout_disarm",
+            () -> EntityType.Builder.of(DisarmEntity::new, EntityClassification.MISC)
+                    .sized(2f, 2f) // Hitbox Size
+                    .setTrackingRange(64)
+                    .setShouldReceiveVelocityUpdates(true)
+                    .setUpdateInterval(2)
+                    .build(new ResourceLocation(Skyrimcraft.MODID, "shout_disarm").toString()));
 
     // Entity Types
 //    public static final RegistryObject<EntityType<OrcaEntity>> ORCA = ENTITY_TYPES.register("orca",

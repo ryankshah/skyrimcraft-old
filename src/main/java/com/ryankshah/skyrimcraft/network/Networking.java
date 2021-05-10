@@ -103,6 +103,24 @@ public class Networking
                 .decoder(PacketRequestCapabilityUpdate::new)
                 .consumer(PacketRequestCapabilityUpdate::handle)
                 .add();
+
+        INSTANCE.messageBuilder(PacketAddToMapFeatures.class, nextID())
+                .encoder(PacketAddToMapFeatures::toBytes)
+                .decoder(PacketAddToMapFeatures::new)
+                .consumer(PacketAddToMapFeatures::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketAddToMapFeaturesOnClient.class, nextID())
+                .encoder(PacketAddToMapFeaturesOnClient::toBytes)
+                .decoder(PacketAddToMapFeaturesOnClient::new)
+                .consumer(PacketAddToMapFeaturesOnClient::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketUpdateMapFeatures.class, nextID())
+                .encoder(PacketUpdateMapFeatures::toBytes)
+                .decoder(PacketUpdateMapFeatures::new)
+                .consumer(PacketUpdateMapFeatures::handle)
+                .add();
     }
 
     public static void sendToClient(Object packet, ServerPlayerEntity player) {

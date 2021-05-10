@@ -4,11 +4,6 @@ import com.ryankshah.skyrimcraft.advancement.TriggerManager;
 import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.spell.ISpell;
 import com.ryankshah.skyrimcraft.spell.SpellRegistry;
-import com.ryankshah.skyrimcraft.util.ModAdvancementProvider;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.PlayerAdvancements;
-import net.minecraft.data.AdvancementProvider;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
@@ -19,7 +14,6 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 public class PacketAddToKnownSpells

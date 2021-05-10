@@ -25,8 +25,9 @@ public class SpellTurnUndead extends ISpell implements IForgeRegistryEntry<ISpel
     @Override
     public List<String> getDescription() {
         List<String> desc = new ArrayList<>();
-        desc.add("Undead enemies within 12 blocks will");
-        desc.add("flee from you for 30 seconds");
+        desc.add("Undead enemies within 12");
+        desc.add("blocks will flee from you for");
+        desc.add("30 seconds");
         return desc;
     }
 

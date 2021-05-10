@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "skyrimcraft:block/blockbench_export"
+      "model": "skyrimcraft:block/salt_deposit"
     }
   }
 }

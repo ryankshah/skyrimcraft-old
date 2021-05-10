@@ -22,10 +22,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
-import java.util.Vector;
 
 public class UnrelentingForceEntity extends Entity
 {
@@ -85,7 +82,7 @@ public class UnrelentingForceEntity extends Entity
     @Override
     public void tick() {
         if(!this.level.isClientSide)
-            if(startingPosition.distanceToSqr(getX(), getY(), getZ()) >= 8D)
+            if(startingPosition.distanceToSqr(getX(), getY(), getZ()) >= 64D)
                 this.remove();
 
         if (this.level.isClientSide || (this.shootingEntity == null || !this.shootingEntity.removed) && this.level.hasChunkAt(new BlockPos(this.getX(), this.getY(), this.getZ()))) {

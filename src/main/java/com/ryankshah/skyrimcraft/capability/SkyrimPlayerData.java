@@ -1,15 +1,14 @@
 package com.ryankshah.skyrimcraft.capability;
 
-import com.ryankshah.skyrimcraft.network.*;
 import com.ryankshah.skyrimcraft.spell.ISpell;
-import com.ryankshah.skyrimcraft.spell.SpellRegistry;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
+import com.ryankshah.skyrimcraft.util.MapFeature;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.world.World;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SkyrimPlayerData implements ISkyrimPlayerData
 {
@@ -23,8 +22,11 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
     private final float maxMagicka = 20.0f;
     private Map<ISpell, Float> shoutsOnCooldown;
 
+    private List<MapFeature> mapFeatures;
+
     public SkyrimPlayerData() {
         knownSpells = new ArrayList<>();
+        mapFeatures = new ArrayList<>();
         selectedSpells = new HashMap<>();
         shoutsOnCooldown = new HashMap<>();
         targetEntity = null;
@@ -36,6 +38,7 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
     public SkyrimPlayerData(PlayerEntity playerEntity) {
         this.playerEntity = playerEntity;
         knownSpells = new ArrayList<>();
+        mapFeatures = new ArrayList<>();
         selectedSpells = new HashMap<>();
         shoutsOnCooldown = new HashMap<>();
         targetEntity = null;
@@ -170,5 +173,21 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
     @Override
     public LivingEntity getCurrentTarget() {
         return this.targetEntity;
+    }
+
+    @Override
+    public void addMapFeature(MapFeature mapFeature) {
+        if(this.mapFeatures.stream().noneMatch(feature -> feature.equals(mapFeature)))
+            mapFeatures.add(mapFeature);
+    }
+
+    @Override
+    public void setMapFeatures(List<MapFeature> mapFeatures) {
+        this.mapFeatures = mapFeatures;
+    }
+
+    @Override
+    public List<MapFeature> getMapFeatures() {
+        return mapFeatures;
     }
 }

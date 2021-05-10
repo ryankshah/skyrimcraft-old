@@ -1,40 +1,28 @@
 package com.ryankshah.skyrimcraft.worldgen.structure;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
-import net.minecraft.util.registry.MutableRegistry;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
-import net.minecraft.world.gen.feature.structure.*;
+import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
+import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.StructureStart;
+import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
-import net.minecraft.world.gen.settings.StructureSeparationSettings;
-import org.apache.logging.log4j.Level;
-
-import java.util.List;
-import java.util.Optional;
-
-import net.minecraft.world.gen.feature.structure.Structure.IStartFactory;
 
 public class StructureShoutWall extends Structure<NoFeatureConfig> {
     public StructureShoutWall(Codec<NoFeatureConfig> codec) {
@@ -237,10 +225,10 @@ public class StructureShoutWall extends Structure<NoFeatureConfig> {
 
             // I use to debug and quickly find out if the structure is spawning or not and where it is.
             // This is returning the coordinates of the center starting piece.
-            Skyrimcraft.LOGGER.log(Level.DEBUG, "Shout Wall at " +
-                    this.pieces.get(0).getBoundingBox().x0 + " " +
-                    this.pieces.get(0).getBoundingBox().y0 + " " +
-                    this.pieces.get(0).getBoundingBox().z0);
+//            Skyrimcraft.LOGGER.log(Level.DEBUG, "Shout Wall at " +
+//                    this.pieces.get(0).getBoundingBox().x0 + " " +
+//                    this.pieces.get(0).getBoundingBox().y0 + " " +
+//                    this.pieces.get(0).getBoundingBox().z0);
         }
 
     }

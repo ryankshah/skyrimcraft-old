@@ -1,15 +1,15 @@
 package com.ryankshah.skyrimcraft.worldgen;
 
-import com.google.common.collect.ImmutableSet;
 import com.ryankshah.skyrimcraft.util.ModBlocks;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SandBlock;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.blockplacer.SimpleBlockPlacer;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
-import net.minecraft.world.gen.feature.*;
+import net.minecraft.world.gen.feature.BlockClusterFeatureConfig;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.Features;
+import net.minecraft.world.gen.feature.OreFeatureConfig;
 import net.minecraft.world.gen.feature.template.RuleTest;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraft.world.gen.placement.TopSolidRangeConfig;
@@ -21,7 +21,13 @@ public class WorldGen
     public static void generate(final BiomeLoadingEvent event) {
         if (!(event.getCategory().equals(Biome.Category.NETHER) || event.getCategory().equals(Biome.Category.THEEND))) {
             generateOre(event.getGeneration(), OreFeatureConfig.FillerBlockType.NATURAL_STONE,
-                    ModBlocks.EBONY_ORE.get().defaultBlockState(), 5, 15, 30, 10);
+                    ModBlocks.EBONY_ORE.get().defaultBlockState(), 5, 10, 30, 6);
+            generateOre(event.getGeneration(), OreFeatureConfig.FillerBlockType.NATURAL_STONE,
+                    ModBlocks.MALACHITE_ORE.get().defaultBlockState(), 5, 15, 45, 10);
+            generateOre(event.getGeneration(), OreFeatureConfig.FillerBlockType.NATURAL_STONE,
+                    ModBlocks.MOONSTONE_ORE.get().defaultBlockState(), 5, 34, 60, 12);
+            generateOre(event.getGeneration(), OreFeatureConfig.FillerBlockType.NATURAL_STONE,
+                    ModBlocks.ORICHALCUM_ORE.get().defaultBlockState(), 5, 30, 50, 12);
 
             if(event.getCategory().equals(Biome.Category.DESERT) || event.getCategory().equals(Biome.Category.MESA) || event.getCategory().equals(Biome.Category.SAVANNA))
                 generateSalt(event.getGeneration());

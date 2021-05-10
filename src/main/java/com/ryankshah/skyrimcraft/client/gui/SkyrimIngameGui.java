@@ -1,18 +1,20 @@
 package com.ryankshah.skyrimcraft.client.gui;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerDataProvider;
+import com.ryankshah.skyrimcraft.util.MapFeature;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.List;
 
 public class SkyrimIngameGui extends AbstractGui
 {
@@ -38,58 +40,52 @@ public class SkyrimIngameGui extends AbstractGui
     private static void renderCompass(MatrixStack matrixStack, int width, int height) {
         TextureDrawer.drawGuiTexture(matrixStack, width / 2 - 110, 10, 0, 37, 221, 14);
 
-        int rot;
-        boolean f0 = mc.player.yRot < 0.0f;
+        float yaw = MathHelper.lerp(mc.getFrameTime(), mc.player.yHeadRotO, mc.player.yHeadRot) % 360;
+        if (yaw < 0) yaw += 360;
 
-        if(f0) rot = -MathHelper.floor(mc.player.yRot % 360);
-        else rot = MathHelper.floor(mc.player.yRot % 360);
+        drawCardinalDirection(matrixStack, yaw, 0, width / 2, "S");
+        drawCardinalDirection(matrixStack, yaw, 90, width / 2, "W");
+        drawCardinalDirection(matrixStack, yaw, 180, width / 2, "N");
+        drawCardinalDirection(matrixStack, yaw, 270, width / 2, "E");
 
-        boolean f1 = rot > 0 && rot < 180;
-        boolean f2 = rot <= 270 && rot >= 90;
-        boolean f3 = rot <= 180 && rot >= 0;
-
-        AtomicInteger targetAngle = new AtomicInteger(-1);
-        mc.player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent(cap -> {
-            if(cap.getCurrentTarget() != null && cap.getCurrentTarget().isAlive()) {
-                Vector3d playerPos = mc.player.getLookAngle();
-                Vector3d targetPos = cap.getCurrentTarget().position();
-                Vector3d norm = targetPos.subtract(playerPos);
-
-                double angleDir = (Math.atan2(norm.z, norm.x) / 2 / Math.PI * 360 + 360) % 360;
-                double angleLook = (Math.atan2(playerPos.z, playerPos.x) / 2 / Math.PI * 360 + 360) % 360;
-                targetAngle.set((int)(angleDir - angleLook + 360) % 360);
-            } else targetAngle.set(-1);
-        });
-        int targetEntityAngle = targetAngle.get();
-
-        if (rot == 0) {
-            drawCenteredString(matrixStack, fontRenderer, "S", width / 2, 13, 16777215);
-            drawCenteredString(matrixStack, fontRenderer, "E", (width / 2) - 90, 13, 16777215);
-            drawCenteredString(matrixStack, fontRenderer, "W", (width / 2) + 90, 13, 16777215);
-        } else if (!f0) {
-            drawCenteredString(matrixStack, fontRenderer, f2 ? "N" : "", (width / 2 - rot) + 180, 13, 16777215);
-            if (!f1) rot -= 360;
-            drawCenteredString(matrixStack, fontRenderer, !f2 ? "S" : "", width / 2 - rot, 13, 16777215);
-            drawCenteredString(matrixStack, fontRenderer, !f3 ? "E" : "", (width / 2 - rot) - 90, 13, 16777215);
-            drawCenteredString(matrixStack, fontRenderer, f3 ? "W" : "", (width / 2 - rot) + 90, 13, 16777215);
-        } else if(f0) {
-            drawCenteredString(matrixStack, fontRenderer, f2 ? "N" : "", (width / 2 + rot) - 180, 13, 16777215);
-            if (!f1) rot -= 360;
-            drawCenteredString(matrixStack, fontRenderer, !f2 ? "S" : "", width / 2 + rot, 13, 16777215);
-            drawCenteredString(matrixStack, fontRenderer, !f3 ? "W" : "", (width / 2 + rot) + 90, 13, 16777215);
-            drawCenteredString(matrixStack, fontRenderer, f3 ? "E" : "", (width / 2 + rot) - 90, 13, 16777215);
-        }
+        double playerPosX = MathHelper.lerp(mc.getFrameTime(), mc.player.xo, mc.player.getX());
+        double playerPosY = MathHelper.lerp(mc.getFrameTime(), mc.player.yo, mc.player.getY());
+        double playerPosZ = MathHelper.lerp(mc.getFrameTime(), mc.player.zo, mc.player.getZ());
+        final float finalYaw = yaw;
 
         mc.getTextureManager().bind(OVERLAY_ICONS); // rebind after drawing strings (mc binds font texture)
 
-//        System.out.println("playerRot: " + rot + " --- targetRot: " + targetEntityAngle);
-//        System.out.println(targetEntityAngle);
-        if(targetEntityAngle != -1) {
-            if(rot / mc.player.getFieldOfViewModifier() < 1)
-                TextureDrawer.drawGuiTexture(matrixStack, width / 2 - targetEntityAngle, 14, 106, 53, 4, 4);
-            else
-                TextureDrawer.drawGuiTexture(matrixStack, width / 2 + targetEntityAngle, 14, 106, 53, 4, 4);
-        }
+        mc.player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent(cap -> {
+            if(cap.getMapFeatures().size() > 0) {
+                List<MapFeature> sortedFeatures = Lists.newArrayList(cap.getMapFeatures());
+                sortedFeatures.sort((a,b) -> {
+                    Vector3d positionA = new Vector3d(a.getChunkPos().x, 0, a.getChunkPos().z); //mc.player.getY()
+                    Vector3d positionB = new Vector3d(b.getChunkPos().x, 0, b.getChunkPos().z);
+                    float angleA = Math.abs(angleDistance(finalYaw, angleFromTarget(positionA, positionB).x));
+                    float angleB = Math.abs(angleDistance(finalYaw, angleFromTarget(positionB, positionA).x));
+                    return (int)Math.signum(angleB-angleA);
+                });
+
+                for (MapFeature feature : sortedFeatures) {
+                    if(mc.player.position().distanceToSqr(feature.getChunkPos().x, mc.player.position().y, feature.getChunkPos().z) <= 512 * 16) { // 256 blocks?
+                        Vector3d position = new Vector3d(feature.getChunkPos().x, 0, feature.getChunkPos().z);
+                        Vector2f angleYd = angleFromTarget(position, new Vector3d(playerPosX, playerPosY, playerPosZ));
+                        drawStructureIndicator(matrixStack, finalYaw, angleYd.x, width / 2, feature);
+                    }
+                }
+            }
+            if (cap.getCurrentTarget() != null && cap.getCurrentTarget().isAlive()) {
+                // Check player is out of target range
+                if(!mc.player.closerThan(cap.getCurrentTarget(), 16.0D))
+                    return;
+
+                Vector3d a = new Vector3d(playerPosX, playerPosY, playerPosZ);
+                Vector3d b = cap.getCurrentTarget().position();
+
+                Vector2f angleYd = angleFromTarget(b, a);
+                drawTargetIndicator(matrixStack, finalYaw, angleYd.x, width / 2); //ydelta = angleYd.y
+            }
+        });
     }
 
     private static void renderHealth(MatrixStack matrixStack, int width, int height) {
@@ -140,13 +136,60 @@ public class SkyrimIngameGui extends AbstractGui
 
                 int entityNameWidth = fontRenderer.width(entityName);
                 // left banner
-                TextureDrawer.drawGuiTexture(matrixStack, (width / 2) - (41 + entityNameWidth), 38, 25, 107, 41, 12); // width / 2 - 69
+                TextureDrawer.drawGuiTexture(matrixStack, (width / 2) - 2 - (41 + entityNameWidth / 2), 38, 25, 107, 41, 12); // width / 2 - 69
                 // right banner
-                TextureDrawer.drawGuiTexture(matrixStack, (width / 2) + entityNameWidth, 38, 84, 107, 41, 12); // width / 2 + 28
+                TextureDrawer.drawGuiTexture(matrixStack, (width / 2) + 2 + entityNameWidth / 2, 38, 84, 107, 41, 12); // width / 2 + 28
                 drawCenteredString(matrixStack, fontRenderer, entityName , width / 2, 40, 0x00FFFFFF);
             }
         });
 
         mc.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
+    }
+
+    private static void drawCardinalDirection(MatrixStack matrixStack, float yaw, float angle, int xPos, String text) {
+        float nDist = angleDistance(yaw, angle);
+        if (Math.abs(nDist) <= 90)
+        {
+            float nPos = xPos + nDist;
+            //fill(matrixStack, (int)(nPos-0.5f), 10, (int)(nPos+0.5f), 18, 0x7FFFFFFF);
+            drawCenteredString(matrixStack, fontRenderer, text, (int)nPos, 13, 0xFFFFFF);
+        }
+    }
+
+    private static Vector2f angleFromTarget(Vector3d targetPos, Vector3d playerPos) {
+        double xd = targetPos.x - playerPos.x;
+        double yd = targetPos.y - playerPos.y;
+        double zd = targetPos.z - playerPos.z;
+        return new Vector2f((float) Math.toDegrees(-Math.atan2(xd, zd)), (float)yd);
+    }
+
+    private static float angleDistance(float yaw, float other) {
+        float dist = other - yaw;
+        if (dist > 0) return dist > 180 ? (dist - 360) : dist;
+        else return dist < -180 ? (dist + 360) : dist;
+    }
+
+    private static void drawTargetIndicator(MatrixStack matrixStack, float yaw, float angle, int xPos) {
+        float nDist = angleDistance(yaw, angle);
+        if (Math.abs(nDist) <= 90)
+        {
+            float nPos = xPos + nDist;
+            //fill(matrixStack, (int)(nPos-0.5f), 10, (int)(nPos+0.5f), 18, 0x7FFFFFFF);
+            TextureDrawer.drawGuiTexture(matrixStack, (int)nPos-2, 15, 106, 53, 4, 4); // -2 for texture size.
+        }
+    }
+
+    private static void drawStructureIndicator(MatrixStack matrixStack, float yaw, float angle, int xPos, MapFeature feature) {
+        if(feature.getIconUV() == null)
+            return;
+
+        float nDist = angleDistance(yaw, angle);
+        if (Math.abs(nDist) <= 90)
+        {
+            float nPos = xPos + nDist;
+            int u = feature.getIconUV().getKey(), v = feature.getIconUV().getValue();
+            //fill(matrixStack, (int)(nPos-0.5f), 10, (int)(nPos+0.5f), 18, 0x7FFFFFFF);
+            TextureDrawer.drawGuiTexture(matrixStack, (int)nPos-2, 17 - (MapFeature.ICON_HEIGHT / 2), u, v, MapFeature.ICON_WIDTH, MapFeature.ICON_HEIGHT);
+        }
     }
 }

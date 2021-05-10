@@ -37,7 +37,7 @@ public class ShoutWhirlwindSprint extends ISpell implements IForgeRegistryEntry<
     @Override
     public SoundEvent getSound() {
         //return ModSounds.UNRELENTING_FORCE.get();
-        return SoundEvents.LIGHTNING_BOLT_IMPACT;
+        return SoundEvents.BLAZE_SHOOT;
     }
 
     @Override

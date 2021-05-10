@@ -105,8 +105,10 @@ public class SkyrimMagicGui extends Screen
         renderMagicka(matrixStack);
 
         int i;
-        for(i = 0; i < spellTypes.size(); i++)
-            drawCenteredString(matrixStack, font, ((ISpell.SpellType)spellTypes.get(i)).toString(), this.width - 50, this.height / 2 + 14 * i - this.currentSpellType * 7, i == this.currentSpellType ? 0x00FFFFFF : 0x00C0C0C0);
+        for(i = 0; i < spellTypes.size(); i++) {
+            String spellTypeName = spellTypes.get(i).toString();
+            drawString(matrixStack, font, spellTypeName, this.width - 20 - font.width(spellTypeName), this.height / 2 + 14 * i - this.currentSpellType * 7, i == this.currentSpellType ? 0x00FFFFFF : 0x00C0C0C0);
+        }
 
         // Get ISpell.SpellType
         currentSpellTypeObject = (ISpell.SpellType) spellTypes.get(currentSpellType);
@@ -137,7 +139,6 @@ public class SkyrimMagicGui extends Screen
                 drawSpellInformation(matrixStack, currentSpellObject, partialTicks);
             }
 
-            minecraft.getSoundManager().stop();
             drawString(matrixStack, font, displayName, this.width - 183, this.height / 2 + 14 * j - this.currentSpell * 7, color.get());
         }
 
@@ -174,9 +175,9 @@ public class SkyrimMagicGui extends Screen
         // Draw the spell entity?
         minecraft.getTextureManager().bind(spell.getDisplayAnimation());
         currentSpellFrame = (int)(lastTick + (currentTick - lastTick) * partialTicks) / 64;
-        int uOffset = 64 * (currentSpellFrame % 60), vOffset = 0;
+        int uOffset = 64 * (currentSpellFrame % 5), vOffset = 0;
         matrixStack.pushPose();
-            blit(matrixStack, 88, (this.height / 2) - 84, uOffset, vOffset, 64, 64, 3840, 64);
+            blit(matrixStack, 88, (this.height / 2) - 94, uOffset, vOffset, 64, 64, 320, 64);
         matrixStack.popPose();
         minecraft.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
     }

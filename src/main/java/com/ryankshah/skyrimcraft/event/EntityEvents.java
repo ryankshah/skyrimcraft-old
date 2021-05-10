@@ -11,6 +11,8 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = Skyrimcraft.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EntityEvents
 {
+    // TODO: Check entities targeting player (i.e. via LivingSetAttackTargetEvent)
+
     /**
      * Used to add panic AI task for undead mobs (for UndeadFleeEffect to activate)
      */
@@ -23,4 +25,11 @@ public class EntityEvents
             }
         }
     }
+
+//    @SubscribeEvent
+//    public static void villagerTrades(VillagerTradesEvent event) {
+//        if(event.getType() == VillagerProfession.LIBRARIAN) {
+//            event.getTrades().
+//        }
+//    }
 }

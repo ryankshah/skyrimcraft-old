@@ -1,0 +1,35 @@
+{
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:chests/bastion_treasure"
+    }
+  ],
+  "chestItems": [
+    {
+      "item": "skyrimcraft:fireball_spellbook",
+      "minItem": 1.0,
+      "maxItem": 1.0,
+      "chance": 0.365
+    },
+    {
+      "item": "skyrimcraft:turn_undead_spellbook",
+      "minItem": 1.0,
+      "maxItem": 1.0,
+      "chance": 0.365
+    },
+    {
+      "item": "skyrimcraft:garlic",
+      "minItem": 1.0,
+      "maxItem": 3.0,
+      "chance": 0.685
+    },
+    {
+      "item": "skyrimcraft:tomato_seeds",
+      "minItem": 1.0,
+      "maxItem": 3.0,
+      "chance": 0.685
+    }
+  ],
+  "type": "skyrimcraft:chest_loot"
+}

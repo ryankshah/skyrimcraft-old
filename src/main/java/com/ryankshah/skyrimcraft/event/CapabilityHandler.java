@@ -39,6 +39,7 @@ public class CapabilityHandler
             Networking.sendToClient(new PacketUpdateSelectedSpells(cap.getSelectedSpells()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdatePlayerTarget((LivingEntity) null), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdateShoutCooldowns(cap.getShoutsAndCooldowns()), (ServerPlayerEntity)event.getEntity());
+            Networking.sendToClient(new PacketUpdateMapFeatures(cap.getMapFeatures()), (ServerPlayerEntity)event.getEntity());
         }
     }
 
@@ -56,6 +57,7 @@ public class CapabilityHandler
             Networking.sendToClient(new PacketUpdateSelectedSpells(cap.getSelectedSpells()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdatePlayerTarget((LivingEntity) null), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdateShoutCooldowns(cap.getShoutsAndCooldowns()), (ServerPlayerEntity)event.getEntity());
+            Networking.sendToClient(new PacketUpdateMapFeatures(cap.getMapFeatures()), (ServerPlayerEntity)event.getEntity());
         }
     }
 

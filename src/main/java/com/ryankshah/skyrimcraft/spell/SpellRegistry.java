@@ -1,8 +1,10 @@
 package com.ryankshah.skyrimcraft.spell;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
+import com.ryankshah.skyrimcraft.spell.entity.DisarmEntity;
 import com.ryankshah.skyrimcraft.spell.entity.FireballEntity;
 import com.ryankshah.skyrimcraft.spell.entity.UnrelentingForceEntity;
+import com.ryankshah.skyrimcraft.spell.entity.render.DisarmRenderer;
 import com.ryankshah.skyrimcraft.spell.entity.render.FireballRenderer;
 import com.ryankshah.skyrimcraft.spell.entity.render.UnrelentingForceRenderer;
 import com.ryankshah.skyrimcraft.util.ModEntityType;
@@ -26,7 +28,8 @@ public class SpellRegistry
     public static RegistryObject<ISpell> UNRELENTING_FORCE = SPELLS.register("unrelenting_force", () -> new ShoutUnrelentingForce(id++));
     public static RegistryObject<ISpell> STORM_CALL = SPELLS.register("storm_call", () -> new ShoutStormCall(id++));
     public static RegistryObject<ISpell> WHIRLWIND_SPRINT = SPELLS.register("whirlwind_sprint", () -> new ShoutWhirlwindSprint(id++));
-    public static RegistryObject<ISpell> ICE_FORM = SPELLS.register("ice_form", () -> new ShoutIceForm(id++));
+    // public static RegistryObject<ISpell> ICE_FORM = SPELLS.register("ice_form", () -> new ShoutIceForm(id++));
+
     // Spells
     public static RegistryObject<ISpell> FIREBALL = SPELLS.register("fireball", () -> new SpellFireball(id++));
     public static RegistryObject<ISpell> TURN_UNDEAD = SPELLS.register("turn_undead", () -> new SpellTurnUndead(id++));
@@ -34,5 +37,6 @@ public class SpellRegistry
     public static void registerRenderers() {
         RenderingRegistry.registerEntityRenderingHandler((EntityType<FireballEntity>) ModEntityType.SPELL_FIREBALL_ENTITY.get(), FireballRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler((EntityType<UnrelentingForceEntity>) ModEntityType.SHOUT_UNRELENTING_FORCE_ENTITY.get(), UnrelentingForceRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler((EntityType<DisarmEntity>) ModEntityType.SHOUT_DISARM_ENTITY.get(), DisarmRenderer::new);
     }
 }

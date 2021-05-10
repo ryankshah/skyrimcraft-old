@@ -3,7 +3,10 @@ package com.ryankshah.skyrimcraft;
 import com.mojang.serialization.Codec;
 import com.ryankshah.skyrimcraft.advancement.BaseTrigger;
 import com.ryankshah.skyrimcraft.advancement.TriggerManager;
-import com.ryankshah.skyrimcraft.capability.*;
+import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerData;
+import com.ryankshah.skyrimcraft.capability.SkyrimPlayerData;
+import com.ryankshah.skyrimcraft.capability.SkyrimPlayerDataStorage;
+import com.ryankshah.skyrimcraft.data.modifier.ModGlobalLootTableProvider;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.spell.ISpell;
@@ -17,8 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.FlatChunkGenerator;
 import net.minecraft.world.gen.feature.structure.Structure;
@@ -37,7 +38,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import software.bernie.geckolib3.GeckoLib;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -49,11 +49,19 @@ import java.util.Map;
  *     - Add more shouts and spells :)
  *   - Continue with adding some items, food, weapons and armour into the game
  *     - Add butter item (crafted by magma cream + bucket of milk) - possibly add churn block later or something..
- *     - Do textures for tomato crop stages and then create and do same for lettuce crop
+ *     - Do code + textures for lettuce crop and add lettuce item
+ *   - Add oven recipes:
+ *     - Apple Dumpling
+ *     - Apple Pie
+ *     - Braided Bread (?)
+ *     - Chicken Dumpling
+ *     - Jazbay Crostata
+ *     - Juniper Berry Crostata
+ *     - Lavender Dumpling
+ *     - Snowberry Crostata
  *   - Continue working on the ingame GUI overlay:
  *     - Mob indicators and *known* structures indicators in compass
  *       - Keep track of entities targeting the player and display these indicators in the compass
- *       - Display indicator of target mob in the compass as well.
  *   - Fix the positioning of the text + icons in SkyrimMenuScreen
  */
 @Mod(Skyrimcraft.MODID)
@@ -64,10 +72,9 @@ public class Skyrimcraft
     public static final Logger LOGGER = LogManager.getLogger();
 
     public Skyrimcraft() {
-        GeckoLib.initialize();
-
         ModBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModBlocks.BLOCK_ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ModBlocks.TILE_ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModSounds.SOUND_EVENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
         SpellRegistry.SPELLS.register(FMLJavaModLoadingContext.get().getModEventBus());
