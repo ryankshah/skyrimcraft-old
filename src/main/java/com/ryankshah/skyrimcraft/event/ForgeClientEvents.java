@@ -1,15 +1,14 @@
 package com.ryankshah.skyrimcraft.event;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerDataProvider;
+import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.client.gui.SkyrimMenuScreen;
 import com.ryankshah.skyrimcraft.network.Networking;
-import com.ryankshah.skyrimcraft.network.PacketCastSpell;
+import com.ryankshah.skyrimcraft.network.spell.PacketCastSpell;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -17,7 +16,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-@Mod.EventBusSubscriber(modid = Skyrimcraft.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = Skyrimcraft.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE) //, value = Dist.CLIENT
 public class ForgeClientEvents
 {
     public static final String CATEGORY = "key.categories." + Skyrimcraft.MODID;
@@ -28,6 +27,7 @@ public class ForgeClientEvents
 
     // public static final Map<BlockPos, Float> positions = Collections.synchronizedMap(new HashMap<>());
 
+    // TODO: Perhaps we make use of this for ice form shout..?
 //    @SubscribeEvent
 //    public static void postRenderWorld(RenderWorldLastEvent event) {
 //        if(!positions.isEmpty()) {
@@ -51,7 +51,6 @@ public class ForgeClientEvents
 
         final Minecraft mc = Minecraft.getInstance();
 
-        // key presses
         if(toggleSkyrimMenu.consumeClick()) {
             mc.setScreen(new SkyrimMenuScreen());
             return;
@@ -62,7 +61,7 @@ public class ForgeClientEvents
                 if(cap.getSelectedSpells().size() > 0 && cap.getSelectedSpells().get(0) != null)
                     Networking.sendToServer(new PacketCastSpell(cap.getSelectedSpells().get(0)));
                 else
-                    mc.player.displayClientMessage(new StringTextComponent("No spell/shout selected"), false);
+                    mc.player.displayClientMessage(new TranslationTextComponent("spell.noselect"), false);
             });
             return;
         }
@@ -72,7 +71,7 @@ public class ForgeClientEvents
                 if(cap.getSelectedSpells().size() > 1 && cap.getSelectedSpells().get(1) != null)
                     Networking.sendToServer(new PacketCastSpell(cap.getSelectedSpells().get(1)));
                 else
-                    mc.player.displayClientMessage(new StringTextComponent("No spell/shout selected"), false);
+                    mc.player.displayClientMessage(new TranslationTextComponent("spell.noselect"), false);
             });
         }
     }

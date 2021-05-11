@@ -1,0 +1,47 @@
+{
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:chests/village/village_desert_house"
+    }
+  ],
+  "chestItems": [
+    {
+      "item": "skyrimcraft:garlic",
+      "minItem": 1.0,
+      "maxItem": 3.0,
+      "chance": 0.685
+    },
+    {
+      "item": "skyrimcraft:tomato_seeds",
+      "minItem": 1.0,
+      "maxItem": 3.0,
+      "chance": 0.685
+    },
+    {
+      "item": "skyrimcraft:minor_magicka_potion",
+      "minItem": 2.0,
+      "maxItem": 3.0,
+      "chance": 0.625
+    },
+    {
+      "item": "skyrimcraft:magicka_potion",
+      "minItem": 1.0,
+      "maxItem": 2.0,
+      "chance": 0.5
+    },
+    {
+      "item": "skyrimcraft:plentiful_magicka_potion",
+      "minItem": 1.0,
+      "maxItem": 2.0,
+      "chance": 0.425
+    },
+    {
+      "item": "skyrimcraft:salt_pile",
+      "minItem": 1.0,
+      "maxItem": 3.0,
+      "chance": 0.425
+    }
+  ],
+  "type": "skyrimcraft:chest_loot"
+}

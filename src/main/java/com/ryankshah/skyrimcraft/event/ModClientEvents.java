@@ -1,7 +1,11 @@
 package com.ryankshah.skyrimcraft.event;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import com.ryankshah.skyrimcraft.data.modifier.*;
+import com.ryankshah.skyrimcraft.data.ModAdvancementProvider;
+import com.ryankshah.skyrimcraft.data.ModGlobalLootTableProvider;
+import com.ryankshah.skyrimcraft.data.ModLootTables;
+import com.ryankshah.skyrimcraft.data.ModRecipes;
+import com.ryankshah.skyrimcraft.data.lang.LangGenerator;
 import com.ryankshah.skyrimcraft.spell.SpellRegistry;
 import com.ryankshah.skyrimcraft.util.*;
 import net.minecraft.data.DataGenerator;

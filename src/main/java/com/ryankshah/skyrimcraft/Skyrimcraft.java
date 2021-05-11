@@ -3,10 +3,10 @@ package com.ryankshah.skyrimcraft;
 import com.mojang.serialization.Codec;
 import com.ryankshah.skyrimcraft.advancement.BaseTrigger;
 import com.ryankshah.skyrimcraft.advancement.TriggerManager;
-import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerData;
-import com.ryankshah.skyrimcraft.capability.SkyrimPlayerData;
-import com.ryankshah.skyrimcraft.capability.SkyrimPlayerDataStorage;
-import com.ryankshah.skyrimcraft.data.modifier.ModGlobalLootTableProvider;
+import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
+import com.ryankshah.skyrimcraft.character.SkyrimPlayerData;
+import com.ryankshah.skyrimcraft.character.SkyrimPlayerDataStorage;
+import com.ryankshah.skyrimcraft.data.ModGlobalLootTableProvider;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.spell.ISpell;
@@ -48,11 +48,12 @@ import java.util.Map;
  *   - Continue working on the shouts and spells system:
  *     - Add more shouts and spells :)
  *   - Continue with adding some items, food, weapons and armour into the game
- *     - Add butter item (crafted by magma cream + bucket of milk) - possibly add churn block later or something..
  *     - Do code + textures for lettuce crop and add lettuce item
+ *     - Add some potions
+ *       - Wellbeing potions
+ *       - Regenerate magicka, and stamina
  *   - Add oven recipes:
  *     - Apple Dumpling
- *     - Apple Pie
  *     - Braided Bread (?)
  *     - Chicken Dumpling
  *     - Jazbay Crostata
@@ -60,9 +61,21 @@ import java.util.Map;
  *     - Lavender Dumpling
  *     - Snowberry Crostata
  *   - Continue working on the ingame GUI overlay:
- *     - Mob indicators and *known* structures indicators in compass
- *       - Keep track of entities targeting the player and display these indicators in the compass
+ *     - Render the boss health similarly to target entities?
  *   - Fix the positioning of the text + icons in SkyrimMenuScreen
+ *   - Work on the character level system ( https://elderscrolls.fandom.com/wiki/Character_Level )
+ *     - Character level is determined solely on skill levels
+ *     - "Simply follow the prompts on the screen, select which of the three statistics to raise (Stamina, Health,
+ *       or Magicka), then allocate perks to whichever skill tree the player wishes to advance. This can even be done
+ *       in combat, and will refill whichever statistic is raised upon level-up, giving the potential to use a
+ *       level-up as a means of recovery during a fight".
+ *     - the hard limit is actually level 65,535 (Hex number FFFF). Although a level cap in 1.9 was 81.5
+ *     - Level calculation: https://elderscrolls.fandom.com/wiki/User:Documentalist/Character_level_calculation_(Skyrim)
+ *   - Work on a skills system (https://elderscrolls.fandom.com/wiki/Skills_(Skyrim))
+ *   - Start working on a quest system
+ *     - Certain quests require a character level of either 2, 5, 10, 15, 17, 20, 25, 30, or 80 to start them.
+ *   - Start working on a faction system
+ *   - Get some dragons and implement a dragon souls system for the shouts.
  */
 @Mod(Skyrimcraft.MODID)
 public class Skyrimcraft
@@ -114,10 +127,34 @@ public class Skyrimcraft
 //    }
 
     // Custom ItemGroup TAB
-    public static final ItemGroup TAB = new ItemGroup("skyrimcraft") {
+    public static final ItemGroup TAB_BLOCKS = new ItemGroup("skyrimcraft.blocks") {
         @Override
         public ItemStack makeIcon() {
             return new ItemStack(ModBlocks.EBONY_ORE.get());
+        }
+    };
+    public static final ItemGroup TAB_INGREDIENTS = new ItemGroup("skyrimcraft.ingredients") {
+        @Override
+        public ItemStack makeIcon() {
+            return new ItemStack(ModItems.SALT_PILE.get());
+        }
+    };
+    public static final ItemGroup TAB_MATERIALS = new ItemGroup("skyrimcraft.material") {
+        @Override
+        public ItemStack makeIcon() {
+            return new ItemStack(ModItems.EBONY_INGOT.get());
+        }
+    };
+    public static final ItemGroup TAB_FOOD = new ItemGroup("skyrimcraft.food") {
+        @Override
+        public ItemStack makeIcon() {
+            return new ItemStack(ModItems.APPLE_PIE.get());
+        }
+    };
+    public static final ItemGroup TAB_MAGIC = new ItemGroup("skyrimcraft.magic") {
+        @Override
+        public ItemStack makeIcon() {
+            return new ItemStack(ModItems.ULTIMATE_MAGICKA_POTION.get());
         }
     };
 

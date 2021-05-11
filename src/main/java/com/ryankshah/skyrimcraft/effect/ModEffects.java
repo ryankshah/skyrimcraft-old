@@ -12,4 +12,5 @@ public class ModEffects
 
     public static final RegistryObject<Effect> UNDEAD_FLEE = EFFECTS.register("undead_flee", UndeadFleeEffect::new);
     public static final RegistryObject<Effect> FROZEN = EFFECTS.register("frozen", FrozenEffect::new);
+    public static final RegistryObject<Effect> REGEN_MAGICKA = EFFECTS.register("regen_magicka", RegenMagickaEffect::new);
 }

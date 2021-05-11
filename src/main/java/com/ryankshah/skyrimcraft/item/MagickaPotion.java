@@ -1,8 +1,8 @@
 package com.ryankshah.skyrimcraft.item;
 
-import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerDataProvider;
+import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.network.Networking;
-import com.ryankshah.skyrimcraft.network.PacketReplenishMagicka;
+import com.ryankshah.skyrimcraft.network.spell.PacketReplenishMagicka;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
@@ -22,8 +22,6 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import net.minecraft.item.Item.Properties;
 
 public class MagickaPotion extends SkyrimItem
 {
@@ -75,7 +73,7 @@ public class MagickaPotion extends SkyrimItem
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new StringTextComponent("Replenishes " + replenishValue + " Magicka"));
+        tooltip.add(new StringTextComponent("Replenishes " + (int)replenishValue + " Magicka"));
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 

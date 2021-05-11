@@ -35,32 +35,32 @@ public class ModBlocks
     public static final RegistryObject<Block> QUICKSILVER_ORE = BLOCKS.register("quicksilver_ore", () -> new SkyrimOreBlock("Quicksilver Ore"));
     public static final RegistryObject<Block> SILVER_ORE = BLOCKS.register("silver_ore", () -> new SkyrimOreBlock("Silver Ore"));
     // Ore BlockItems
-    public static final RegistryObject<Item> EBONY_ORE_ITEM = BLOCK_ITEMS.register("ebony_ore", () -> new SkyrimBlockItem(EBONY_ORE.get(), new Item.Properties().tab(Skyrimcraft.TAB), "Ebony Ore"));
-    public static final RegistryObject<Item> CORUNDUM_ORE_ITEM = BLOCK_ITEMS.register("corundum_ore", () -> new SkyrimBlockItem(CORUNDUM_ORE.get(), new Item.Properties().tab(Skyrimcraft.TAB), "Corundum Ore"));
-    public static final RegistryObject<Item> MALACHITE_ORE_ITEM = BLOCK_ITEMS.register("malachite_ore", () -> new SkyrimBlockItem(MALACHITE_ORE.get(), new Item.Properties().tab(Skyrimcraft.TAB), "Malachite Ore"));
-    public static final RegistryObject<Item> MOONSTONE_ORE_ITEM = BLOCK_ITEMS.register("moonstone_ore", () -> new SkyrimBlockItem(MOONSTONE_ORE.get(), new Item.Properties().tab(Skyrimcraft.TAB), "Moonstone Ore"));
-    public static final RegistryObject<Item> ORICHALCUM_ORE_ITEM = BLOCK_ITEMS.register("orichalcum_ore", () -> new SkyrimBlockItem(ORICHALCUM_ORE.get(), new Item.Properties().tab(Skyrimcraft.TAB), "Orichalcum Ore"));
-    public static final RegistryObject<Item> QUICKSILVER_ORE_ITEM = BLOCK_ITEMS.register("quicksilver_ore", () -> new SkyrimBlockItem(QUICKSILVER_ORE.get(), new Item.Properties().tab(Skyrimcraft.TAB), "Quicksilver Ore"));
-    public static final RegistryObject<Item> SILVER_ORE_ITEM = BLOCK_ITEMS.register("silver_ore", () -> new SkyrimBlockItem(SILVER_ORE.get(), new Item.Properties().tab(Skyrimcraft.TAB), "Silver Ore"));
+    public static final RegistryObject<Item> EBONY_ORE_ITEM = BLOCK_ITEMS.register("ebony_ore", () -> new SkyrimBlockItem(EBONY_ORE.get(), new Item.Properties().tab(Skyrimcraft.TAB_BLOCKS), "Ebony Ore"));
+    public static final RegistryObject<Item> CORUNDUM_ORE_ITEM = BLOCK_ITEMS.register("corundum_ore", () -> new SkyrimBlockItem(CORUNDUM_ORE.get(), new Item.Properties().tab(Skyrimcraft.TAB_BLOCKS), "Corundum Ore"));
+    public static final RegistryObject<Item> MALACHITE_ORE_ITEM = BLOCK_ITEMS.register("malachite_ore", () -> new SkyrimBlockItem(MALACHITE_ORE.get(), new Item.Properties().tab(Skyrimcraft.TAB_BLOCKS), "Malachite Ore"));
+    public static final RegistryObject<Item> MOONSTONE_ORE_ITEM = BLOCK_ITEMS.register("moonstone_ore", () -> new SkyrimBlockItem(MOONSTONE_ORE.get(), new Item.Properties().tab(Skyrimcraft.TAB_BLOCKS), "Moonstone Ore"));
+    public static final RegistryObject<Item> ORICHALCUM_ORE_ITEM = BLOCK_ITEMS.register("orichalcum_ore", () -> new SkyrimBlockItem(ORICHALCUM_ORE.get(), new Item.Properties().tab(Skyrimcraft.TAB_BLOCKS), "Orichalcum Ore"));
+    public static final RegistryObject<Item> QUICKSILVER_ORE_ITEM = BLOCK_ITEMS.register("quicksilver_ore", () -> new SkyrimBlockItem(QUICKSILVER_ORE.get(), new Item.Properties().tab(Skyrimcraft.TAB_BLOCKS), "Quicksilver Ore"));
+    public static final RegistryObject<Item> SILVER_ORE_ITEM = BLOCK_ITEMS.register("silver_ore", () -> new SkyrimBlockItem(SILVER_ORE.get(), new Item.Properties().tab(Skyrimcraft.TAB_BLOCKS), "Silver Ore"));
 
     // Misc
     public static final RegistryObject<Block> SALT_DEPOSIT = BLOCKS.register("salt_deposit", () -> new SaltDepositBlock("Salt Deposit"));
-    public static final RegistryObject<Item> SALT_DEPOSIT_ITEM = BLOCK_ITEMS.register("salt_deposit", () -> new SkyrimBlockItem(SALT_DEPOSIT.get(), new Item.Properties().tab(Skyrimcraft.TAB), "Salt Deposit"));
+    public static final RegistryObject<Item> SALT_DEPOSIT_ITEM = BLOCK_ITEMS.register("salt_deposit", () -> new SkyrimBlockItem(SALT_DEPOSIT.get(), new Item.Properties().tab(Skyrimcraft.TAB_BLOCKS), "Salt Deposit"));
 
     // Plants
     public static final RegistryObject<Block> TOMATO_CROP = BLOCKS.register("tomatoes", () -> new TomatoCrop("Tomatoes"));
     public static final RegistryObject<Block> GARLIC_CROP = BLOCKS.register("garlic", () -> new TomatoCrop("Garlic"));
     // Plant seeds
-    public static final RegistryObject<Item> TOMATO_SEEDS = BLOCK_ITEMS.register("tomato_seeds", () -> new SkyrimBlockItem(ModBlocks.TOMATO_CROP.get(), new Item.Properties().tab(Skyrimcraft.TAB), "Tomato Seeds"));
-    public static final RegistryObject<Item> GARLIC = BLOCK_ITEMS.register("garlic", () -> new SkyrimBlockItem(ModBlocks.GARLIC_CROP.get(), new Item.Properties().tab(Skyrimcraft.TAB), "Garlic"));
+    public static final RegistryObject<Item> TOMATO_SEEDS = BLOCK_ITEMS.register("tomato_seeds", () -> new SkyrimBlockItem(ModBlocks.TOMATO_CROP.get(), new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Tomato Seeds"));
+    public static final RegistryObject<Item> GARLIC = BLOCK_ITEMS.register("garlic", () -> new SkyrimBlockItem(ModBlocks.GARLIC_CROP.get(), new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Garlic"));
 
     public static final RegistryObject<Block> OVEN = BLOCKS.register("oven", () -> new OvenBlock("Oven"));
-    public static final RegistryObject<Item> OVEN_BLOCK_ITEM = BLOCK_ITEMS.register("oven", () -> new SkyrimBlockItem(OVEN.get(), new Item.Properties().tab(Skyrimcraft.TAB), "Oven"));
+    public static final RegistryObject<Item> OVEN_BLOCK_ITEM = BLOCK_ITEMS.register("oven", () -> new SkyrimBlockItem(OVEN.get(), new Item.Properties().tab(Skyrimcraft.TAB_BLOCKS), "Oven"));
     public static final RegistryObject<TileEntityType<?>> OVEN_TILE_ENTITY = TILE_ENTITIES.register("oven", () -> TileEntityType.Builder.of(OvenTileEntity::new, OVEN.get()).build(null));
 
     // Shout block
     public static final RegistryObject<Block> SHOUT_BLOCK = BLOCKS.register("shout_block", () -> new ShoutBlock("Shout Block"));
-    public static final RegistryObject<Item> SHOUT_BLOCK_ITEM = BLOCK_ITEMS.register("shout_block", () -> new SkyrimBlockItem(SHOUT_BLOCK.get(), new Item.Properties().tab(Skyrimcraft.TAB), "Shout Block"));
+    public static final RegistryObject<Item> SHOUT_BLOCK_ITEM = BLOCK_ITEMS.register("shout_block", () -> new SkyrimBlockItem(SHOUT_BLOCK.get(), new Item.Properties().tab(Skyrimcraft.TAB_BLOCKS), "Shout Block"));
 
     public static void blockRenders() {
         RenderTypeLookup.setRenderLayer(ModBlocks.SILVER_ORE.get(), RenderType.solid());

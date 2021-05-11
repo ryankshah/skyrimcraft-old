@@ -9,8 +9,6 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public class UndeadFleeEffect extends Effect implements IForgeRegistryEntry<Effect>
 {
-    private static final double FLEE_RADIUS = 30D;
-
     public UndeadFleeEffect() {
         super(EffectType.BENEFICIAL, 0xAA222222);
     }

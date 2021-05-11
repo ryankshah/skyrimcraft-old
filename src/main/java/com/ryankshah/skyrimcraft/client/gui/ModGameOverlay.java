@@ -11,6 +11,9 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = Skyrimcraft.MODID, value = Dist.CLIENT)
 public class ModGameOverlay
 {
+    // TODO: Check for boss health + info and use the render target display similar to other mobs.
+    // TODO: Fix subtitle text position (if needed??)
+    // TODO: Move position of item text up
     @SubscribeEvent
     public static void renderOverlay(RenderGameOverlayEvent.Pre event) {
         if (ClientUtil.getMinecraft().player == null) { return; }

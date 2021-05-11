@@ -1,8 +1,6 @@
 package com.ryankshah.skyrimcraft.block;
 
-import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.util.ModBlocks;
-import com.ryankshah.skyrimcraft.util.ModItems;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.state.IntegerProperty;

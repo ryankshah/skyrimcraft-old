@@ -1,6 +1,8 @@
 package com.ryankshah.skyrimcraft.network;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
+import com.ryankshah.skyrimcraft.network.character.*;
+import com.ryankshah.skyrimcraft.network.spell.*;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.chunk.Chunk;
@@ -120,6 +122,18 @@ public class Networking
                 .encoder(PacketUpdateMapFeatures::toBytes)
                 .decoder(PacketUpdateMapFeatures::new)
                 .consumer(PacketUpdateMapFeatures::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketAddToTargetingEntities.class, nextID())
+                .encoder(PacketAddToTargetingEntities::toBytes)
+                .decoder(PacketAddToTargetingEntities::new)
+                .consumer(PacketAddToTargetingEntities::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketUpdateTargetingEntities.class, nextID())
+                .encoder(PacketUpdateTargetingEntities::toBytes)
+                .decoder(PacketUpdateTargetingEntities::new)
+                .consumer(PacketUpdateTargetingEntities::handle)
                 .add();
     }
 

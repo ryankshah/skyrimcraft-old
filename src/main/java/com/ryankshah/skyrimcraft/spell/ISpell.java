@@ -1,33 +1,18 @@
 package com.ryankshah.skyrimcraft.spell;
 
-import com.ryankshah.skyrimcraft.advancement.TriggerManager;
-import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerData;
-import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerDataProvider;
-import com.ryankshah.skyrimcraft.event.ForgeClientEvents;
+import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
+import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.network.Networking;
-import com.ryankshah.skyrimcraft.network.PacketConsumeMagicka;
-import com.ryankshah.skyrimcraft.network.PacketUpdateShoutCooldownOnServer;
-import com.ryankshah.skyrimcraft.util.ClientUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.audio.SoundHandler;
+import com.ryankshah.skyrimcraft.network.spell.PacketConsumeMagicka;
+import com.ryankshah.skyrimcraft.network.spell.PacketUpdateShoutCooldownOnServer;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.ForgeRegistryEntry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**

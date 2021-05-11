@@ -44,6 +44,8 @@ public class MapFeature
             return new Pair<>(29, 124);
         } else if(feature.equals(Structure.MINESHAFT.getRegistryName())) {
             return new Pair<>(44, 125);
+        } else if(feature.equals(Structure.SHIPWRECK.getRegistryName())) {
+            return new Pair<>(57, 124);
         }
         return null;
     }

@@ -3,7 +3,7 @@ package com.ryankshah.skyrimcraft.client.gui;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerDataProvider;
+import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.util.MapFeature;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
@@ -72,6 +72,23 @@ public class SkyrimIngameGui extends AbstractGui
                         Vector2f angleYd = angleFromTarget(position, new Vector3d(playerPosX, playerPosY, playerPosZ));
                         drawStructureIndicator(matrixStack, finalYaw, angleYd.x, width / 2, feature);
                     }
+                }
+            }
+            if (cap.getTargetingEntities() != null) {
+                for(int entityID : cap.getTargetingEntities()) {
+                    if(mc.player.level.getEntity(entityID) == null)
+                        return;
+
+                    LivingEntity targetingEntity = (LivingEntity) mc.player.level.getEntity(entityID);
+                    // Check player is out of target range
+                    if(!mc.player.closerThan(targetingEntity, 16.0D))
+                        return;
+
+                    Vector3d a = new Vector3d(playerPosX, playerPosY, playerPosZ);
+                    Vector3d b = targetingEntity.position();
+
+                    Vector2f angleYd = angleFromTarget(b, a);
+                    drawTargetIndicator(matrixStack, finalYaw, angleYd.x, width / 2); //ydelta = angleYd.y
                 }
             }
             if (cap.getCurrentTarget() != null && cap.getCurrentTarget().isAlive()) {

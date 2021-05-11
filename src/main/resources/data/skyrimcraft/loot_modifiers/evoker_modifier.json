@@ -22,6 +22,48 @@
       "maxItem": 1.0,
       "change": 0.4,
       "useLooting": false
+    },
+    {
+      "item": "skyrimcraft:magicka_potion",
+      "minItem": 1.0,
+      "maxItem": 2.0,
+      "change": 0.5,
+      "useLooting": true
+    },
+    {
+      "item": "skyrimcraft:minor_magicka_potion",
+      "minItem": 2.0,
+      "maxItem": 3.0,
+      "change": 0.625,
+      "useLooting": true
+    },
+    {
+      "item": "skyrimcraft:plentiful_magicka_potion",
+      "minItem": 1.0,
+      "maxItem": 2.0,
+      "change": 0.425,
+      "useLooting": true
+    },
+    {
+      "item": "skyrimcraft:vigorous_magicka_potion",
+      "minItem": 1.0,
+      "maxItem": 1.0,
+      "change": 0.35,
+      "useLooting": true
+    },
+    {
+      "item": "skyrimcraft:extreme_magicka_potion",
+      "minItem": 1.0,
+      "maxItem": 1.0,
+      "change": 0.3,
+      "useLooting": true
+    },
+    {
+      "item": "skyrimcraft:ultimate_magicka_potion",
+      "minItem": 0.0,
+      "maxItem": 1.0,
+      "change": 0.2,
+      "useLooting": true
     }
   ],
   "type": "skyrimcraft:passive_entity"

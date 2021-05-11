@@ -1,38 +1,30 @@
 package com.ryankshah.skyrimcraft.block;
 
-import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerData;
-import com.ryankshah.skyrimcraft.capability.ISkyrimPlayerDataProvider;
+import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
+import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.network.Networking;
-import com.ryankshah.skyrimcraft.network.PacketAddToKnownSpells;
+import com.ryankshah.skyrimcraft.network.spell.PacketAddToKnownSpells;
 import com.ryankshah.skyrimcraft.spell.ISpell;
 import com.ryankshah.skyrimcraft.spell.SpellRegistry;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.RegistryObject;
 
-import javax.annotation.Nullable;
-import java.util.*;
+import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class ShoutBlock extends SkyrimBlock
@@ -59,45 +51,37 @@ public class ShoutBlock extends SkyrimBlock
         if (!p_225533_2_.isClientSide) {
             List<BlockState> nearbyShoutBlocks = p_225533_2_.getBlockStates(new AxisAlignedBB(p_225533_3_.getX() - 5, p_225533_3_.getY() - 5, p_225533_3_.getZ() - 5,
                     p_225533_3_.getX() + 5, p_225533_3_.getY() + 5, p_225533_3_.getZ() + 5)).collect(Collectors.toList());
-            // Check if the shout is given (if blockstate shout given property is true)
             if(!p_225533_1_.getValue(SHOUT_GIVEN)) {
-                // Check that no blocks in nearbyShoutBlocks has the property set to true
                 for(BlockState state : nearbyShoutBlocks) {
                     if(state.hasProperty(SHOUT_GIVEN) && state.getValue(SHOUT_GIVEN)) {
-                        playerEntity.displayClientMessage(new StringTextComponent("The power which once resonated within this wall has since departed"), false);
+                        playerEntity.displayClientMessage(new TranslationTextComponent("shoutblock.used"), false);
                         return ActionResultType.FAIL;
                     }
                 }
 
-                // Now that no blocks in nearbyShoutBlocks has the property set to true
-                // we can now add the shout to the player
-
                 // TODO: Later on we will make use of dragon souls to unlock shouts...
                 ISkyrimPlayerData cap = playerEntity.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("shout block use"));
 
-                // we'll have unrelenting force always be the first shout they learn,
-                // otherwise add a random shout from the spell registry.
                 if (cap.getKnownSpells().contains(SpellRegistry.UNRELENTING_FORCE.get())) {
                     List<ISpell> shouts = SpellRegistry.SPELLS.getEntries().stream().filter(spell -> spell.get().getType() == ISpell.SpellType.SHOUT && spell != SpellRegistry.UNRELENTING_FORCE && !cap.getKnownSpells().contains(spell.get())).map(RegistryObject::get).collect(Collectors.toList());
 
                     if (shouts.size() > 0) {
                         ISpell shout = shouts.get(random.nextInt(shouts.size()));
                         Networking.sendToServer(new PacketAddToKnownSpells(shout));
-                        // TODO: do we need to replace this with a shout learned sound of our own
-                        //p_225533_2_.playLocalSound(playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SoundEvents.END_PORTAL_SPAWN, SoundCategory.BLOCKS, 1f, 1f, false);
                     } else
-                        playerEntity.displayClientMessage(new StringTextComponent("You have no more shouts to learn!"), false);
+                        playerEntity.displayClientMessage(new TranslationTextComponent("shoutblock.allshoutsknown"), false);
                 } else {
                     Networking.sendToServer(new PacketAddToKnownSpells(SpellRegistry.UNRELENTING_FORCE.get()));
                 }
 
-                // Now set the state value to true, as well as for other block states in the area.
                 p_225533_2_.setBlockAndUpdate(p_225533_3_, p_225533_1_.setValue(SHOUT_GIVEN, true));
                 for(BlockState state : nearbyShoutBlocks) {
                     if(state.hasProperty(SHOUT_GIVEN) && !state.getValue(SHOUT_GIVEN)) {
                         state.setValue(SHOUT_GIVEN, true);
                     }
                 }
+            } else {
+                playerEntity.displayClientMessage(new TranslationTextComponent("shoutblock.used"), false);
             }
         }
         return ActionResultType.SUCCESS;
