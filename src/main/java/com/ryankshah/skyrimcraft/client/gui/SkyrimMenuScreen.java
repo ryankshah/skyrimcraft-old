@@ -22,6 +22,11 @@ public class SkyrimMenuScreen extends Screen
 
     private Direction currentDirection;
 
+    TranslationTextComponent SKILLS = new TranslationTextComponent("skyrimcraft.menu.skills");
+    TranslationTextComponent MAP = new TranslationTextComponent("skyrimcraft.menu.map");
+    TranslationTextComponent ITEMS = new TranslationTextComponent("skyrimcraft.menu.items");
+    TranslationTextComponent MAGIC = new TranslationTextComponent("skyrimcraft.menu.magic");
+
     public SkyrimMenuScreen() {
         super(new TranslationTextComponent(Skyrimcraft.MODID + ".menugui.title"));
 
@@ -30,11 +35,6 @@ public class SkyrimMenuScreen extends Screen
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        TranslationTextComponent SKILLS = new TranslationTextComponent("skyrimcraft.menu.skills");
-        TranslationTextComponent MAP = new TranslationTextComponent("skyrimcraft.menu.map");
-        TranslationTextComponent ITEMS = new TranslationTextComponent("skyrimcraft.menu.items");
-        TranslationTextComponent MAGIC = new TranslationTextComponent("skyrimcraft.menu.magic");
-
         minecraft.getTextureManager().bind(MENU_ICONS);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.renderBackground(matrixStack);
@@ -68,13 +68,13 @@ public class SkyrimMenuScreen extends Screen
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if(keyCode == GLFW_KEY_RIGHT)
+        if(keyCode == GLFW_KEY_RIGHT || keyCode == GLFW_KEY_D)
             currentDirection = Direction.WEST;
-        else if(keyCode == GLFW_KEY_LEFT)
+        else if(keyCode == GLFW_KEY_LEFT || keyCode == GLFW_KEY_A)
             currentDirection = Direction.EAST;
-        else if(keyCode == GLFW_KEY_UP)
+        else if(keyCode == GLFW_KEY_UP || keyCode == GLFW_KEY_W)
             currentDirection = Direction.NORTH;
-        else if(keyCode == GLFW_KEY_DOWN)
+        else if(keyCode == GLFW_KEY_DOWN || keyCode == GLFW_KEY_S)
             currentDirection = Direction.SOUTH;
         else if(keyCode == GLFW_KEY_ENTER) {
             if(currentDirection == Direction.NORTH) {

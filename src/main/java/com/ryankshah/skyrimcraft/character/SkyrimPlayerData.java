@@ -21,6 +21,7 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
 
     private float magicka = 20.0f;
     private final float maxMagicka = 20.0f;
+    private float magicka_regen_modifier;
     private Map<ISpell, Float> shoutsOnCooldown;
 
     private List<MapFeature> mapFeatures;
@@ -32,6 +33,8 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
         shoutsOnCooldown = new HashMap<>();
         targetEntity = null;
         targetingEntities = new ArrayList<>();
+
+        magicka_regen_modifier = 1.0f;
 
         selectedSpells.put(0, null);
         selectedSpells.put(1, null);
@@ -45,6 +48,8 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
         shoutsOnCooldown = new HashMap<>();
         targetEntity = null;
         targetingEntities = new ArrayList<>();
+
+        magicka_regen_modifier = 1.0f;
 
         selectedSpells.put(0, null);
         selectedSpells.put(1, null);
@@ -132,6 +137,16 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
     @Override
     public float getMaxMagicka() {
         return this.maxMagicka;
+    }
+
+    @Override
+    public float getMagickaRegenModifier() {
+        return magicka_regen_modifier;
+    }
+
+    @Override
+    public void setMagickaRegenModifier(float modifier) {
+        this.magicka_regen_modifier = modifier;
     }
 
     @Override

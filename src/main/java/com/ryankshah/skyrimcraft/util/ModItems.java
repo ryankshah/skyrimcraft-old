@@ -1,9 +1,7 @@
 package com.ryankshah.skyrimcraft.util;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import com.ryankshah.skyrimcraft.item.MagickaPotion;
-import com.ryankshah.skyrimcraft.item.SkyrimItem;
-import com.ryankshah.skyrimcraft.item.SpellBook;
+import com.ryankshah.skyrimcraft.item.*;
 import com.ryankshah.skyrimcraft.spell.SpellRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.Food;
@@ -27,12 +25,22 @@ public class ModItems
     public static final RegistryObject<Item> DAEDRA_HEART = ITEMS.register("daedra_heart", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_MATERIALS), "Daedra Heart"));
 
     // Potions
-    public static final RegistryObject<Item> MINOR_MAGICKA_POTION = ITEMS.register("minor_magicka_potion", () -> new MagickaPotion(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC), "Minor Magicka Potion", 2.0f));
-    public static final RegistryObject<Item> MAGICKA_POTION = ITEMS.register("magicka_potion", () -> new MagickaPotion(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC), "Magicka Potion", 4.0f));
-    public static final RegistryObject<Item> PLENTIFUL_MAGICKA_POTION = ITEMS.register("plentiful_magicka_potion", () -> new MagickaPotion(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC), "Plentiful Magicka Potion", 6.0f));
-    public static final RegistryObject<Item> VIGOROUS_MAGICKA_POTION = ITEMS.register("vigorous_magicka_potion", () -> new MagickaPotion(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC), "Vigorous Magicka Potion", 8.0f));
-    public static final RegistryObject<Item> EXTREME_MAGICKA_POTION = ITEMS.register("extreme_magicka_potion", () -> new MagickaPotion(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC), "Extreme Magicka Potion", 12.0f));
-    public static final RegistryObject<Item> ULTIMATE_MAGICKA_POTION = ITEMS.register("ultimate_magicka_potion", () -> new MagickaPotion(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC), "Ultimate Magicka Potion", 20.0f));
+    // Magicka potions
+    public static final RegistryObject<Item> MINOR_MAGICKA_POTION = ITEMS.register("minor_magicka_potion", () -> new MagickaPotion(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC), "Potion of Minor Magicka", 2.0f));
+    public static final RegistryObject<Item> MAGICKA_POTION = ITEMS.register("magicka_potion", () -> new MagickaPotion(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC), "Potion of Magicka", 4.0f));
+    public static final RegistryObject<Item> PLENTIFUL_MAGICKA_POTION = ITEMS.register("plentiful_magicka_potion", () -> new MagickaPotion(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC), "Potion of Plentiful Magicka", 6.0f));
+    public static final RegistryObject<Item> VIGOROUS_MAGICKA_POTION = ITEMS.register("vigorous_magicka_potion", () -> new MagickaPotion(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC), "Potion of Vigorous Magicka", 8.0f));
+    public static final RegistryObject<Item> EXTREME_MAGICKA_POTION = ITEMS.register("extreme_magicka_potion", () -> new MagickaPotion(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC), "Potion of Extreme Magicka", 12.0f));
+    public static final RegistryObject<Item> ULTIMATE_MAGICKA_POTION = ITEMS.register("ultimate_magicka_potion", () -> new MagickaPotion(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC), "Potion of Ultimate Magicka", 20.0f));
+    // Magicka regen potions
+    public static final RegistryObject<Item> LASTING_POTENCY_POTION = ITEMS.register("lasting_potency_potion", () -> new RegenMagickaPotion(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC), "Potion of Lasting Potency",1.5f, 600));
+    public static final RegistryObject<Item> DRAUGHT_LASTING_POTENCY_POTION = ITEMS.register("draught_lasting_potency_potion", () -> new RegenMagickaPotion(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC), "Draught of Lasting Potency", 1.6f, 600));
+    public static final RegistryObject<Item> SOLUTION_LASTING_POTENCY_POTION = ITEMS.register("solution_lasting_potency_potion", () -> new RegenMagickaPotion(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC), "Solution of Lasting Potency", 1.7f, 600));
+    public static final RegistryObject<Item> PHILTER_LASTING_POTENCY_POTION = ITEMS.register("philter_lasting_potency_potion", () -> new RegenMagickaPotion(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC), "Philter of Lasting Potency", 1.8f, 600));
+    public static final RegistryObject<Item> ELIXIR_LASTING_POTENCY_POTION = ITEMS.register("elixir_lasting_potency_potion", () -> new RegenMagickaPotion(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC), "Elixir of Lasting Potency", 2f, 600));
+    // Unique and non-levelled potions
+    public static final RegistryObject<Item> PHILTER_OF_THE_PHANTOM_POTION = ITEMS.register("philter_of_the_phantom_potion", () -> new SpectralPotion(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC), "Philter of the Phantom", 600));
+
 
     // Food
     public static final RegistryObject<Item> SWEET_ROLL = ITEMS.register("sweet_roll", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new Food.Builder().nutrition(4).saturationMod(0.4F).build()), "Sweet Roll"));
@@ -57,56 +65,71 @@ public class ModItems
 
         @Override
         protected void registerModels() {
-            singleTexture(EBONY_INGOT.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(EBONY_INGOT.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/ebony_ingot"));
-            singleTexture(MOONSTONE_INGOT.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(MOONSTONE_INGOT.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/moonstone_ingot"));
-            singleTexture(MALACHITE_INGOT.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(MALACHITE_INGOT.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/malachite_ingot"));
-            singleTexture(ORICHALCUM_INGOT.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(ORICHALCUM_INGOT.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/orichalcum_ingot"));
-            singleTexture(LEATHER_STRIPS.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(LEATHER_STRIPS.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/leather_strips"));
-            singleTexture(DAEDRA_HEART.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(DAEDRA_HEART.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/daedra_heart"));
 
             // Potions
-            singleTexture(MINOR_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            // magicka potions
+            singleTexture(MINOR_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/minor_magicka_potion"));
-            singleTexture(MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/magicka_potion"));
-            singleTexture(PLENTIFUL_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(PLENTIFUL_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/plentiful_magicka_potion"));
-            singleTexture(VIGOROUS_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(VIGOROUS_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/vigorous_magicka_potion"));
-            singleTexture(EXTREME_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(EXTREME_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/extreme_magicka_potion"));
-            singleTexture(ULTIMATE_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(ULTIMATE_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/ultimate_magicka_potion"));
+            // magicka regen potions
+            singleTexture(LASTING_POTENCY_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/lasting_potency_potion"));
+            singleTexture(DRAUGHT_LASTING_POTENCY_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/draught_lasting_potency_potion"));
+            singleTexture(SOLUTION_LASTING_POTENCY_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/solution_lasting_potency_potion"));
+            singleTexture(PHILTER_LASTING_POTENCY_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/philter_lasting_potency_potion"));
+            singleTexture(ELIXIR_LASTING_POTENCY_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/elixir_lasting_potency_potion"));
+            // unique potions
+            singleTexture(PHILTER_OF_THE_PHANTOM_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/philter_of_the_phantom_potion"));
 
             // Food
-            singleTexture(SWEET_ROLL.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(SWEET_ROLL.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/sweet_roll"));
-            singleTexture(GARLIC_BREAD.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(GARLIC_BREAD.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/garlic_bread"));
-            singleTexture(POTATO_BREAD.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(POTATO_BREAD.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/potato_bread"));
-            singleTexture(TOMATO.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(TOMATO.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/tomato"));
-            singleTexture(APPLE_PIE.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(APPLE_PIE.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/apple_pie"));
 
             // Ingredients
-            singleTexture(SALT_PILE.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(SALT_PILE.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/salt_pile"));
-            singleTexture(FLOUR.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(FLOUR.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/flour"));
-            singleTexture(BUTTER.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(BUTTER.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/butter"));
 
-            singleTexture(FIREBALL_SPELLBOOK.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(FIREBALL_SPELLBOOK.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/spellbook"));
-            singleTexture(TURN_UNDEAD_SPELLBOOK.get().getRegistryName().getPath(), new ResourceLocation("item/handheld"),
+            singleTexture(TURN_UNDEAD_SPELLBOOK.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/spellbook"));
         }
     }

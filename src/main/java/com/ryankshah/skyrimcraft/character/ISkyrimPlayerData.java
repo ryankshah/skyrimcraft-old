@@ -27,6 +27,8 @@ public interface ISkyrimPlayerData
     public void setMagicka(float amount);
     public float getMagicka();
     public float getMaxMagicka();
+    public float getMagickaRegenModifier();
+    public void setMagickaRegenModifier(float modifier);
 
     /* CURRENT TARGET FIELDS */
     public void setCurrentTarget(LivingEntity entity);

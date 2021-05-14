@@ -15,6 +15,7 @@ import com.ryankshah.skyrimcraft.util.*;
 import com.ryankshah.skyrimcraft.worldgen.WorldGen;
 import com.ryankshah.skyrimcraft.worldgen.structure.ModConfiguredStructures;
 import com.ryankshah.skyrimcraft.worldgen.structure.ModStructures;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -28,6 +29,7 @@ import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -85,6 +87,7 @@ public class Skyrimcraft
     public static final Logger LOGGER = LogManager.getLogger();
 
     public Skyrimcraft() {
+        ModAttributes.ATTRIBUTES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModBlocks.BLOCK_ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModBlocks.TILE_ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
@@ -97,6 +100,7 @@ public class Skyrimcraft
         ModGlobalLootTableProvider.LOOT_MODIFIERS.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(Skyrimcraft::commonSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(Skyrimcraft::addEntityAttributes);
 
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, WorldGen::generate); // high for additions to worldgen
         MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, this::addDimensionalSpacing);
@@ -121,10 +125,9 @@ public class Skyrimcraft
         ModConfiguredStructures.registerConfiguredStructures();
     }
 
-//    @SubscribeEvent
-//    public static void addEntityAttributes(EntityAttributeCreationEvent event) {
-//        event.put(ModEntityTypes.EARTH_GOD.get(), EarthGodEntity.createAttributes().build());
-//    }
+    public static void addEntityAttributes(EntityAttributeModificationEvent event) {
+        event.add(EntityType.PLAYER, ModAttributes.MAGICKA_REGEN.get());
+    }
 
     // Custom ItemGroup TAB
     public static final ItemGroup TAB_BLOCKS = new ItemGroup("skyrimcraft.blocks") {

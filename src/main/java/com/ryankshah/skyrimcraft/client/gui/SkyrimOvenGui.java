@@ -8,6 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.util.ModBlocks;
 import com.ryankshah.skyrimcraft.util.ModItems;
+import javafx.util.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
@@ -48,7 +49,7 @@ public class SkyrimOvenGui extends Screen
     private PlayerEntity player;
 
     public SkyrimOvenGui() {
-        super(new TranslationTextComponent(Skyrimcraft.MODID + ".shopgui.title"));
+        super(new TranslationTextComponent(Skyrimcraft.MODID + ".ovengui.title"));
         this.player = Minecraft.getInstance().player;
         this.items = ArrayListMultimap.create();
         this.addItems();
@@ -138,7 +139,7 @@ public class SkyrimOvenGui extends Screen
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if(keyCode == GLFW_KEY_DOWN) {
+        if(keyCode == GLFW_KEY_DOWN || keyCode == GLFW_KEY_S) {
             if (!this.categoryChosen) {
                 if (this.currentCategory < this.categories.length - 1) {
                     ++this.currentCategory;
@@ -155,7 +156,7 @@ public class SkyrimOvenGui extends Screen
             }
         }
 
-        if(keyCode == GLFW_KEY_UP) {
+        if(keyCode == GLFW_KEY_UP || keyCode == GLFW_KEY_W) {
             if (!this.categoryChosen) {
                 if (this.currentCategory > 0) {
                     --this.currentCategory;
@@ -172,14 +173,14 @@ public class SkyrimOvenGui extends Screen
             }
         }
 
-        if(keyCode == GLFW_KEY_LEFT) {
+        if(keyCode == GLFW_KEY_LEFT || keyCode == GLFW_KEY_A) {
             if(this.categoryChosen) {
                 this.categoryChosen = false;
                 this.currentItem = 0;
             }
         }
 
-        if(keyCode == GLFW_KEY_RIGHT) {
+        if(keyCode == GLFW_KEY_RIGHT || keyCode == GLFW_KEY_D) {
             if(!this.categoryChosen) {
                 this.categoryChosen = true;
                 this.currentItem = 0;
@@ -201,7 +202,7 @@ public class SkyrimOvenGui extends Screen
 
             for(ItemStack is : currentRecipeObject.getRecipeItems()) {
                 ItemStack copy = is.copy();
-                removeItem(player, copy, copy.getCount());
+                hasAndRemoveItems(player, copy, copy.getCount());
             }
 
             this.player.addItem(this.currentRecipeObject.getItemStack().copy());
@@ -316,16 +317,41 @@ public class SkyrimOvenGui extends Screen
 
     public static boolean hasItem(PlayerEntity player, ItemStack is, int amount) {
         if (is != null) {
-            IItemHandler ih = (IItemHandler)player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("skyrim oven gui hasItem"));
+            IItemHandler ih = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new IllegalStateException("skyrim oven gui hasItem"));
+            int count = 0;
 
             for(int i = 0; i < ih.getSlots(); ++i) {
-                ItemStack stack = ih.getStackInSlot(i);
-                if (areItemStacksEqual(is, stack)) {
+                if(count >= is.getCount())
                     return true;
+
+                ItemStack stack = ih.getStackInSlot(i);
+                if(is.sameItem(stack) && ItemStack.tagMatches(is, stack)) {
+                    count += stack.getCount();
                 }
             }
         }
         return false;
+    }
+
+    public static void hasAndRemoveItems(PlayerEntity player, ItemStack is, int amount) {
+        if (is != null) {
+            IItemHandler ih = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new IllegalStateException("skyrim oven gui hasAndRemoveItems"));
+            List<Pair<Integer, ItemStack>> matchedItems = new ArrayList<>();
+            int count = is.getCount();
+
+            for(int i = 0; i < ih.getSlots(); ++i) {
+                ItemStack stack = ih.getStackInSlot(i);
+                if(is.sameItem(stack) && ItemStack.tagMatches(is, stack)) {
+                    if(stack.getCount() >= count) {
+                        ih.extractItem(i, count, false);
+                        break;
+                    } else {
+                        count -= stack.getCount();
+                        ih.extractItem(i, stack.getCount(), false);
+                    }
+                }
+            }
+        }
     }
 
     public static void removeItem(PlayerEntity player, ItemStack is, int amount) {

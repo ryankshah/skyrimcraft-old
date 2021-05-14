@@ -23,6 +23,7 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
         CompoundNBT tag = new CompoundNBT();
 
         tag.putFloat("magicka", instance.getMagicka());
+        tag.putFloat("magicka_regen_modifier", instance.getMagickaRegenModifier());
 
         List<ISpell> knownSpells = instance.getKnownSpells();
         ListNBT knownSpellsNBT = new ListNBT();
@@ -69,6 +70,7 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
         List<Integer> targetingEntities = new ArrayList<>();
 
         float magicka = tag.getFloat("magicka");
+        float magicka_regen_modifier = tag.getFloat("magicka_regen_modifier");
 
         CompoundNBT shoutsAndCooldownsNBT = tag.getCompound("shoutsAndCooldowns");
         for(String s : shoutsAndCooldownsNBT.getAllKeys()) {
@@ -102,5 +104,6 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
         instance.setSelectedSpells(selectedSpells);
         instance.setMapFeatures(mapFeatures);
         instance.setTargetingEntities(targetingEntities);
+        instance.setMagickaRegenModifier(magicka_regen_modifier);
     }
 }

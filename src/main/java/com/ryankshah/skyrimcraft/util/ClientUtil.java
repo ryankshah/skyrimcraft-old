@@ -4,17 +4,15 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.Color;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
-import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,7 +22,7 @@ public class ClientUtil
         return Minecraft.getInstance().level;
     }
 
-    public PlayerEntity getClientPlayer() {
+    public AbstractClientPlayerEntity getClientPlayer() {
         return Minecraft.getInstance().player;
     }
 
@@ -57,8 +55,7 @@ public class ClientUtil
         return circlePoints;
     }
 
-    public static void drawCloudAtPos(RenderWorldLastEvent event, BlockPos pos, Vector3d size, int color)
-    {
+    public static void drawCloudAtPos(RenderWorldLastEvent event, BlockPos pos, Vector3d size, int color)  {
         IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
         IVertexBuilder builder = buffer.getBuffer(RenderType.lightning());
 
@@ -116,8 +113,7 @@ public class ClientUtil
 
     }
 
-    private static int[] getRGBAArrayFromHexColor(int color)
-    {
+    private static int[] getRGBAArrayFromHexColor(int color)  {
         int[] ints = new int[4];
         ints[0] = (color >> 24 & 255);
         ints[1] = (color >> 16 & 255);

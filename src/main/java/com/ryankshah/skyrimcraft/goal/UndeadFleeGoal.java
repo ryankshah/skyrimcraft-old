@@ -108,7 +108,7 @@ public class UndeadFleeGoal extends Goal
                 double z = Math.cos(phi) * 0.8;
                 double x = Math.sin(phi) * 0.8;
                 if(fleeingEntity.level instanceof ServerWorld)
-                    ((ServerWorld) fleeingEntity.level).sendParticles(ParticleTypes.SMOKE, fleeingEntity.getX() + x, fleeingEntity.getY() + fleeingEntity.getEyeHeight() + 0.25, fleeingEntity.getZ() + z, 1, 0D, 0D, 0D, 0); // set amount to 0 so particles don't fly off and stays in place
+                    ((ServerWorld) fleeingEntity.level).sendParticles(ParticleTypes.SMOKE, fleeingEntity.getX() + x, fleeingEntity.getY() + fleeingEntity.getEyeHeight(), fleeingEntity.getZ() + z, 1, 0D, 0D, 0D, 0); // set amount to 0 so particles don't fly off and stays in place
             }
 
 //            for(double y = 0; y <= fleeingEntity.getEyeHeight(); y+=0.05) {

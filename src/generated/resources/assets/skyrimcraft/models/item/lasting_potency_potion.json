@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/potion",
+  "textures": {
+    "layer0": "skyrimcraft:item/lasting_potency_potion"
+  }
+}

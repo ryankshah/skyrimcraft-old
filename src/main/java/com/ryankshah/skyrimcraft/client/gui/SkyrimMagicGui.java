@@ -210,7 +210,7 @@ public class SkyrimMagicGui extends Screen
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if(keyCode == GLFW_KEY_DOWN) {
+        if(keyCode == GLFW_KEY_DOWN || keyCode == GLFW_KEY_S) {
             if(!this.spellTypeChosen) {
                 if(this.currentSpellType < this.spellTypes.size()-1)
                     ++this.currentSpellType;
@@ -222,7 +222,7 @@ public class SkyrimMagicGui extends Screen
             }
         }
 
-        if(keyCode == GLFW_KEY_UP) {
+        if(keyCode == GLFW_KEY_UP || keyCode == GLFW_KEY_W) {
             if(!this.spellTypeChosen) {
                 if(this.currentSpellType > 0)
                     --this.currentSpellType;
@@ -234,14 +234,14 @@ public class SkyrimMagicGui extends Screen
             }
         }
 
-        if(keyCode == GLFW_KEY_RIGHT) {
+        if(keyCode == GLFW_KEY_RIGHT || keyCode == GLFW_KEY_D) {
             if(this.spellTypeChosen) {
                 this.spellTypeChosen = false;
                 this.currentSpell = 0;
             }
         }
 
-        if(keyCode == GLFW_KEY_LEFT) {
+        if(keyCode == GLFW_KEY_LEFT || keyCode == GLFW_KEY_A) {
             if(!this.spellTypeChosen) {
                 this.spellTypeChosen = true;
                 this.currentSpell = 0;

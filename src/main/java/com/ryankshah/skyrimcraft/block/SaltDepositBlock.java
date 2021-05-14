@@ -13,7 +13,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraftforge.common.ToolType;
 
-public class SaltDepositBlock extends SkyrimBlock {
+public class SaltDepositBlock extends SkyrimBlock
+{
     private VoxelShape shape = VoxelShapes.or(
             Block.box(1, 0, 1, 15, 2, 13),
             Block.box(0, 0, 9, 12, 2, 15),

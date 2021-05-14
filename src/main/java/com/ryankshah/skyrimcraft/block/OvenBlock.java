@@ -2,13 +2,14 @@ package com.ryankshah.skyrimcraft.block;
 
 import com.ryankshah.skyrimcraft.block.tileentity.OvenTileEntity;
 import com.ryankshah.skyrimcraft.client.gui.SkyrimOvenGui;
-import net.minecraft.block.*;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
@@ -54,16 +55,6 @@ public class OvenBlock extends SkyrimBlock
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext p_196258_1_) {
         return this.defaultBlockState().setValue(FACING, p_196258_1_.getHorizontalDirection().getOpposite());
-    }
-
-    @Override
-    public void setPlacedBy(World p_180633_1_, BlockPos p_180633_2_, BlockState p_180633_3_, LivingEntity p_180633_4_, ItemStack p_180633_5_) {
-//        if (p_180633_5_.hasCustomHoverName()) {
-//            TileEntity tileentity = p_180633_1_.getBlockEntity(p_180633_2_);
-//            if (tileentity instanceof OvenTileEntity) {
-//                ((OvenTileEntity)tileentity).setCustomName(p_180633_5_.getHoverName());
-//            }
-//        }
     }
 
     @Override

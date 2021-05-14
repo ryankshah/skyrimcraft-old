@@ -46,6 +46,18 @@ public class Networking
                 .consumer(PacketReplenishMagicka::handle)
                 .add();
 
+        INSTANCE.messageBuilder(PacketUpdateMagickaRegenModifierOnServer.class, nextID())
+                .encoder(PacketUpdateMagickaRegenModifierOnServer::toBytes)
+                .decoder(PacketUpdateMagickaRegenModifierOnServer::new) // buf -> new PacketUpdateMagicka(buf)
+                .consumer(PacketUpdateMagickaRegenModifierOnServer::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketUpdateMagickaRegenModifierOnClient.class, nextID())
+                .encoder(PacketUpdateMagickaRegenModifierOnClient::toBytes)
+                .decoder(PacketUpdateMagickaRegenModifierOnClient::new) // buf -> new PacketUpdateMagicka(buf)
+                .consumer(PacketUpdateMagickaRegenModifierOnClient::handle)
+                .add();
+
         INSTANCE.messageBuilder(PacketUpdateKnownSpells.class, nextID())
                 .encoder(PacketUpdateKnownSpells::toBytes)
                 .decoder(PacketUpdateKnownSpells::new)

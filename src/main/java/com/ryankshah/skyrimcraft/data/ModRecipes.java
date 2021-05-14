@@ -7,6 +7,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.data.*;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.tags.ItemTags;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 
 import java.util.function.Consumer;
@@ -25,6 +26,7 @@ public class ModRecipes extends RecipeProvider implements IConditionBuilder
 
         // blocks
         ShapedRecipeBuilder.shaped(ModBlocks.OVEN_BLOCK_ITEM.get()).define('s', Blocks.STONE).define('b', Blocks.STONE_BRICKS).pattern(" b ").pattern("b b").pattern("sss").unlockedBy("has_stone_brick", has(Blocks.STONE_BRICKS)).save(consumer);
+        ShapedRecipeBuilder.shaped(ModBlocks.ALCHEMY_TABLE_ITEM.get()).define('p', ItemTags.PLANKS).define('g', Items.GLASS_BOTTLE).pattern(" g ").pattern("ppp").pattern("p p").unlockedBy("has_planks", has(ItemTags.PLANKS)).save(consumer);
 
         CookingRecipeBuilder.blasting(Ingredient.of(ModBlocks.EBONY_ORE_ITEM.get()), ModItems.EBONY_INGOT.get(), 1.0F, 100).unlockedBy("has_ebony_ore", has(ModBlocks.EBONY_ORE_ITEM.get())).save(consumer, Skyrimcraft.MODID+":blasting/ebony_ingot_from_blasting");
         CookingRecipeBuilder.blasting(Ingredient.of(ModBlocks.MALACHITE_ORE_ITEM.get()), ModItems.MALACHITE_INGOT.get(), 0.7F, 100).unlockedBy("has_malachite_ore", has(ModBlocks.MALACHITE_ORE_ITEM.get())).save(consumer, Skyrimcraft.MODID+":blasting/malachite_ingot_from_blasting");

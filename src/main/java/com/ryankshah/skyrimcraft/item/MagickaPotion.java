@@ -10,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.Rarity;
 import net.minecraft.item.UseAction;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResult;
@@ -30,6 +31,16 @@ public class MagickaPotion extends SkyrimItem
     public MagickaPotion(Properties properties, String displayName, float replenishValue) {
         super(properties, displayName);
         this.replenishValue = replenishValue;
+    }
+
+    @Override
+    public Rarity getRarity(ItemStack stack) {
+        return Rarity.EPIC;
+    }
+
+    @Override
+    public boolean isFoil(ItemStack stack) {
+        return true;
     }
 
     @Override
@@ -73,7 +84,7 @@ public class MagickaPotion extends SkyrimItem
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new StringTextComponent("Replenishes " + (int)replenishValue + " Magicka"));
+        tooltip.add(new StringTextComponent("Replenishes " + (int)replenishValue + " magicka"));
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 
