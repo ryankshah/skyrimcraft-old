@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
-import com.ryankshah.skyrimcraft.util.MapFeature;
+import com.ryankshah.skyrimcraft.util.CompassFeature;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
@@ -56,8 +56,8 @@ public class SkyrimIngameGui extends AbstractGui
         mc.getTextureManager().bind(OVERLAY_ICONS); // rebind after drawing strings (mc binds font texture)
 
         mc.player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent(cap -> {
-            if(cap.getMapFeatures().size() > 0) {
-                List<MapFeature> sortedFeatures = Lists.newArrayList(cap.getMapFeatures());
+            if(cap.getCompassFeatures().size() > 0) {
+                List<CompassFeature> sortedFeatures = Lists.newArrayList(cap.getCompassFeatures());
                 sortedFeatures.sort((a,b) -> {
                     Vector3d positionA = new Vector3d(a.getChunkPos().x, 0, a.getChunkPos().z); //mc.player.getY()
                     Vector3d positionB = new Vector3d(b.getChunkPos().x, 0, b.getChunkPos().z);
@@ -66,7 +66,7 @@ public class SkyrimIngameGui extends AbstractGui
                     return (int)Math.signum(angleB-angleA);
                 });
 
-                for (MapFeature feature : sortedFeatures) {
+                for (CompassFeature feature : sortedFeatures) {
                     if(mc.player.position().distanceToSqr(feature.getChunkPos().x, mc.player.position().y, feature.getChunkPos().z) <= 512 * 16) { // 256 blocks?
                         Vector3d position = new Vector3d(feature.getChunkPos().x, 0, feature.getChunkPos().z);
                         Vector2f angleYd = angleFromTarget(position, new Vector3d(playerPosX, playerPosY, playerPosZ));
@@ -196,7 +196,7 @@ public class SkyrimIngameGui extends AbstractGui
         }
     }
 
-    private static void drawStructureIndicator(MatrixStack matrixStack, float yaw, float angle, int xPos, MapFeature feature) {
+    private static void drawStructureIndicator(MatrixStack matrixStack, float yaw, float angle, int xPos, CompassFeature feature) {
         if(feature.getIconUV() == null)
             return;
 
@@ -206,7 +206,7 @@ public class SkyrimIngameGui extends AbstractGui
             float nPos = xPos + nDist;
             int u = feature.getIconUV().getKey(), v = feature.getIconUV().getValue();
             //fill(matrixStack, (int)(nPos-0.5f), 10, (int)(nPos+0.5f), 18, 0x7FFFFFFF);
-            TextureDrawer.drawGuiTexture(matrixStack, (int)nPos-2, 17 - (MapFeature.ICON_HEIGHT / 2), u, v, MapFeature.ICON_WIDTH, MapFeature.ICON_HEIGHT);
+            TextureDrawer.drawGuiTexture(matrixStack, (int)nPos-2, 17 - (CompassFeature.ICON_HEIGHT / 2), u, v, CompassFeature.ICON_WIDTH, CompassFeature.ICON_HEIGHT);
         }
     }
 }

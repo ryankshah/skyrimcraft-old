@@ -1,7 +1,7 @@
 package com.ryankshah.skyrimcraft.character;
 
 import com.ryankshah.skyrimcraft.spell.ISpell;
-import com.ryankshah.skyrimcraft.util.MapFeature;
+import com.ryankshah.skyrimcraft.util.CompassFeature;
 import net.minecraft.entity.LivingEntity;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public interface ISkyrimPlayerData
     public void removeTargetingEntity(Integer entityId);
 
     /* FEATURE FIELDS */
-    public void addMapFeature(MapFeature feature);
-    public void setMapFeatures(List<MapFeature> mapFeatures);
-    public List<MapFeature> getMapFeatures();
+    public void addMapFeature(CompassFeature feature);
+    public void setCompassFeatures(List<CompassFeature> compassFeatures);
+    public List<CompassFeature> getCompassFeatures();
 }

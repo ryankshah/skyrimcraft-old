@@ -1,8 +1,7 @@
 package com.ryankshah.skyrimcraft.network.character;
 
-import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
-import com.ryankshah.skyrimcraft.util.MapFeature;
-import net.minecraft.client.Minecraft;
+import com.ryankshah.skyrimcraft.network.Networking;
+import com.ryankshah.skyrimcraft.util.CompassFeature;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
@@ -13,41 +12,36 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class PacketUpdateMapFeatures
+public class PacketAddToCompassFeaturesOnClient
 {
-    private List<MapFeature> mapFeatures = new ArrayList<>();
     private static final Logger LOGGER = LogManager.getLogger();
+    private CompassFeature compassFeature;
 
-    public PacketUpdateMapFeatures(PacketBuffer buf) {
-        int size = buf.readInt();
-        for(int i = 0; i < size; i++) {
-            UUID id = buf.readUUID();
-            ResourceLocation structure = buf.readResourceLocation();
-            int x = buf.readInt();
-            int y = buf.readInt();
-            ChunkPos pos = new ChunkPos(x, y);
-            mapFeatures.add(new MapFeature(id, structure, pos));
-        }
+    public PacketAddToCompassFeaturesOnClient(PacketBuffer buf) {
+        UUID id = buf.readUUID();
+        ResourceLocation structure = buf.readResourceLocation();
+        int x = buf.readInt();
+        int y = buf.readInt();
+        ChunkPos pos = new ChunkPos(x, y);
+        compassFeature = new CompassFeature(id, structure, pos);
+        //ResourceLocation rl = buf.readResourceLocation();
+        //this.spell = SpellRegistry.SPELLS_REGISTRY.get().getValue(rl);
     }
 
-    public PacketUpdateMapFeatures(List<MapFeature> mapFeatures) {
-        this.mapFeatures = mapFeatures;
+    public PacketAddToCompassFeaturesOnClient(CompassFeature compassFeature) {
+        this.compassFeature = compassFeature;
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeInt(mapFeatures.size());
-        for(MapFeature feature : mapFeatures) {
-            buf.writeUUID(feature.getId());
-            buf.writeResourceLocation(feature.getFeature());
-            buf.writeInt(feature.getChunkPos().x);
-            buf.writeInt(feature.getChunkPos().z);
-        }
+        buf.writeUUID(compassFeature.getId());
+        buf.writeResourceLocation(compassFeature.getFeature());
+        buf.writeInt(compassFeature.getChunkPos().x);
+        buf.writeInt(compassFeature.getChunkPos().z);
+        //buf.writeResourceLocation(SpellRegistry.SPELLS_REGISTRY.get().getKey(spell));
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
@@ -66,10 +60,9 @@ public class PacketUpdateMapFeatures
         }
 
         ctx.get().enqueueWork(() -> {
-            Minecraft.getInstance().player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((cap) -> {
-                cap.setMapFeatures(this.mapFeatures);
-            });
+            Networking.sendToServer(new PacketAddToCompassFeatures(compassFeature));
         });
+
         return true;
     }
 }

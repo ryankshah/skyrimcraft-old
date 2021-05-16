@@ -2,7 +2,7 @@ package com.ryankshah.skyrimcraft.character;
 
 import com.ryankshah.skyrimcraft.spell.ISpell;
 import com.ryankshah.skyrimcraft.spell.SpellRegistry;
-import com.ryankshah.skyrimcraft.util.MapFeature;
+import com.ryankshah.skyrimcraft.util.CompassFeature;
 import net.minecraft.nbt.*;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -44,10 +44,10 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
             tag.put("selected" + entry.getKey(), entry.getValue() == null ? StringNBT.valueOf("null") : StringNBT.valueOf(entry.getValue().getRegistryName().toString()));
         }
 
-        List<MapFeature> mapFeatures = instance.getMapFeatures();
-        tag.putInt("mapFeaturesSize", mapFeatures.size());
+        List<CompassFeature> compassFeatures = instance.getCompassFeatures();
+        tag.putInt("mapFeaturesSize", compassFeatures.size());
         int counter = 0;
-        for(MapFeature feature : mapFeatures) {
+        for(CompassFeature feature : compassFeatures) {
             tag.put("feature"+counter++, feature.serialise());
         }
 
@@ -66,7 +66,7 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
         List<ISpell> knownSpells = new ArrayList<>();
         Map<Integer, ISpell> selectedSpells = new HashMap<>();
         Map<ISpell, Float> shoutsAndCooldowns = new HashMap<>();
-        List<MapFeature> mapFeatures = new ArrayList<>();
+        List<CompassFeature> compassFeatures = new ArrayList<>();
         List<Integer> targetingEntities = new ArrayList<>();
 
         float magicka = tag.getFloat("magicka");
@@ -90,7 +90,7 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
         int mapFeaturesSize = tag.getInt("mapFeaturesSize");
         for(int i = 0; i < mapFeaturesSize; i++) {
             CompoundNBT comp = tag.getCompound("feature"+i);
-            mapFeatures.add(MapFeature.deserialise(comp));
+            compassFeatures.add(CompassFeature.deserialise(comp));
         }
 
         int targetingEntitiesSize = tag.getInt("targetingEntitiesSize");
@@ -102,7 +102,7 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
         instance.setKnownSpells(knownSpells);
         instance.setShoutsWithCooldowns(shoutsAndCooldowns);
         instance.setSelectedSpells(selectedSpells);
-        instance.setMapFeatures(mapFeatures);
+        instance.setCompassFeatures(compassFeatures);
         instance.setTargetingEntities(targetingEntities);
         instance.setMagickaRegenModifier(magicka_regen_modifier);
     }

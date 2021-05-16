@@ -118,22 +118,22 @@ public class Networking
                 .consumer(PacketRequestCapabilityUpdate::handle)
                 .add();
 
-        INSTANCE.messageBuilder(PacketAddToMapFeatures.class, nextID())
-                .encoder(PacketAddToMapFeatures::toBytes)
-                .decoder(PacketAddToMapFeatures::new)
-                .consumer(PacketAddToMapFeatures::handle)
+        INSTANCE.messageBuilder(PacketAddToCompassFeatures.class, nextID())
+                .encoder(PacketAddToCompassFeatures::toBytes)
+                .decoder(PacketAddToCompassFeatures::new)
+                .consumer(PacketAddToCompassFeatures::handle)
                 .add();
 
-        INSTANCE.messageBuilder(PacketAddToMapFeaturesOnClient.class, nextID())
-                .encoder(PacketAddToMapFeaturesOnClient::toBytes)
-                .decoder(PacketAddToMapFeaturesOnClient::new)
-                .consumer(PacketAddToMapFeaturesOnClient::handle)
+        INSTANCE.messageBuilder(PacketAddToCompassFeaturesOnClient.class, nextID())
+                .encoder(PacketAddToCompassFeaturesOnClient::toBytes)
+                .decoder(PacketAddToCompassFeaturesOnClient::new)
+                .consumer(PacketAddToCompassFeaturesOnClient::handle)
                 .add();
 
-        INSTANCE.messageBuilder(PacketUpdateMapFeatures.class, nextID())
-                .encoder(PacketUpdateMapFeatures::toBytes)
-                .decoder(PacketUpdateMapFeatures::new)
-                .consumer(PacketUpdateMapFeatures::handle)
+        INSTANCE.messageBuilder(PacketUpdateCompassFeatures.class, nextID())
+                .encoder(PacketUpdateCompassFeatures::toBytes)
+                .decoder(PacketUpdateCompassFeatures::new)
+                .consumer(PacketUpdateCompassFeatures::handle)
                 .add();
 
         INSTANCE.messageBuilder(PacketAddToTargetingEntities.class, nextID())

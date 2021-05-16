@@ -21,6 +21,8 @@ import net.minecraftforge.fml.RegistryObject;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import net.minecraft.item.Item.Properties;
+
 public class SpellBook extends SkyrimItem
 {
     public SpellBook(Properties properties, String displayName) {

@@ -17,6 +17,8 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.item.Item.Properties;
+
 public class MagickaPotion extends SkyrimPotion
 {
     private float replenishValue;

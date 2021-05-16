@@ -1,7 +1,7 @@
 package com.ryankshah.skyrimcraft.character;
 
 import com.ryankshah.skyrimcraft.spell.ISpell;
-import com.ryankshah.skyrimcraft.util.MapFeature;
+import com.ryankshah.skyrimcraft.util.CompassFeature;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -24,11 +24,11 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
     private float magicka_regen_modifier;
     private Map<ISpell, Float> shoutsOnCooldown;
 
-    private List<MapFeature> mapFeatures;
+    private List<CompassFeature> compassFeatures;
 
     public SkyrimPlayerData() {
         knownSpells = new ArrayList<>();
-        mapFeatures = new ArrayList<>();
+        compassFeatures = new ArrayList<>();
         selectedSpells = new HashMap<>();
         shoutsOnCooldown = new HashMap<>();
         targetEntity = null;
@@ -43,7 +43,7 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
     public SkyrimPlayerData(PlayerEntity playerEntity) {
         this.playerEntity = playerEntity;
         knownSpells = new ArrayList<>();
-        mapFeatures = new ArrayList<>();
+        compassFeatures = new ArrayList<>();
         selectedSpells = new HashMap<>();
         shoutsOnCooldown = new HashMap<>();
         targetEntity = null;
@@ -182,18 +182,18 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
     }
 
     @Override
-    public void addMapFeature(MapFeature mapFeature) {
-        if(this.mapFeatures.stream().noneMatch(feature -> feature.equals(mapFeature)))
-            mapFeatures.add(mapFeature);
+    public void addMapFeature(CompassFeature compassFeature) {
+        if(this.compassFeatures.stream().noneMatch(feature -> feature.equals(compassFeature)))
+            compassFeatures.add(compassFeature);
     }
 
     @Override
-    public void setMapFeatures(List<MapFeature> mapFeatures) {
-        this.mapFeatures = mapFeatures;
+    public void setCompassFeatures(List<CompassFeature> compassFeatures) {
+        this.compassFeatures = compassFeatures;
     }
 
     @Override
-    public List<MapFeature> getMapFeatures() {
-        return mapFeatures;
+    public List<CompassFeature> getCompassFeatures() {
+        return compassFeatures;
     }
 }

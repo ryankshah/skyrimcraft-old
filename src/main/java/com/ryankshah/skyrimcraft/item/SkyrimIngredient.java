@@ -10,6 +10,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import net.minecraft.item.Item.Properties;
+
 public class SkyrimIngredient extends SkyrimItem
 {
     private IngredientEffect[] ingredientEffects;

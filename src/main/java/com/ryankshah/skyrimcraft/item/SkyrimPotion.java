@@ -20,6 +20,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import net.minecraft.item.Item.Properties;
+
 public class SkyrimPotion extends SkyrimItem implements IPotion
 {
     public SkyrimPotion(Properties properties, String displayName) {

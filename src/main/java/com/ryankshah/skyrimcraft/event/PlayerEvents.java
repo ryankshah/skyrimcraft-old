@@ -6,11 +6,11 @@ import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.character.render.SpectralLayerRenderer;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.network.Networking;
-import com.ryankshah.skyrimcraft.network.character.PacketAddToMapFeaturesOnClient;
+import com.ryankshah.skyrimcraft.network.character.PacketAddToCompassFeaturesOnClient;
 import com.ryankshah.skyrimcraft.network.character.PacketUpdatePlayerTargetOnServer;
 import com.ryankshah.skyrimcraft.network.spell.PacketUpdateShoutCooldownOnServer;
 import com.ryankshah.skyrimcraft.spell.ISpell;
-import com.ryankshah.skyrimcraft.util.MapFeature;
+import com.ryankshah.skyrimcraft.util.CompassFeature;
 import com.ryankshah.skyrimcraft.util.ModAttributes;
 import com.ryankshah.skyrimcraft.worldgen.structure.ModStructures;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -114,7 +114,7 @@ public class PlayerEvents
             if(playerEntity instanceof ServerPlayerEntity && event.side == LogicalSide.SERVER) {
                 ServerPlayerEntity player = (ServerPlayerEntity) playerEntity;
                 ServerWorld world = (ServerWorld) player.level;
-                List<MapFeature> playerMapFeatures = cap.getMapFeatures();
+                List<CompassFeature> playerCompassFeatures = cap.getCompassFeatures();
 
                 // TODO: see below...
 //                if(!PositionTrigger.Instance.located(LocationPredicate.inFeature(Structure.VILLAGE)).matches(world, player.getX(), player.getY(), player.getZ())) {
@@ -128,9 +128,9 @@ public class PlayerEvents
                             || structure == Structure.SHIPWRECK) {
                         ChunkPos featureStartPos = locateFeatureStartChunkFromPlayerBlockPos(world, player.blockPosition(), structure);
                         if (featureStartPos != null) {
-                            MapFeature mapFeature = new MapFeature(UUID.randomUUID(), structure.getRegistryName(), featureStartPos);
-                            if (playerMapFeatures.stream().noneMatch(feature -> feature.equals(mapFeature))) {
-                                Networking.sendToClient(new PacketAddToMapFeaturesOnClient(mapFeature), player);
+                            CompassFeature compassFeature = new CompassFeature(UUID.randomUUID(), structure.getRegistryName(), featureStartPos);
+                            if (playerCompassFeatures.stream().noneMatch(feature -> feature.equals(compassFeature))) {
+                                Networking.sendToClient(new PacketAddToCompassFeaturesOnClient(compassFeature), player);
                             }
                         }
                     }

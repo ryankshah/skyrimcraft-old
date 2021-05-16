@@ -9,7 +9,7 @@ import net.minecraft.world.gen.feature.structure.Structure;
 
 import java.util.UUID;
 
-public class MapFeature
+public class CompassFeature
 {
     private ResourceLocation feature;
     private ChunkPos chunkPos;
@@ -17,7 +17,7 @@ public class MapFeature
 
     public static final int ICON_WIDTH = 12, ICON_HEIGHT = 16;
 
-    public MapFeature(UUID id, ResourceLocation feature, ChunkPos chunkPos) {
+    public CompassFeature(UUID id, ResourceLocation feature, ChunkPos chunkPos) {
         this.feature = feature;
         this.chunkPos = chunkPos;
         this.id = id;
@@ -61,21 +61,21 @@ public class MapFeature
         return nbt;
     }
 
-    public static MapFeature deserialise(CompoundNBT nbt) {
+    public static CompassFeature deserialise(CompoundNBT nbt) {
         UUID id = nbt.getUUID("uuid");
         ResourceLocation feature = new ResourceLocation(nbt.getString("resourcelocation"));
         int x = nbt.getInt("xPos");
         int z = nbt.getInt("zPos");
         ChunkPos chunkPos = new ChunkPos(x, z);
-        return new MapFeature(id, feature, chunkPos);
+        return new CompassFeature(id, feature, chunkPos);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if(!(obj instanceof MapFeature))
+        if(!(obj instanceof CompassFeature))
             return false;
 
-        MapFeature featureToCompare = (MapFeature)obj;
+        CompassFeature featureToCompare = (CompassFeature)obj;
         return this.feature.equals(featureToCompare.feature) && this.chunkPos.x == featureToCompare.getChunkPos().x && this.chunkPos.z == featureToCompare.getChunkPos().z;
     }
 }

@@ -2,7 +2,7 @@ package com.ryankshah.skyrimcraft.network.character;
 
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.network.Networking;
-import com.ryankshah.skyrimcraft.util.MapFeature;
+import com.ryankshah.skyrimcraft.util.CompassFeature;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
@@ -15,31 +15,31 @@ import org.apache.logging.log4j.Logger;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class PacketAddToMapFeatures
+public class PacketAddToCompassFeatures
 {
     private static final Logger LOGGER = LogManager.getLogger();
-    private MapFeature mapFeature;
+    private CompassFeature compassFeature;
 
-    public PacketAddToMapFeatures(PacketBuffer buf) {
+    public PacketAddToCompassFeatures(PacketBuffer buf) {
         UUID id = buf.readUUID();
         ResourceLocation structure = buf.readResourceLocation();
         int x = buf.readInt();
         int y = buf.readInt();
         ChunkPos pos = new ChunkPos(x, y);
-        mapFeature = new MapFeature(id, structure, pos);
+        compassFeature = new CompassFeature(id, structure, pos);
         //ResourceLocation rl = buf.readResourceLocation();
         //this.spell = SpellRegistry.SPELLS_REGISTRY.get().getValue(rl);
     }
 
-    public PacketAddToMapFeatures(MapFeature mapFeature) {
-        this.mapFeature = mapFeature;
+    public PacketAddToCompassFeatures(CompassFeature compassFeature) {
+        this.compassFeature = compassFeature;
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeUUID(mapFeature.getId());
-        buf.writeResourceLocation(mapFeature.getFeature());
-        buf.writeInt(mapFeature.getChunkPos().x);
-        buf.writeInt(mapFeature.getChunkPos().z);
+        buf.writeUUID(compassFeature.getId());
+        buf.writeResourceLocation(compassFeature.getFeature());
+        buf.writeInt(compassFeature.getChunkPos().x);
+        buf.writeInt(compassFeature.getChunkPos().z);
         //buf.writeResourceLocation(SpellRegistry.SPELLS_REGISTRY.get().getKey(spell));
     }
 
@@ -65,9 +65,9 @@ public class PacketAddToMapFeatures
 
         context.enqueueWork(() -> {
             sendingPlayer.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((cap) -> {
-                cap.addMapFeature(mapFeature);
+                cap.addMapFeature(compassFeature);
                 //TriggerManager.TRIGGERS.get(spell).trigger(sendingPlayer);
-                Networking.sendToClient(new PacketUpdateMapFeatures(cap.getMapFeatures()), sendingPlayer);
+                Networking.sendToClient(new PacketUpdateCompassFeatures(cap.getCompassFeatures()), sendingPlayer);
             });
         });
         return true;

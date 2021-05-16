@@ -12,6 +12,8 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class GarlicCrop extends CropsBlock implements IGrowable
 {
     public static final IntegerProperty GARLIC_PLANT_AGE = BlockStateProperties.AGE_7;

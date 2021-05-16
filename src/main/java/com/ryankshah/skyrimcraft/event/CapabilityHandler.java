@@ -4,7 +4,7 @@ import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.network.*;
-import com.ryankshah.skyrimcraft.network.character.PacketUpdateMapFeatures;
+import com.ryankshah.skyrimcraft.network.character.PacketUpdateCompassFeatures;
 import com.ryankshah.skyrimcraft.network.character.PacketUpdatePlayerTarget;
 import com.ryankshah.skyrimcraft.network.spell.*;
 import net.minecraft.entity.Entity;
@@ -41,7 +41,7 @@ public class CapabilityHandler
             Networking.sendToClient(new PacketUpdateSelectedSpells(cap.getSelectedSpells()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdatePlayerTarget((LivingEntity) null), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdateShoutCooldowns(cap.getShoutsAndCooldowns()), (ServerPlayerEntity)event.getEntity());
-            Networking.sendToClient(new PacketUpdateMapFeatures(cap.getMapFeatures()), (ServerPlayerEntity)event.getEntity());
+            Networking.sendToClient(new PacketUpdateCompassFeatures(cap.getCompassFeatures()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdateMagickaRegenModifierOnClient(cap.getMagickaRegenModifier()), (ServerPlayerEntity)event.getEntity());
         }
     }
@@ -59,7 +59,7 @@ public class CapabilityHandler
             Networking.sendToClient(new PacketUpdateSelectedSpells(cap.getSelectedSpells()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdatePlayerTarget((LivingEntity) null), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdateShoutCooldowns(cap.getShoutsAndCooldowns()), (ServerPlayerEntity)event.getEntity());
-            Networking.sendToClient(new PacketUpdateMapFeatures(cap.getMapFeatures()), (ServerPlayerEntity)event.getEntity());
+            Networking.sendToClient(new PacketUpdateCompassFeatures(cap.getCompassFeatures()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdateMagickaRegenModifierOnClient(cap.getMagickaRegenModifier()), (ServerPlayerEntity)event.getEntity());
         }
     }
@@ -73,7 +73,7 @@ public class CapabilityHandler
             Networking.sendToClient(new PacketUpdateSelectedSpells(cap.getSelectedSpells()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdatePlayerTarget((LivingEntity) null), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdateShoutCooldowns(cap.getShoutsAndCooldowns()), (ServerPlayerEntity)event.getEntity());
-            Networking.sendToClient(new PacketUpdateMapFeatures(cap.getMapFeatures()), (ServerPlayerEntity)event.getEntity());
+            Networking.sendToClient(new PacketUpdateCompassFeatures(cap.getCompassFeatures()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdateMagickaRegenModifierOnClient(cap.getMagickaRegenModifier()), (ServerPlayerEntity)event.getEntity());
         }
     }
@@ -90,7 +90,7 @@ public class CapabilityHandler
                 newPlayer.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((ISkyrimPlayerData newCap) -> {
                     newCap.setKnownSpells(originalPlayerCapability.getKnownSpells());
                     newCap.setSelectedSpells(originalPlayerCapability.getSelectedSpells());
-                    newCap.setMapFeatures(originalPlayerCapability.getMapFeatures());
+                    newCap.setCompassFeatures(originalPlayerCapability.getCompassFeatures());
                     newCap.setMagickaRegenModifier(1.0F); // reset to default magicka regen modifier
                 });
             }

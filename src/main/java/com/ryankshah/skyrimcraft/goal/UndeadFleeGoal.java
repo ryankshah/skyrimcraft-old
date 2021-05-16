@@ -17,6 +17,8 @@ import net.minecraft.world.server.ServerWorld;
 import java.util.EnumSet;
 import java.util.function.Predicate;
 
+import net.minecraft.entity.ai.goal.Goal.Flag;
+
 public class UndeadFleeGoal extends Goal
 {
     private CreatureEntity fleeingEntity;
