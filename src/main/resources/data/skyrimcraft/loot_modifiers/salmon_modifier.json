@@ -1,0 +1,21 @@
+{
+  "conditions": [
+    {
+      "condition": "minecraft:entity_properties",
+      "predicate": {
+        "type": "minecraft:salmon"
+      },
+      "entity": "this"
+    }
+  ],
+  "additional": [
+    {
+      "item": "skyrimcraft:salmon_roe",
+      "minItem": 1.0,
+      "maxItem": 2.0,
+      "change": 0.3,
+      "useLooting": false
+    }
+  ],
+  "type": "skyrimcraft:passive_entity"
+}

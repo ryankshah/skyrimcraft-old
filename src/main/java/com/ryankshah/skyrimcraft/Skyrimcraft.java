@@ -54,6 +54,12 @@ import java.util.Map;
  *     - Add some potions
  *       - Wellbeing potions
  *       - Regenerate magicka, and stamina
+ *       - etc.
+ *   - Work on the alchemy system
+ *     - Update model + textures for alchemy table
+ *     - World generation for creep clusters and other ingredients
+ *     - Add more ingredients
+ *     - Sort out how ingredients will be obtainable (i.e. giants toes currently tradeable in village, but we need giants! etc.)
  *   - Add oven recipes:
  *     - Apple Dumpling
  *     - Braided Bread (?)

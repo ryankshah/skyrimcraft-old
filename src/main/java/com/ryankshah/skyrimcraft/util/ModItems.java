@@ -41,18 +41,26 @@ public class ModItems
     // Unique and non-levelled potions
     public static final RegistryObject<Item> PHILTER_OF_THE_PHANTOM_POTION = ITEMS.register("philter_of_the_phantom_potion", () -> new SpectralPotion(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC), "Philter of the Phantom", 600));
 
-
     // Food
     public static final RegistryObject<Item> SWEET_ROLL = ITEMS.register("sweet_roll", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new Food.Builder().nutrition(4).saturationMod(0.4F).build()), "Sweet Roll"));
     public static final RegistryObject<Item> GARLIC_BREAD = ITEMS.register("garlic_bread", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new Food.Builder().nutrition(5).saturationMod(0.6F).build()), "Garlic Bread"));
     public static final RegistryObject<Item> POTATO_BREAD = ITEMS.register("potato_bread", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new Food.Builder().nutrition(4).saturationMod(0.4F).build()), "Potato Bread"));
     public static final RegistryObject<Item> TOMATO = ITEMS.register("tomato", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new Food.Builder().nutrition(4).saturationMod(0.4F).build()), "Tomato"));
     public static final RegistryObject<Item> APPLE_PIE = ITEMS.register("apple_pie", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new Food.Builder().nutrition(4).saturationMod(0.4F).build()), "Apple Pie"));
+    public static final RegistryObject<Item> FLOUR = ITEMS.register("flour", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD), "Flour"));
+    public static final RegistryObject<Item> BUTTER = ITEMS.register("butter", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD), "Butter"));
 
     // Ingredients
-    public static final RegistryObject<Item> SALT_PILE = ITEMS.register("salt_pile", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Salt Pile"));
-    public static final RegistryObject<Item> FLOUR = ITEMS.register("flour", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Flour"));
-    public static final RegistryObject<Item> BUTTER = ITEMS.register("butter", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Butter"));
+    public static final RegistryObject<Item> SALT_PILE = ITEMS.register("salt_pile", () -> new SkyrimIngredient(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Salt Pile", SkyrimIngredient.IngredientEffect.WEAKNESS_TO_MAGIC, SkyrimIngredient.IngredientEffect.FORTIFY_RESTORATION, SkyrimIngredient.IngredientEffect.SLOW, SkyrimIngredient.IngredientEffect.REGENERATE_MAGICKA));
+    public static final RegistryObject<Item> CREEP_CLUSTER = ITEMS.register("creep_cluster", () -> new SkyrimIngredient(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Creep Cluster", SkyrimIngredient.IngredientEffect.RESTORE_MAGICKA, SkyrimIngredient.IngredientEffect.DAMAGE_STAMINA_REGEN, SkyrimIngredient.IngredientEffect.FORTIFY_CARRY_WEIGHT, SkyrimIngredient.IngredientEffect.WEAKNESS_TO_MAGIC));
+    public static final RegistryObject<Item> GRASS_POD = ITEMS.register("grass_pod", () -> new SkyrimIngredient(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Grass Pod", SkyrimIngredient.IngredientEffect.RESIST_POISON, SkyrimIngredient.IngredientEffect.RAVAGE_MAGICKA, SkyrimIngredient.IngredientEffect.FORTIFY_ALTERATION, SkyrimIngredient.IngredientEffect.RESTORE_MAGICKA));
+    public static final RegistryObject<Item> VAMPIRE_DUST = ITEMS.register("vampire_dust", () -> new SkyrimIngredient(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Vampire Dust", SkyrimIngredient.IngredientEffect.INVISIBILITY, SkyrimIngredient.IngredientEffect.RESTORE_MAGICKA, SkyrimIngredient.IngredientEffect.REGENERATE_HEALTH, SkyrimIngredient.IngredientEffect.CURE_DISEASE));
+    public static final RegistryObject<Item> MORA_TAPINELLA = ITEMS.register("mora_tapinella", () -> new SkyrimIngredient(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Mora Tapinella", SkyrimIngredient.IngredientEffect.RESTORE_MAGICKA, SkyrimIngredient.IngredientEffect.LINGERING_DAMAGE_HEALTH, SkyrimIngredient.IngredientEffect.REGENERATE_STAMINA, SkyrimIngredient.IngredientEffect.FORTIFY_ILLUSION));
+    public static final RegistryObject<Item> BRIAR_HEART = ITEMS.register("briar_heart", () -> new SkyrimIngredient(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Briar Heart", SkyrimIngredient.IngredientEffect.RESTORE_MAGICKA, SkyrimIngredient.IngredientEffect.FORTIFY_BLOCK, SkyrimIngredient.IngredientEffect.PARALYSIS, SkyrimIngredient.IngredientEffect.FORTIFY_MAGICKA));
+    public static final RegistryObject<Item> GIANTS_TOE = ITEMS.register("giants_toe", () -> new SkyrimIngredient(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Giant's Toe", SkyrimIngredient.IngredientEffect.DAMAGE_STAMINA, SkyrimIngredient.IngredientEffect.FORTIFY_HEALTH, SkyrimIngredient.IngredientEffect.FORTIFY_CARRY_WEIGHT, SkyrimIngredient.IngredientEffect.DAMAGE_STAMINA_REGEN));
+    public static final RegistryObject<Item> SALMON_ROE = ITEMS.register("salmon_roe", () -> new SkyrimIngredient(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Salmon Roe", SkyrimIngredient.IngredientEffect.RESTORE_STAMINA, SkyrimIngredient.IngredientEffect.WATERBREATHING, SkyrimIngredient.IngredientEffect.FORTIFY_MAGICKA, SkyrimIngredient.IngredientEffect.REGENERATE_MAGICKA));
+    public static final RegistryObject<Item> DWARVEN_OIL = ITEMS.register("dwarven_oil", () -> new SkyrimIngredient(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Dwarven Oil", SkyrimIngredient.IngredientEffect.WEAKNESS_TO_MAGIC, SkyrimIngredient.IngredientEffect.FORTIFY_ILLUSION, SkyrimIngredient.IngredientEffect.REGENERATE_MAGICKA, SkyrimIngredient.IngredientEffect.RESTORE_MAGICKA));
+    public static final RegistryObject<Item> FIRE_SALTS = ITEMS.register("fire_salts", () -> new SkyrimIngredient(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Fire Salts", SkyrimIngredient.IngredientEffect.WEAKNESS_TO_FROST, SkyrimIngredient.IngredientEffect.RESIST_FIRE, SkyrimIngredient.IngredientEffect.RESTORE_MAGICKA, SkyrimIngredient.IngredientEffect.REGENERATE_MAGICKA));
 
     // Spell books
     public static final RegistryObject<Item> FIREBALL_SPELLBOOK = ITEMS.register("fireball_spellbook", () -> new SpellBook(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC).stacksTo(1), "Spellbook", SpellRegistry.FIREBALL));
@@ -126,6 +134,25 @@ public class ModItems
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/flour"));
             singleTexture(BUTTER.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/butter"));
+
+            singleTexture(CREEP_CLUSTER.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/creep_cluster"));
+            singleTexture(GRASS_POD.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/grass_pod"));
+            singleTexture(VAMPIRE_DUST.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/vampire_dust"));
+            singleTexture(MORA_TAPINELLA.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/mora_tapinella"));
+            singleTexture(BRIAR_HEART.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/briar_heart"));
+            singleTexture(GIANTS_TOE.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/giants_toe"));
+            singleTexture(SALMON_ROE.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/salmon_roe"));
+            singleTexture(DWARVEN_OIL.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/dwarven_oil"));
+            singleTexture(FIRE_SALTS.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/fire_salts"));
 
             singleTexture(FIREBALL_SPELLBOOK.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/spellbook"));

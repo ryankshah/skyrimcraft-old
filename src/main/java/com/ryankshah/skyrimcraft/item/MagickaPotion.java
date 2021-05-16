@@ -3,28 +3,21 @@ package com.ryankshah.skyrimcraft.item;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.network.spell.PacketReplenishMagicka;
-import net.minecraft.advancements.CriteriaTriggers;
+import com.ryankshah.skyrimcraft.util.ModBlocks;
+import com.ryankshah.skyrimcraft.util.ModItems;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.Rarity;
-import net.minecraft.item.UseAction;
-import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.DrinkHelper;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class MagickaPotion extends SkyrimItem
+public class MagickaPotion extends SkyrimPotion
 {
     private float replenishValue;
 
@@ -34,21 +27,8 @@ public class MagickaPotion extends SkyrimItem
     }
 
     @Override
-    public Rarity getRarity(ItemStack stack) {
-        return Rarity.EPIC;
-    }
-
-    @Override
-    public boolean isFoil(ItemStack stack) {
-        return true;
-    }
-
-    @Override
     public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving) {
         PlayerEntity playerEntity = entityLiving instanceof PlayerEntity ? (PlayerEntity) entityLiving : null;
-
-        if(playerEntity instanceof ServerPlayerEntity)
-            CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayerEntity)playerEntity, stack);
 
         if(!worldIn.isClientSide) {
             playerEntity.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((cap) -> {
@@ -57,59 +37,39 @@ public class MagickaPotion extends SkyrimItem
             });
         }
 
-        if (playerEntity != null) {
-            playerEntity.awardStat(Stats.ITEM_USED.get(this));
-            if (!playerEntity.abilities.instabuild) {
-                stack.shrink(1);
-            }
-        }
-
-        if (playerEntity == null || !playerEntity.abilities.instabuild) {
-            if (stack.isEmpty()) {
-                return new ItemStack(Items.GLASS_BOTTLE);
-            }
-
-            if (playerEntity != null) {
-                playerEntity.inventory.add(new ItemStack(Items.GLASS_BOTTLE));
-            }
-        }
-
-        return stack;
+        return super.finishUsingItem(stack, worldIn, entityLiving);
     }
 
     @Override
-    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        return DrinkHelper.useDrink(worldIn, playerIn, handIn);
+    public List<ItemStack> getIngredients() {
+        List<ItemStack> ingredients = new ArrayList<>();
+        if (this == ModItems.MINOR_MAGICKA_POTION.get() || this == ModItems.MAGICKA_POTION.get()) {
+            ingredients.add(new ItemStack(ModItems.CREEP_CLUSTER.get(), 1));
+            ingredients.add(new ItemStack(ModBlocks.RED_MOUNTAIN_FLOWER_ITEM.get(), 1));
+        } else if (this == ModItems.PLENTIFUL_MAGICKA_POTION.get()) {
+            ingredients.add(new ItemStack(ModItems.VAMPIRE_DUST.get(), 1));
+            ingredients.add(new ItemStack(ModItems.BRIAR_HEART.get(), 1));
+        } else if (this == ModItems.VIGOROUS_MAGICKA_POTION.get()) {
+            ingredients.add(new ItemStack(ModItems.GRASS_POD.get(), 1));
+            ingredients.add(new ItemStack(ModItems.MORA_TAPINELLA.get(), 1));
+        } else if (this == ModItems.EXTREME_MAGICKA_POTION.get()) {
+            ingredients.add(new ItemStack(ModItems.GRASS_POD.get(), 1));
+            ingredients.add(new ItemStack(ModBlocks.RED_MOUNTAIN_FLOWER_ITEM.get(), 1));
+        } else if (this == ModItems.ULTIMATE_MAGICKA_POTION.get()) {
+            ingredients.add(new ItemStack(ModItems.MORA_TAPINELLA.get(), 1));
+            ingredients.add(new ItemStack(ModBlocks.RED_MOUNTAIN_FLOWER_ITEM.get(), 1));
+        }
+        return ingredients;
+    }
+
+    @Override
+    public PotionCategory getCategory() {
+        return PotionCategory.RESTORE_MAGICKA;
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         tooltip.add(new StringTextComponent("Replenishes " + (int)replenishValue + " magicka"));
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-    }
-
-    @Override
-    public UseAction getUseAnimation(ItemStack stack) {
-        return UseAction.DRINK;
-    }
-
-    @Override
-    public int getUseDuration(ItemStack stack) {
-        return 32;
-    }
-
-    @Override
-    public void releaseUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
-        super.releaseUsing(stack, worldIn, entityLiving, timeLeft);
-    }
-
-    @Override
-    public boolean isEdible() {
-        return super.isEdible();
-    }
-
-    @Override
-    public SoundEvent getDrinkingSound() {
-        return super.getDrinkingSound();
     }
 }

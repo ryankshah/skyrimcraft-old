@@ -29,8 +29,13 @@ public class WorldGen
             generateOre(event.getGeneration(), OreFeatureConfig.FillerBlockType.NATURAL_STONE,
                     ModBlocks.ORICHALCUM_ORE.get().defaultBlockState(), 5, 30, 50, 12);
 
+            // Salt pile
             if(event.getCategory().equals(Biome.Category.DESERT) || event.getCategory().equals(Biome.Category.MESA) || event.getCategory().equals(Biome.Category.SAVANNA))
                 generateSalt(event.getGeneration());
+
+            // Flowers
+            //if(event.getName().equals(Biomes.MOUNTAINS.getRegistryName()) || event.getName().equals(Biomes.MOUNTAIN_EDGE.getRegistryName()))
+            event.getGeneration().addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Feature.FLOWER.configured((new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(ModBlocks.RED_MOUNTAIN_FLOWER.get().defaultBlockState()), SimpleBlockPlacer.INSTANCE)).build()).decorated(Features.Placements.ADD_32).decorated(Features.Placements.HEIGHTMAP_SQUARE).count(2));
         }
     }
 
@@ -45,6 +50,7 @@ public class WorldGen
     }
 
     private static void generateSalt(BiomeGenerationSettingsBuilder settings) {
+
         settings.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Feature.RANDOM_PATCH.configured((new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(ModBlocks.SALT_DEPOSIT.get().defaultBlockState()), SimpleBlockPlacer.INSTANCE)).tries(3).build()).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(3).chance(32));
     }
 }

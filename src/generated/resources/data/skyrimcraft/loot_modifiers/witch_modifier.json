@@ -13,21 +13,21 @@
       "item": "skyrimcraft:fireball_spellbook",
       "minItem": 0.0,
       "maxItem": 1.0,
-      "change": 0.4,
+      "change": 0.245,
       "useLooting": false
     },
     {
       "item": "skyrimcraft:turn_undead_spellbook",
       "minItem": 0.0,
       "maxItem": 1.0,
-      "change": 0.4,
+      "change": 0.245,
       "useLooting": false
     },
     {
       "item": "skyrimcraft:magicka_potion",
       "minItem": 1.0,
       "maxItem": 2.0,
-      "change": 0.5,
+      "change": 0.475,
       "useLooting": true
     },
     {
@@ -48,21 +48,70 @@
       "item": "skyrimcraft:vigorous_magicka_potion",
       "minItem": 1.0,
       "maxItem": 1.0,
-      "change": 0.35,
+      "change": 0.3,
       "useLooting": true
     },
     {
       "item": "skyrimcraft:extreme_magicka_potion",
       "minItem": 1.0,
       "maxItem": 1.0,
-      "change": 0.3,
+      "change": 0.2,
       "useLooting": true
     },
     {
       "item": "skyrimcraft:ultimate_magicka_potion",
       "minItem": 0.0,
       "maxItem": 1.0,
+      "change": 0.1,
+      "useLooting": true
+    },
+    {
+      "item": "skyrimcraft:philter_of_the_phantom_potion",
+      "minItem": 0.0,
+      "maxItem": 1.0,
       "change": 0.2,
+      "useLooting": true
+    },
+    {
+      "item": "skyrimcraft:briar_heart",
+      "minItem": 1.0,
+      "maxItem": 1.0,
+      "change": 0.4,
+      "useLooting": true
+    },
+    {
+      "item": "skyrimcraft:giants_toe",
+      "minItem": 1.0,
+      "maxItem": 1.0,
+      "change": 0.285,
+      "useLooting": true
+    },
+    {
+      "item": "skyrimcraft:red_mountain_flower",
+      "minItem": 1.0,
+      "maxItem": 2.0,
+      "change": 0.475,
+      "useLooting": true
+    },
+    {
+      "item": "skyrimcraft:vampire_dust",
+      "minItem": 0.0,
+      "maxItem": 1.0,
+      "change": 0.3,
+      "useLooting": true
+    },
+    {
+      "item": "skyrimcraft:fire_salts",
+      "minItem": 1.0,
+      "maxItem": 1.0,
+      "change": 0.3,
+      "useLooting": true
+    },
+    {
+      "item": "skyrimcraft:dwarven_oil",
+      "minItem": 1.0,
+      "maxItem": 1.0,
+      "change": 0.3,
       "useLooting": true
     }
   ],

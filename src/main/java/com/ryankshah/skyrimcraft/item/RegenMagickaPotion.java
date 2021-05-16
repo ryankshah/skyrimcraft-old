@@ -3,27 +3,23 @@ package com.ryankshah.skyrimcraft.item;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.util.ModAttributes;
 import com.ryankshah.skyrimcraft.util.ModItems;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.DrinkHelper;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class RegenMagickaPotion extends SkyrimItem {
+public class RegenMagickaPotion extends SkyrimPotion {
     private float modifierValue;
     private int duration;
 
@@ -34,21 +30,8 @@ public class RegenMagickaPotion extends SkyrimItem {
     }
 
     @Override
-    public Rarity getRarity(ItemStack stack) {
-        return Rarity.EPIC;
-    }
-
-    @Override
-    public boolean isFoil(ItemStack stack) {
-        return true;
-    }
-
-    @Override
     public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving) {
         PlayerEntity playerEntity = entityLiving instanceof PlayerEntity ? (PlayerEntity) entityLiving : null;
-
-        if (playerEntity instanceof ServerPlayerEntity)
-            CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayerEntity) playerEntity, stack);
 
         if (!worldIn.isClientSide) {
             if(playerEntity instanceof ServerPlayerEntity) {
@@ -58,29 +41,20 @@ public class RegenMagickaPotion extends SkyrimItem {
             }
         }
 
-        if (playerEntity != null) {
-            playerEntity.awardStat(Stats.ITEM_USED.get(this));
-            if (!playerEntity.abilities.instabuild) {
-                stack.shrink(1);
-            }
-        }
-
-        if (playerEntity == null || !playerEntity.abilities.instabuild) {
-            if (stack.isEmpty()) {
-                return new ItemStack(Items.GLASS_BOTTLE);
-            }
-
-            if (playerEntity != null) {
-                playerEntity.inventory.add(new ItemStack(Items.GLASS_BOTTLE));
-            }
-        }
-
-        return stack;
+        return super.finishUsingItem(stack, worldIn, entityLiving);
     }
 
     @Override
-    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        return DrinkHelper.useDrink(worldIn, playerIn, handIn);
+    public List<ItemStack> getIngredients() {
+        List<ItemStack> ingredients = new ArrayList<>();
+//        ingredients.add(new ItemStack(ModBlocks.GARLIC.get(), 1));
+//        ingredients.add(new ItemStack())
+        return ingredients;
+    }
+
+    @Override
+    public PotionCategory getCategory() {
+        return PotionCategory.REGENERATE_HEALTH;
     }
 
     @Override
@@ -102,30 +76,5 @@ public class RegenMagickaPotion extends SkyrimItem {
 
         tooltip.add(new StringTextComponent("Grants " + duration/20 + "s of " + regenValue + " magicka regen"));
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-    }
-
-    @Override
-    public UseAction getUseAnimation(ItemStack stack) {
-        return UseAction.DRINK;
-    }
-
-    @Override
-    public int getUseDuration(ItemStack stack) {
-        return 32;
-    }
-
-    @Override
-    public void releaseUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
-        super.releaseUsing(stack, worldIn, entityLiving, timeLeft);
-    }
-
-    @Override
-    public boolean isEdible() {
-        return super.isEdible();
-    }
-
-    @Override
-    public SoundEvent getDrinkingSound() {
-        return super.getDrinkingSound();
     }
 }

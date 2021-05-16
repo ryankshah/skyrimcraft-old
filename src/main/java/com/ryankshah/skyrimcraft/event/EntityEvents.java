@@ -67,7 +67,6 @@ public class EntityEvents
     @SubscribeEvent
     public static void villagerTrades(VillagerTradesEvent event) {
         if(event.getType() == VillagerProfession.LIBRARIAN) {
-            // For level 3, add spellbooks
             event.getTrades().get(3).add(new RandomTradeBuilder(1, 10, 0.125F).setEmeraldPrice(18, 30).setForSale(ModItems.FIREBALL_SPELLBOOK.get(), 1, 1).build());
             event.getTrades().get(3).add(new RandomTradeBuilder(1, 10, 0.125F).setEmeraldPrice(18, 30).setForSale(ModItems.TURN_UNDEAD_SPELLBOOK.get(), 1, 1).build());
         }
@@ -78,12 +77,23 @@ public class EntityEvents
             event.getTrades().get(2).add(new RandomTradeBuilder(2, 6, 0.2F).setEmeraldPrice(8, 12).setForSale(ModItems.VIGOROUS_MAGICKA_POTION.get(), 1, 1).build());
             event.getTrades().get(3).add(new RandomTradeBuilder(1, 8, 0.325F).setEmeraldPrice(14, 20).setForSale(ModItems.VIGOROUS_MAGICKA_POTION.get(), 1, 1).build());
             event.getTrades().get(3).add(new RandomTradeBuilder(1, 10, 0.4F).setEmeraldPrice(26, 45).setForSale(ModItems.VIGOROUS_MAGICKA_POTION.get(), 1, 1).build());
+            event.getTrades().get(2).add(new RandomTradeBuilder(1, 10, 0.7F).setEmeraldPrice(22, 45).setForSale(ModItems.PHILTER_OF_THE_PHANTOM_POTION.get(), 1, 1).build());
+
+            // Ingredients
+            event.getTrades().get(1).add(new RandomTradeBuilder(3, 4, 0.175F).setEmeraldPrice(5, 11).setForSale(ModItems.CREEP_CLUSTER.get(), 1, 2).build());
+            event.getTrades().get(1).add(new RandomTradeBuilder(8, 4, 0.175F).setEmeraldPrice(4, 7).setForSale(ModItems.BRIAR_HEART.get(), 1, 2).build());
+            event.getTrades().get(2).add(new RandomTradeBuilder(3, 6, 0.275F).setEmeraldPrice(13, 25).setForSale(ModItems.VAMPIRE_DUST.get(), 1, 2).build());
+            event.getTrades().get(2).add(new RandomTradeBuilder(3, 6, 0.275F).setEmeraldPrice(6, 12).setForSale(ModItems.MORA_TAPINELLA.get(), 1, 2).build());
+            event.getTrades().get(3).add(new RandomTradeBuilder(1, 10, 0.675F).setEmeraldPrice(26, 45).setForSale(ModItems.GIANTS_TOE.get(), 1, 1).build());
         }
         if(event.getType() == VillagerProfession.FARMER) {
             event.getTrades().get(1).add(new RandomTradeBuilder(8, 3, 0.125F).setEmeraldPrice(1, 4).setForSale(ModBlocks.TOMATO_SEEDS.get(), 1, 3).build());
             event.getTrades().get(1).add(new RandomTradeBuilder(8, 3, 0.125F).setEmeraldPrice(2, 5).setForSale(ModBlocks.GARLIC.get(), 1, 2).build());
             event.getTrades().get(2).add(new RandomTradeBuilder(4, 5, 0.2F).setEmeraldPrice(3, 6).setForSale(ModItems.GARLIC_BREAD.get(), 1, 1).build());
             event.getTrades().get(1).add(new RandomTradeBuilder(4, 3, 0.2F).setEmeraldPrice(2, 5).setForSale(ModItems.POTATO_BREAD.get(), 1, 1).build());
+            event.getTrades().get(2).add(new RandomTradeBuilder(3, 6, 0.275F).setEmeraldPrice(6, 12).setForSale(ModItems.MORA_TAPINELLA.get(), 1, 2).build());
+            event.getTrades().get(1).add(new RandomTradeBuilder(3, 4, 0.175F).setEmeraldPrice(5, 11).setForSale(ModItems.CREEP_CLUSTER.get(), 1, 2).build());
+            event.getTrades().get(1).add(new RandomTradeBuilder(8, 4, 0.175F).setEmeraldPrice(4, 7).setForSale(ModItems.BRIAR_HEART.get(), 1, 2).build());
         }
         if(event.getType() == VillagerProfession.LEATHERWORKER) {
             event.getTrades().get(2).add(new RandomTradeBuilder(4, 4, 0.125F).setEmeraldPrice(4, 6).setForSale(ModItems.LEATHER_STRIPS.get(), 1, 2).build());

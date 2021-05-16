@@ -8,7 +8,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.util.ModBlocks;
 import com.ryankshah.skyrimcraft.util.ModItems;
-import javafx.util.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
@@ -56,7 +55,7 @@ public class SkyrimOvenGui extends Screen
         this.categories = this.items.keySet().toArray();
         this.currentCategory = 0;
         this.currentItem = 0;
-        this.itemList = new ArrayList();
+        this.itemList = new ArrayList<>();
         this.itemList.addAll(this.items.get((String)this.categories[this.currentCategory]));
         this.itemList.sort((i1, i2) -> i1.getItemStack().getItem().getRegistryName().compareTo(i2.getItemStack().getItem().getRegistryName()));
         categoryChosen = true;
@@ -336,7 +335,6 @@ public class SkyrimOvenGui extends Screen
     public static void hasAndRemoveItems(PlayerEntity player, ItemStack is, int amount) {
         if (is != null) {
             IItemHandler ih = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new IllegalStateException("skyrim oven gui hasAndRemoveItems"));
-            List<Pair<Integer, ItemStack>> matchedItems = new ArrayList<>();
             int count = is.getCount();
 
             for(int i = 0; i < ih.getSlots(); ++i) {
@@ -351,28 +349,6 @@ public class SkyrimOvenGui extends Screen
                     }
                 }
             }
-        }
-    }
-
-    public static void removeItem(PlayerEntity player, ItemStack is, int amount) {
-        if (is != null) {
-            IItemHandler ih = (IItemHandler)player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("skyrim oven gui removeItem"));
-
-            for(int i = 0; i < ih.getSlots(); ++i) {
-                ItemStack stack = ih.getStackInSlot(i);
-                if (areItemStacksEqual(is, stack)) {
-                    ih.extractItem(i, amount, false);
-                }
-            }
-
-        }
-    }
-
-    public static boolean areItemStacksEqual(ItemStack stack1, ItemStack stack2) {
-        if (stack1 != null && stack2 != null) {
-            return stack1.sameItem(stack2) && ItemStack.tagMatches(stack1, stack2) && (stack2.getCount() >= stack1.getCount());
-        } else {
-            return stack1 == stack2;
         }
     }
 

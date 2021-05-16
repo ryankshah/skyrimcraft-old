@@ -1,12 +1,11 @@
 package com.ryankshah.skyrimcraft.client.gui;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import com.ryankshah.skyrimcraft.util.ModBlocks;
+import com.ryankshah.skyrimcraft.item.IPotion;
+import com.ryankshah.skyrimcraft.item.SkyrimPotion;
 import com.ryankshah.skyrimcraft.util.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
@@ -17,19 +16,20 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -37,28 +37,28 @@ public class SkyrimAlchemyGui extends Screen
 {
     protected static final ResourceLocation OVERLAY_ICONS = new ResourceLocation(Skyrimcraft.MODID, "textures/gui/overlay_icons.png");
 
-    private Multimap<String, OvenRecipe> items;
-    private ArrayList<OvenRecipe> itemList;
-    private Object[] categories;
+    private Map<IPotion.PotionCategory, List<AlchemyRecipe>> items;
+    private List<AlchemyRecipe> itemList;
+    private List<Object> categories;
     private boolean categoryChosen;
     private int currentCategory;
     private int currentItem;
     private float spin = 0.0F;
-    private OvenRecipe currentRecipeObject = null;
+    private AlchemyRecipe currentRecipeObject = null;
     private PlayerEntity player;
 
     public SkyrimAlchemyGui() {
         super(new TranslationTextComponent(Skyrimcraft.MODID + ".alchemygui.title"));
         this.player = Minecraft.getInstance().player;
-        this.items = ArrayListMultimap.create();
-        this.addItems();
-        this.categories = this.items.keySet().toArray();
+        this.items = new HashMap<>();
+        items.put(IPotion.PotionCategory.ALL, new ArrayList<>());
+        this.addCategoriesAndRecipes();
+        items = items.entrySet().stream().sorted((e1,e2) -> Integer.compare(e1.getKey().getTypeID(), (e2.getKey().getTypeID()))).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        this.categories = Arrays.asList(this.items.keySet().toArray());
         this.currentCategory = 0;
         this.currentItem = 0;
-        this.itemList = new ArrayList();
-        this.itemList.addAll(this.items.get((String)this.categories[this.currentCategory]));
-        this.itemList.sort((i1, i2) -> i1.getItemStack().getItem().getRegistryName().compareTo(i2.getItemStack().getItem().getRegistryName()));
-        categoryChosen = true;
+        this.itemList = new ArrayList<>();
+        this.itemList.addAll(this.items.get((IPotion.PotionCategory) this.categories.get(this.currentCategory)));
     }
 
     @Override
@@ -87,39 +87,35 @@ public class SkyrimAlchemyGui extends Screen
             fillGradient(matrixStack, 92, 2, 93, this.height - 2, 0xAAFFFFFF, 0xAAFFFFFF);
         }
 
-        if (!this.items.isEmpty()) {
-            Object[] categories = this.getCategories(this.items);
+        int i;
+        for(i = 0; i < categories.size(); i++) {
+            String categoryName = categories.get(i).toString();
+            if (categoryName.length() >= 14) {
+                categoryName = categoryName.substring(0, 8) + "..";
+            }
+            drawString(matrixStack, font, categoryName, 18, this.height / 2 + 14 * i - this.currentCategory * 7, i == this.currentCategory ? 0x00FFFFFF : 0x00C0C0C0);
+        }
 
-            int i;
-            for(i = Math.max(this.currentCategory - 6, 0); i < (Math.min(this.currentCategory + 6, categories.length)); ++i) {
-                if (i == this.currentCategory) {
-                    drawString(matrixStack, font, ((String)categories[i]).toUpperCase(), 18, height / 2 + 14 * i - this.currentCategory * 7, 16777215);
-                } else {
-                    drawString(matrixStack, font, ((String)categories[i]).toUpperCase(), 18, height / 2 + 14 * i - this.currentCategory * 7, 12632256);
-                }
+        itemList = items.get(categories.get(currentCategory));
+
+        for(int j = 0; j < itemList.size(); j++) {
+            AlchemyRecipe recipe = itemList.get(j);
+            ITextComponent itemStackHoverName = recipe.itemStack.getHoverName();
+
+            if (j == this.currentItem && this.categoryChosen) {
+                this.currentRecipeObject = recipe;
+                this.drawItemImage(matrixStack, recipe.getItemStack(), width - 100, height / 2 - 70, this.spin);
+                this.drawItemInformation(matrixStack, recipe);
             }
 
-            if (this.itemList != null) {
-                for(i = Math.max(this.currentItem - 6, 0); i < (Math.min(this.currentItem + 6, this.itemList.size())); ++i) {
-                    OvenRecipe recipe = (OvenRecipe)this.itemList.get(i);
-
-                    if (i == this.currentItem) {
-                        this.currentRecipeObject = recipe;
-                        drawString(matrixStack, font, recipe.getItemStack().getHoverName(), 98, height / 2 + 14 * i - this.currentItem * 7, 16777215);
-                        this.drawItemImage(matrixStack, recipe.getItemStack(), width - 100, height / 2 - 70, this.spin);
-                        this.drawItemInformation(matrixStack, recipe);
-                    } else {
-                        drawString(matrixStack, font, recipe.getItemStack().getHoverName(), 98, height / 2 + 14 * i - this.currentItem * 7, 12632256);
-                    }
-                }
-            }
+            drawString(matrixStack, font, font.width(itemStackHoverName) < 16 ? itemStackHoverName.getString() : itemStackHoverName.getString().substring(0, 16) + "..", 98, height / 2 + 14 * j - this.currentItem * 7, j == this.currentItem ? 0x00FFFFFF : 0x00C0C0C0);
         }
 
         fillGradient(matrixStack, 0, this.height * 3 / 4 + 20, this.width, this.height, 0x77000000, 0x77000000);
         fillGradient(matrixStack, 0, this.height * 3 / 4 + 22, this.width, this.height * 3 / 4 + 23, 0xAAFFFFFF, 0xAAFFFFFF);
-//        drawBorderedGradientRect(matrixStack, 17, this.height - 29, 32, this.height - 14, 0xAA000000, 0xAA000000, 0xAAFFFFFF);
-//        drawCenteredString(matrixStack, font, "Enter", 25, this.height - 25, 0x0000FF00);
-//        drawCenteredString(matrixStack, font, "Select", 70, this.height - 25, 0x00FFFFFF);
+        drawBorderedGradientRect(matrixStack, 17, this.height - 29, 32 + font.width("Enter"), this.height - 14, 0xAA000000, 0xAA000000, 0xAAFFFFFF);
+        drawString(matrixStack, font, "Enter", 25, this.height - 25, 0x00FFFFFF);
+        drawString(matrixStack, font, "Create Potion", 32 + font.width("Enter") + 6, this.height - 25, 0x00FFFFFF);
 
         renderHealth(matrixStack);
 
@@ -139,36 +135,26 @@ public class SkyrimAlchemyGui extends Screen
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if(keyCode == GLFW_KEY_DOWN || keyCode == GLFW_KEY_S) {
-            if (!this.categoryChosen) {
-                if (this.currentCategory < this.categories.length - 1) {
+            if(!this.categoryChosen) {
+                if(this.currentCategory < this.categories.size()-1)
                     ++this.currentCategory;
-                } else {
-                    this.currentCategory = this.categories.length - 1;
-                }
-
-                this.itemList.clear();
-                this.itemList.addAll(this.items.get((String)this.categories[this.currentCategory]));
-            } else if (this.currentItem < this.itemList.size() - 1) {
-                ++this.currentItem;
+                else
+                    this.currentCategory = this.categories.size()-1;
             } else {
-                this.currentItem = this.itemList.size() - 1;
+                if(this.currentItem >= 0 && this.currentItem < itemList.size()-1)
+                    this.currentItem++;
             }
         }
 
         if(keyCode == GLFW_KEY_UP || keyCode == GLFW_KEY_W) {
-            if (!this.categoryChosen) {
-                if (this.currentCategory > 0) {
+            if(!this.categoryChosen) {
+                if(this.currentCategory > 0)
                     --this.currentCategory;
-                } else {
+                else
                     this.currentCategory = 0;
-                }
-
-                this.itemList.clear();
-                this.itemList.addAll(this.items.get((String)this.categories[this.currentCategory]));
-            } else if (this.currentItem > 0) {
-                --this.currentItem;
             } else {
-                this.currentItem = 0;
+                if(this.currentItem > 0 && this.currentItem < itemList.size())
+                    this.currentItem--;
             }
         }
 
@@ -201,10 +187,11 @@ public class SkyrimAlchemyGui extends Screen
 
             for(ItemStack is : currentRecipeObject.getRecipeItems()) {
                 ItemStack copy = is.copy();
-                removeItem(player, copy, copy.getCount());
+                hasAndRemoveItems(player, copy, copy.getCount());
             }
 
             this.player.addItem(this.currentRecipeObject.getItemStack().copy());
+            player.playSound(SoundEvents.BREWING_STAND_BREW, 1.0F, 1.0F);
             this.player.giveExperiencePoints(2);
         }
 
@@ -249,7 +236,7 @@ public class SkyrimAlchemyGui extends Screen
         matrixStack.popPose();
     }
 
-    private void drawItemInformation(MatrixStack matrixStack, OvenRecipe recipe) {
+    private void drawItemInformation(MatrixStack matrixStack, AlchemyRecipe recipe) {
         //fillGradient(matrixStack, this.width - 180, (this.height + 50) / 2 - 20, this.width - 20, (this.height + 50) / 2 + 80, 0xAA000000, 0xAA000000);
         drawBorderedGradientRect(matrixStack, this.width - 180, this.height / 2 - 20, this.width - 20, this.height / 2 + 20 + (10 * recipe.getRecipeItems().size()), 0xAA000000, 0xAA000000, 0xAAFFFFFF);
         fillGradient(matrixStack, this.width - 160, (this.height) / 2, this.width - 40, (this.height) / 2 + 1, 0xAAFFFFFF, 0xAAFFFFFF); // Line under recipe item name
@@ -266,15 +253,15 @@ public class SkyrimAlchemyGui extends Screen
         }
     }
 
-    private Object[] getCategories(Multimap<String, OvenRecipe> items) {
+    private Object[] getCategories(Map<IPotion.PotionCategory, List<AlchemyRecipe>> items) {
         return items.keySet().toArray();
     }
 
-    public static class OvenRecipe {
+    public static class AlchemyRecipe {
         private ItemStack itemStack;
         private List<ItemStack> recipeItems;
 
-        public OvenRecipe(ItemStack itemStack, List<ItemStack> recipeItems) {
+        public AlchemyRecipe(ItemStack itemStack, List<ItemStack> recipeItems) {
             this.itemStack = itemStack;
             this.recipeItems = recipeItems;
         }
@@ -288,65 +275,58 @@ public class SkyrimAlchemyGui extends Screen
         }
     }
 
-    public static OvenRecipe createRecipe(ItemStack itemStack, ItemStack... items) {
-        return new OvenRecipe(itemStack, Arrays.asList(items));
-    }
+    private void addCategoriesAndRecipes() {
+        List<SkyrimPotion> potions = ModItems.ITEMS.getEntries().stream().map(RegistryObject::get).filter(item -> item instanceof SkyrimPotion).map(item -> (SkyrimPotion)item).collect(Collectors.toList());
+        for(SkyrimPotion potion : potions) {
+            if(potion.getCategory() == IPotion.PotionCategory.UNIQUE || potion.getIngredients().isEmpty())
+                continue;
 
-    private void addItems() {
-//        NonNullList<ItemStack> inventory = this.player.inventory.items;
-//
-//        for (ItemStack itemStack : inventory) {
-//            this.items.put("Inventory", new OvenRecipe(itemStack, null));
-//        }
-
-        // Add oven recipes
-        this.items.put("Food", createRecipe(new ItemStack(ModItems.SWEET_ROLL.get(), 1),
-                new ItemStack(ModItems.BUTTER.get(), 1), new ItemStack(Items.EGG, 1), new ItemStack(ModItems.SALT_PILE.get(), 1),
-                new ItemStack(ModItems.FLOUR.get(), 1), new ItemStack(Items.MILK_BUCKET, 1)));
-        this.items.put("Food", createRecipe(new ItemStack(ModItems.GARLIC_BREAD.get(), 1),
-                new ItemStack(ModBlocks.GARLIC.get(), 1), new ItemStack(ModItems.BUTTER.get(), 1), new ItemStack(ModItems.FLOUR.get(), 1)));
-        this.items.put("Food", createRecipe(new ItemStack(ModItems.APPLE_PIE.get(), 1),
-                new ItemStack(ModItems.FLOUR.get(), 1), new ItemStack(ModItems.SALT_PILE.get(), 2), new ItemStack(ModItems.BUTTER.get(), 1),
-                new ItemStack(Items.EGG, 1), new ItemStack(Items.APPLE, 2)));
-        this.items.put("Food", createRecipe(new ItemStack(ModItems.POTATO_BREAD.get(), 1),
-                new ItemStack(ModItems.SALT_PILE.get(), 1), new ItemStack(Items.EGG, 1), new ItemStack(ModItems.FLOUR.get(), 1),
-                new ItemStack(Items.MILK_BUCKET, 1), new ItemStack(Items.POTATO, 1)));
-        //this.items.put("Food", createRecipe(new ItemStack(ModItems.SWEET_ROLL.get(), 1), new ItemStack(ModItems.BUTTER.get(), 1), new ItemStack(Items.EGG, 1), new ItemStack(ModItems.SALT_PILE.get(), 1), new ItemStack(ModItems.FLOUR.get(), 1), new ItemStack(Items.MILK_BUCKET, 1)));
+            if(items.containsKey(potion.getCategory()))
+                items.get(potion.getCategory()).add(new AlchemyRecipe(new ItemStack(potion, 1), potion.getIngredients()));
+            else {
+                List<AlchemyRecipe> temp = new ArrayList<>();
+                temp.add(new AlchemyRecipe(new ItemStack(potion, 1), potion.getIngredients()));
+                items.put(potion.getCategory(), temp);
+            }
+            items.get(IPotion.PotionCategory.ALL).add(new AlchemyRecipe(new ItemStack(potion, 1), potion.getIngredients()));
+        }
     }
 
     public static boolean hasItem(PlayerEntity player, ItemStack is, int amount) {
         if (is != null) {
-            IItemHandler ih = (IItemHandler)player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("skyrim oven gui hasItem"));
+            IItemHandler ih = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new IllegalStateException("skyrim oven gui hasItem"));
+            int count = 0;
 
             for(int i = 0; i < ih.getSlots(); ++i) {
-                ItemStack stack = ih.getStackInSlot(i);
-                if (areItemStacksEqual(is, stack)) {
+                if(count >= is.getCount())
                     return true;
+
+                ItemStack stack = ih.getStackInSlot(i);
+                if(is.sameItem(stack) && ItemStack.tagMatches(is, stack)) {
+                    count += stack.getCount();
                 }
             }
         }
         return false;
     }
 
-    public static void removeItem(PlayerEntity player, ItemStack is, int amount) {
+    public static void hasAndRemoveItems(PlayerEntity player, ItemStack is, int amount) {
         if (is != null) {
-            IItemHandler ih = (IItemHandler)player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("skyrim oven gui removeItem"));
+            IItemHandler ih = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new IllegalStateException("skyrim oven gui hasAndRemoveItems"));
+            int count = is.getCount();
 
             for(int i = 0; i < ih.getSlots(); ++i) {
                 ItemStack stack = ih.getStackInSlot(i);
-                if (areItemStacksEqual(is, stack)) {
-                    ih.extractItem(i, amount, false);
+                if(is.sameItem(stack) && ItemStack.tagMatches(is, stack)) {
+                    if(stack.getCount() >= count) {
+                        ih.extractItem(i, count, false);
+                        break;
+                    } else {
+                        count -= stack.getCount();
+                        ih.extractItem(i, stack.getCount(), false);
+                    }
                 }
             }
-
-        }
-    }
-
-    public static boolean areItemStacksEqual(ItemStack stack1, ItemStack stack2) {
-        if (stack1 != null && stack2 != null) {
-            return stack1.sameItem(stack2) && ItemStack.tagMatches(stack1, stack2) && (stack2.getCount() >= stack1.getCount());
-        } else {
-            return stack1 == stack2;
         }
     }
 

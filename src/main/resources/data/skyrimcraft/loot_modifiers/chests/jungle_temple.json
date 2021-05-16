@@ -71,6 +71,18 @@
       "minItem": 1.0,
       "maxItem": 3.0,
       "chance": 0.425
+    },
+    {
+      "item": "skyrimcraft:dwarven_oil",
+      "minItem": 1.0,
+      "maxItem": 2.0,
+      "chance": 0.4
+    },
+    {
+      "item": "skyrimcraft:fire_salts",
+      "minItem": 1.0,
+      "maxItem": 2.0,
+      "chance": 0.4
     }
   ],
   "type": "skyrimcraft:chest_loot"

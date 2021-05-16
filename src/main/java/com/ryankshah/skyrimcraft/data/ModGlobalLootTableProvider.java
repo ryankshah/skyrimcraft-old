@@ -1,28 +1,36 @@
 package com.ryankshah.skyrimcraft.data;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.data.loot_table.modifier.ChestLootModifier;
 import com.ryankshah.skyrimcraft.data.loot_table.modifier.PassiveEntityLootModifier;
 import com.ryankshah.skyrimcraft.util.ModBlocks;
 import com.ryankshah.skyrimcraft.util.ModItems;
 import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.RandomValueRange;
-import net.minecraft.loot.conditions.EntityHasProperty;
-import net.minecraft.loot.conditions.ILootCondition;
+import net.minecraft.loot.conditions.*;
+import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.data.GlobalLootModifierProvider;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
+import net.minecraftforge.common.loot.LootModifier;
 import net.minecraftforge.common.loot.LootTableIdCondition;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ModGlobalLootTableProvider extends GlobalLootModifierProvider
@@ -30,6 +38,7 @@ public class ModGlobalLootTableProvider extends GlobalLootModifierProvider
     public static DeferredRegister<GlobalLootModifierSerializer<?>> LOOT_MODIFIERS = DeferredRegister.create(ForgeRegistries.LOOT_MODIFIER_SERIALIZERS, Skyrimcraft.MODID);
     public static final RegistryObject<PassiveEntityLootModifier.Serializer> PASSIVE_ENTITY = LOOT_MODIFIERS.register("passive_entity", PassiveEntityLootModifier.Serializer::new);
     public static final RegistryObject<ChestLootModifier.Serializer> CHEST_LOOT = LOOT_MODIFIERS.register("chest_loot", ChestLootModifier.Serializer::new);
+    public static final RegistryObject<AdditionalDropsForBlocks.Serializer> BLOCK_LOOT = LOOT_MODIFIERS.register("block_loot", AdditionalDropsForBlocks.Serializer::new);
 
     public ModGlobalLootTableProvider(DataGenerator gen) {
         super(gen, Skyrimcraft.MODID);
@@ -39,6 +48,19 @@ public class ModGlobalLootTableProvider extends GlobalLootModifierProvider
     protected void start() {
         addMobLootModifiers();
         addChestLootModifiers();
+        addBlockLootModifiers();
+    }
+
+    protected void addBlockLootModifiers() {
+        add("grass_pod_from_small_vegetation", BLOCK_LOOT.get(), new AdditionalDropsForBlocks(
+                new ILootCondition[]{Alternative.alternative(
+                        BlockStateProperty.hasBlockStateProperties(Blocks.GRASS),
+                        BlockStateProperty.hasBlockStateProperties(Blocks.FERN),
+                        BlockStateProperty.hasBlockStateProperties(Blocks.TALL_GRASS),
+                        BlockStateProperty.hasBlockStateProperties(Blocks.LARGE_FERN)
+                ).build(), RandomChanceWithLooting.randomChanceAndLootingBoost(0.25f, 0.35f).build()
+                }, NonNullList.of(ItemStack.EMPTY, new ItemStack(ModItems.GRASS_POD.get()))
+        ));
     }
 
     protected void addChestLootModifiers() {
@@ -54,6 +76,8 @@ public class ModGlobalLootTableProvider extends GlobalLootModifierProvider
         globalChestDrops.add(new ChestLootModifier.ChestItem(ModItems.EXTREME_MAGICKA_POTION.get(), new RandomValueRange(1, 1), 0.3f));
         globalChestDrops.add(new ChestLootModifier.ChestItem(ModItems.ULTIMATE_MAGICKA_POTION.get(), new RandomValueRange(0, 1), 0.2f));
         globalChestDrops.add(new ChestLootModifier.ChestItem(ModItems.SALT_PILE.get(), new RandomValueRange(1, 3), 0.425f));
+        globalChestDrops.add(new ChestLootModifier.ChestItem(ModItems.DWARVEN_OIL.get(), new RandomValueRange(1, 2), 0.4f));
+        globalChestDrops.add(new ChestLootModifier.ChestItem(ModItems.FIRE_SALTS.get(), new RandomValueRange(1, 2), 0.4f));
 
 
         for(Map.Entry<String, ResourceLocation> entry : getChestTables().entrySet()) {
@@ -72,6 +96,9 @@ public class ModGlobalLootTableProvider extends GlobalLootModifierProvider
         villageChestDrops.add(new ChestLootModifier.ChestItem(ModItems.MAGICKA_POTION.get(), new RandomValueRange(1, 2), 0.5f));
         villageChestDrops.add(new ChestLootModifier.ChestItem(ModItems.PLENTIFUL_MAGICKA_POTION.get(), new RandomValueRange(1, 2), 0.425f));
         villageChestDrops.add(new ChestLootModifier.ChestItem(ModItems.SALT_PILE.get(), new RandomValueRange(1, 3), 0.425f));
+        villageChestDrops.add(new ChestLootModifier.ChestItem(ModItems.BRIAR_HEART.get(), new RandomValueRange(1, 2), 0.425f));
+        villageChestDrops.add(new ChestLootModifier.ChestItem(ModItems.DWARVEN_OIL.get(), new RandomValueRange(1, 2), 0.4f));
+        villageChestDrops.add(new ChestLootModifier.ChestItem(ModItems.FIRE_SALTS.get(), new RandomValueRange(1, 2), 0.4f));
 
         for(Map.Entry<String, ResourceLocation> entry : getVillageChestTables().entrySet()) {
             add(entry.getValue().getPath(), CHEST_LOOT.get(), new ChestLootModifier(
@@ -84,29 +111,36 @@ public class ModGlobalLootTableProvider extends GlobalLootModifierProvider
     }
 
     protected void addMobLootModifiers() {
-        NonNullList<PassiveEntityLootModifier.AdditionalItems> spellBookDrops = NonNullList.create();
-        spellBookDrops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.FIREBALL_SPELLBOOK.get(), new RandomValueRange(0, 1), 0.4f, false));
-        spellBookDrops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.TURN_UNDEAD_SPELLBOOK.get(), new RandomValueRange(0, 1), 0.4f, false));
-        spellBookDrops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.MAGICKA_POTION.get(), new RandomValueRange(1, 2), 0.5f, true));
-        spellBookDrops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.MINOR_MAGICKA_POTION.get(), new RandomValueRange(2, 3), 0.625f, true));
-        spellBookDrops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.PLENTIFUL_MAGICKA_POTION.get(), new RandomValueRange(1, 2), 0.425f, true));
-        spellBookDrops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.VIGOROUS_MAGICKA_POTION.get(), new RandomValueRange(1, 1), 0.35f, true));
-        spellBookDrops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.EXTREME_MAGICKA_POTION.get(), new RandomValueRange(1, 1), 0.3f, true));
-        spellBookDrops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.ULTIMATE_MAGICKA_POTION.get(), new RandomValueRange(0, 1), 0.2f, true));
+        NonNullList<PassiveEntityLootModifier.AdditionalItems> witch_evoker_drops = NonNullList.create();
+        witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.FIREBALL_SPELLBOOK.get(), new RandomValueRange(0, 1), 0.245f, false));
+        witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.TURN_UNDEAD_SPELLBOOK.get(), new RandomValueRange(0, 1), 0.245f, false));
+        witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.MAGICKA_POTION.get(), new RandomValueRange(1, 2), 0.475f, true));
+        witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.MINOR_MAGICKA_POTION.get(), new RandomValueRange(2, 3), 0.625f, true));
+        witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.PLENTIFUL_MAGICKA_POTION.get(), new RandomValueRange(1, 2), 0.425f, true));
+        witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.VIGOROUS_MAGICKA_POTION.get(), new RandomValueRange(1, 1), 0.3f, true));
+        witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.EXTREME_MAGICKA_POTION.get(), new RandomValueRange(1, 1), 0.2f, true));
+        witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.ULTIMATE_MAGICKA_POTION.get(), new RandomValueRange(0, 1), 0.1f, true));
+        witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.PHILTER_OF_THE_PHANTOM_POTION.get(), new RandomValueRange(0, 1), 0.2f, true));
+        witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.BRIAR_HEART.get(), new RandomValueRange(1, 1), 0.4f, true));
+        witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.GIANTS_TOE.get(), new RandomValueRange(1, 1), 0.285f, true));
+        witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModBlocks.RED_MOUNTAIN_FLOWER_ITEM.get(), new RandomValueRange(1, 2), 0.475f, true));
+        witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.VAMPIRE_DUST.get(), new RandomValueRange(0, 1), 0.3f, true));
+        witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.FIRE_SALTS.get(), new RandomValueRange(1, 1), 0.3f, true));
+        witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.DWARVEN_OIL.get(), new RandomValueRange(1, 1), 0.3f, true));
 
         add("witch_modifier", PASSIVE_ENTITY.get(), new PassiveEntityLootModifier(
                 new ILootCondition[]{
                         EntityHasProperty.hasProperties(LootContext.EntityTarget.THIS,
                                 EntityPredicate.Builder.entity().of(EntityType.WITCH).build()).build()
                 },
-                spellBookDrops
+                witch_evoker_drops
         ));
         add("evoker_modifier", PASSIVE_ENTITY.get(), new PassiveEntityLootModifier(
                 new ILootCondition[]{
                         EntityHasProperty.hasProperties(LootContext.EntityTarget.THIS,
                                 EntityPredicate.Builder.entity().of(EntityType.EVOKER).build()).build()
                 },
-                spellBookDrops
+                witch_evoker_drops
         ));
 
         NonNullList<PassiveEntityLootModifier.AdditionalItems> modSeedDrops = NonNullList.create();
@@ -126,6 +160,16 @@ public class ModGlobalLootTableProvider extends GlobalLootModifierProvider
                                 EntityPredicate.Builder.entity().of(EntityType.RABBIT).build()).build()
                 },
                 modSeedDrops
+        ));
+
+        NonNullList<PassiveEntityLootModifier.AdditionalItems> salmonRoeDrop = NonNullList.create();
+        salmonRoeDrop.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.SALMON_ROE.get(), new RandomValueRange(1, 2), 0.3f, false));
+        add("salmon_modifier", PASSIVE_ENTITY.get(), new PassiveEntityLootModifier(
+                new ILootCondition[]{
+                        EntityHasProperty.hasProperties(LootContext.EntityTarget.THIS,
+                                EntityPredicate.Builder.entity().of(EntityType.SALMON).build()).build()
+                },
+                salmonRoeDrop
         ));
     }
 
@@ -165,5 +209,62 @@ public class ModGlobalLootTableProvider extends GlobalLootModifierProvider
     @Override
     public String getName() {
         return Skyrimcraft.MODID + "_globalLootTables";
+    }
+
+
+    public static class AdditionalDropsForBlocks extends LootModifier {
+
+        private NonNullList<ItemStack> output;
+
+        /**
+         * Constructs a LootModifier.
+         *
+         * @param conditionsIn the ILootConditions that need to be matched before the loot is modified.
+         */
+        public AdditionalDropsForBlocks(ILootCondition[] conditionsIn, NonNullList<ItemStack> outputs) {
+            super(conditionsIn);
+            this.output = outputs;
+        }
+
+        @NotNull
+        @Override
+        protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
+            generatedLoot.addAll(output);
+            return generatedLoot;
+        }
+
+        public static class Serializer extends GlobalLootModifierSerializer<AdditionalDropsForBlocks> {
+
+            @Override
+            public AdditionalDropsForBlocks read(ResourceLocation location, JsonObject object, ILootCondition[] condition) {
+
+                JsonArray array = JSONUtils.getAsJsonArray(object, "items");
+
+                NonNullList<ItemStack> list = NonNullList.create();
+
+                for (JsonElement json : array) {
+                    JsonObject jsonObject = (JsonObject) json;
+                    list.add(new ItemStack(JSONUtils.getAsItem(jsonObject, "item"), JSONUtils.getAsInt(jsonObject, "count")));
+                }
+
+                return new AdditionalDropsForBlocks(condition, list);
+            }
+
+            @Override
+            public JsonObject write(AdditionalDropsForBlocks instance) {
+                JsonObject jsonObject = makeConditions(instance.conditions);
+                JsonArray array = new JsonArray();
+                for (ItemStack stack : instance.output) {
+                    JsonObject jo = new JsonObject();
+                    jo.addProperty("item", ForgeRegistries.ITEMS.getKey(stack.getItem()).toString());
+                    jo.addProperty("count", stack.getCount());
+                    array.add(jo);
+                }
+                jsonObject.add("items", array);
+
+                return jsonObject;
+            }
+
+        }
     }
 }

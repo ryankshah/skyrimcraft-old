@@ -1,0 +1,37 @@
+{
+  "conditions": [
+    {
+      "condition": "minecraft:alternative",
+      "terms": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "minecraft:grass"
+        },
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "minecraft:fern"
+        },
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "minecraft:tall_grass"
+        },
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "minecraft:large_fern"
+        }
+      ]
+    },
+    {
+      "condition": "minecraft:random_chance_with_looting",
+      "chance": 0.25,
+      "looting_multiplier": 0.35
+    }
+  ],
+  "items": [
+    {
+      "item": "skyrimcraft:grass_pod",
+      "count": 1
+    }
+  ],
+  "type": "skyrimcraft:block_loot"
+}
