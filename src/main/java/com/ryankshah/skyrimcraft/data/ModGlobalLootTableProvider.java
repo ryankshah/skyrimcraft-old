@@ -76,8 +76,13 @@ public class ModGlobalLootTableProvider extends GlobalLootModifierProvider
         globalChestDrops.add(new ChestLootModifier.ChestItem(ModItems.EXTREME_MAGICKA_POTION.get(), new RandomValueRange(1, 1), 0.3f));
         globalChestDrops.add(new ChestLootModifier.ChestItem(ModItems.ULTIMATE_MAGICKA_POTION.get(), new RandomValueRange(0, 1), 0.2f));
         globalChestDrops.add(new ChestLootModifier.ChestItem(ModItems.SALT_PILE.get(), new RandomValueRange(1, 3), 0.425f));
-        globalChestDrops.add(new ChestLootModifier.ChestItem(ModItems.DWARVEN_OIL.get(), new RandomValueRange(1, 2), 0.4f));
-        globalChestDrops.add(new ChestLootModifier.ChestItem(ModItems.FIRE_SALTS.get(), new RandomValueRange(1, 2), 0.4f));
+        globalChestDrops.add(new ChestLootModifier.ChestItem(ModItems.BRIAR_HEART.get(), new RandomValueRange(1, 2), 0.425f));
+        globalChestDrops.add(new ChestLootModifier.ChestItem(ModItems.DWARVEN_OIL.get(), new RandomValueRange(1, 2), 0.3825f));
+        globalChestDrops.add(new ChestLootModifier.ChestItem(ModItems.FIRE_SALTS.get(), new RandomValueRange(1, 2), 0.325f));
+        globalChestDrops.add(new ChestLootModifier.ChestItem(ModItems.MORA_TAPINELLA.get(), new RandomValueRange(1, 2), 0.375f));
+        globalChestDrops.add(new ChestLootModifier.ChestItem(ModItems.GIANTS_TOE.get(), new RandomValueRange(1, 2), 0.2f));
+        globalChestDrops.add(new ChestLootModifier.ChestItem(ModItems.VAMPIRE_DUST.get(), new RandomValueRange(1, 2), 0.3f));
+        globalChestDrops.add(new ChestLootModifier.ChestItem(ModItems.CREEP_CLUSTER.get(), new RandomValueRange(1, 2), 0.375f));
 
 
         for(Map.Entry<String, ResourceLocation> entry : getChestTables().entrySet()) {
@@ -97,8 +102,12 @@ public class ModGlobalLootTableProvider extends GlobalLootModifierProvider
         villageChestDrops.add(new ChestLootModifier.ChestItem(ModItems.PLENTIFUL_MAGICKA_POTION.get(), new RandomValueRange(1, 2), 0.425f));
         villageChestDrops.add(new ChestLootModifier.ChestItem(ModItems.SALT_PILE.get(), new RandomValueRange(1, 3), 0.425f));
         villageChestDrops.add(new ChestLootModifier.ChestItem(ModItems.BRIAR_HEART.get(), new RandomValueRange(1, 2), 0.425f));
-        villageChestDrops.add(new ChestLootModifier.ChestItem(ModItems.DWARVEN_OIL.get(), new RandomValueRange(1, 2), 0.4f));
-        villageChestDrops.add(new ChestLootModifier.ChestItem(ModItems.FIRE_SALTS.get(), new RandomValueRange(1, 2), 0.4f));
+        villageChestDrops.add(new ChestLootModifier.ChestItem(ModItems.DWARVEN_OIL.get(), new RandomValueRange(1, 2), 0.3825f));
+        villageChestDrops.add(new ChestLootModifier.ChestItem(ModItems.FIRE_SALTS.get(), new RandomValueRange(1, 2), 0.325f));
+        villageChestDrops.add(new ChestLootModifier.ChestItem(ModItems.MORA_TAPINELLA.get(), new RandomValueRange(1, 2), 0.375f));
+        villageChestDrops.add(new ChestLootModifier.ChestItem(ModItems.GIANTS_TOE.get(), new RandomValueRange(1, 2), 0.2f));
+        villageChestDrops.add(new ChestLootModifier.ChestItem(ModItems.VAMPIRE_DUST.get(), new RandomValueRange(1, 2), 0.3f));
+        villageChestDrops.add(new ChestLootModifier.ChestItem(ModItems.CREEP_CLUSTER.get(), new RandomValueRange(1, 2), 0.375f));
 
         for(Map.Entry<String, ResourceLocation> entry : getVillageChestTables().entrySet()) {
             add(entry.getValue().getPath(), CHEST_LOOT.get(), new ChestLootModifier(
@@ -124,6 +133,7 @@ public class ModGlobalLootTableProvider extends GlobalLootModifierProvider
         witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.BRIAR_HEART.get(), new RandomValueRange(1, 1), 0.4f, true));
         witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.GIANTS_TOE.get(), new RandomValueRange(1, 1), 0.285f, true));
         witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModBlocks.RED_MOUNTAIN_FLOWER_ITEM.get(), new RandomValueRange(1, 2), 0.475f, true));
+        witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.MORA_TAPINELLA.get(), new RandomValueRange(0, 1), 0.3f, true));
         witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.VAMPIRE_DUST.get(), new RandomValueRange(0, 1), 0.3f, true));
         witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.FIRE_SALTS.get(), new RandomValueRange(1, 1), 0.3f, true));
         witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.DWARVEN_OIL.get(), new RandomValueRange(1, 1), 0.3f, true));

@@ -2,6 +2,7 @@ package com.ryankshah.skyrimcraft.item;
 
 import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.util.ModAttributes;
+import com.ryankshah.skyrimcraft.util.ModBlocks;
 import com.ryankshah.skyrimcraft.util.ModItems;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
@@ -18,8 +19,6 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-
-import net.minecraft.item.Item.Properties;
 
 public class RegenMagickaPotion extends SkyrimPotion {
     private float modifierValue;
@@ -49,8 +48,22 @@ public class RegenMagickaPotion extends SkyrimPotion {
     @Override
     public List<ItemStack> getIngredients() {
         List<ItemStack> ingredients = new ArrayList<>();
-//        ingredients.add(new ItemStack(ModBlocks.GARLIC.get(), 1));
-//        ingredients.add(new ItemStack())
+        if (this == ModItems.LASTING_POTENCY_POTION.get()) {
+            ingredients.add(new ItemStack(ModItems.SALMON_ROE.get(), 1));
+            ingredients.add(new ItemStack(ModBlocks.GARLIC.get(), 1));
+        } else if(this == ModItems.DRAUGHT_LASTING_POTENCY_POTION.get()) {
+            ingredients.add(new ItemStack(ModBlocks.GARLIC.get(), 1));
+            ingredients.add(new ItemStack(ModItems.SALT_PILE.get(), 1));
+        } else if (this == ModItems.SOLUTION_LASTING_POTENCY_POTION.get()) {
+            ingredients.add(new ItemStack(ModItems.DWARVEN_OIL.get(), 1));
+            ingredients.add(new ItemStack(ModItems.SALMON_ROE.get(), 1));
+        } else if (this == ModItems.PHILTER_LASTING_POTENCY_POTION.get()) {
+            ingredients.add(new ItemStack(ModItems.SALT_PILE.get(), 1));
+            ingredients.add(new ItemStack(ModItems.DWARVEN_OIL.get(), 1));
+        } else if (this == ModItems.ELIXIR_LASTING_POTENCY_POTION.get()) {
+            ingredients.add(new ItemStack(ModItems.DWARVEN_OIL.get(), 1));
+            ingredients.add(new ItemStack(ModItems.FIRE_SALTS.get(), 1));
+        }
         return ingredients;
     }
 

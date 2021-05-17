@@ -124,10 +124,8 @@ public class FireballEntity extends Entity
                 Entity entity = ((EntityRayTraceResult)result).getEntity();
                 ServerWorld world = (ServerWorld) entity.level;
                 entity.hurt(DamageSource.indirectMagic(this, this.shootingEntity), 5.5F);
-
-                // TODO: on impact cause player on fire (and set surrounding blocks on fire?)
                 entity.setSecondsOnFire(4); // 4 seconds too long/short?
-                //igniteBlocks(4);
+                //igniteBlocks(4); // needed ?
             } else if (result.getType() == RayTraceResult.Type.BLOCK) {
                 level.playSound(null, new BlockPos(result.getLocation().x, result.getLocation().y, result.getLocation().z), SoundEvents.GENERIC_EXPLODE, SoundCategory.HOSTILE, 1.0F, 1.0F);
             }

@@ -43,6 +43,7 @@ public class SkyrimAlchemyGui extends Screen
     private boolean categoryChosen;
     private int currentCategory;
     private int currentItem;
+    private int categoryStartIndex, itemStartIndex;
     private float spin = 0.0F;
     private AlchemyRecipe currentRecipeObject = null;
     private PlayerEntity player;
@@ -87,17 +88,24 @@ public class SkyrimAlchemyGui extends Screen
             fillGradient(matrixStack, 92, 2, 93, this.height - 2, 0xAAFFFFFF, 0xAAFFFFFF);
         }
 
-        int i;
-        for(i = 0; i < categories.size(); i++) {
+        int MIN_Y = 30;
+        int MAX_Y = height / 2 + 14 * 6 - 10;
+
+        for(int i = 0; i < categories.size(); i++) {
+            int y = height / 2 + 14 * i - this.currentCategory * 7 - 10;
+            if(y <= MIN_Y || y >= MAX_Y)
+                continue;
+
             String categoryName = categories.get(i).toString();
             if (categoryName.length() >= 14) {
                 categoryName = categoryName.substring(0, 8) + "..";
             }
-            drawString(matrixStack, font, categoryName, 18, this.height / 2 + 14 * i - this.currentCategory * 7, i == this.currentCategory ? 0x00FFFFFF : 0x00C0C0C0);
+            drawString(matrixStack, font, categoryName, 18, y, i == this.currentCategory ? 0x00FFFFFF : 0x00C0C0C0);
         }
 
         itemList = items.get(categories.get(currentCategory));
 
+        // TODO: Fix the overflowing issue...
         for(int j = 0; j < itemList.size(); j++) {
             AlchemyRecipe recipe = itemList.get(j);
             ITextComponent itemStackHoverName = recipe.itemStack.getHoverName();
@@ -108,7 +116,11 @@ public class SkyrimAlchemyGui extends Screen
                 this.drawItemInformation(matrixStack, recipe);
             }
 
-            drawString(matrixStack, font, font.width(itemStackHoverName) < 16 ? itemStackHoverName.getString() : itemStackHoverName.getString().substring(0, 16) + "..", 98, height / 2 + 14 * j - this.currentItem * 7, j == this.currentItem ? 0x00FFFFFF : 0x00C0C0C0);
+            int y = height / 2 + 14 * j - this.currentItem * 7 - 10;
+            if(y >= MAX_Y)
+                continue;
+
+            drawString(matrixStack, font, font.width(itemStackHoverName) < 16 ? itemStackHoverName.getString() : itemStackHoverName.getString().substring(0, 16) + "..", 98, y, j == this.currentItem ? 0x00FFFFFF : 0x00C0C0C0);
         }
 
         fillGradient(matrixStack, 0, this.height * 3 / 4 + 20, this.width, this.height, 0x77000000, 0x77000000);

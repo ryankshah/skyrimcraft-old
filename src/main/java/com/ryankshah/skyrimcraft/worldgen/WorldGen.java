@@ -21,13 +21,13 @@ public class WorldGen
     public static void generate(final BiomeLoadingEvent event) {
         if (!(event.getCategory().equals(Biome.Category.NETHER) || event.getCategory().equals(Biome.Category.THEEND))) {
             generateOre(event.getGeneration(), OreFeatureConfig.FillerBlockType.NATURAL_STONE,
-                    ModBlocks.EBONY_ORE.get().defaultBlockState(), 5, 10, 30, 6);
+                    ModBlocks.EBONY_ORE.get().defaultBlockState(), 2, 10, 30, 6);
             generateOre(event.getGeneration(), OreFeatureConfig.FillerBlockType.NATURAL_STONE,
-                    ModBlocks.MALACHITE_ORE.get().defaultBlockState(), 5, 15, 45, 10);
+                    ModBlocks.MALACHITE_ORE.get().defaultBlockState(), 3, 15, 45, 10);
             generateOre(event.getGeneration(), OreFeatureConfig.FillerBlockType.NATURAL_STONE,
-                    ModBlocks.MOONSTONE_ORE.get().defaultBlockState(), 5, 34, 60, 12);
+                    ModBlocks.MOONSTONE_ORE.get().defaultBlockState(), 4, 34, 60, 12);
             generateOre(event.getGeneration(), OreFeatureConfig.FillerBlockType.NATURAL_STONE,
-                    ModBlocks.ORICHALCUM_ORE.get().defaultBlockState(), 5, 30, 50, 12);
+                    ModBlocks.ORICHALCUM_ORE.get().defaultBlockState(), 3, 30, 50, 12);
 
             // Salt pile
             if(event.getCategory().equals(Biome.Category.DESERT) || event.getCategory().equals(Biome.Category.MESA) || event.getCategory().equals(Biome.Category.SAVANNA))

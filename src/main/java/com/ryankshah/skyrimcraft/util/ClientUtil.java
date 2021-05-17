@@ -55,7 +55,7 @@ public class ClientUtil
         return circlePoints;
     }
 
-    public static void drawCloudAtPos(RenderWorldLastEvent event, BlockPos pos, Vector3d size, int color)  {
+    public static void drawCubeAtPos(RenderWorldLastEvent event, BlockPos pos, Vector3d size, int color)  {
         IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
         IVertexBuilder builder = buffer.getBuffer(RenderType.lightning());
 

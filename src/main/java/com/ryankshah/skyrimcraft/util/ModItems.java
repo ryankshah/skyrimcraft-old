@@ -47,8 +47,8 @@ public class ModItems
     public static final RegistryObject<Item> POTATO_BREAD = ITEMS.register("potato_bread", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new Food.Builder().nutrition(4).saturationMod(0.4F).build()), "Potato Bread"));
     public static final RegistryObject<Item> TOMATO = ITEMS.register("tomato", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new Food.Builder().nutrition(4).saturationMod(0.4F).build()), "Tomato"));
     public static final RegistryObject<Item> APPLE_PIE = ITEMS.register("apple_pie", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new Food.Builder().nutrition(4).saturationMod(0.4F).build()), "Apple Pie"));
-    public static final RegistryObject<Item> FLOUR = ITEMS.register("flour", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD), "Flour"));
-    public static final RegistryObject<Item> BUTTER = ITEMS.register("butter", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD), "Butter"));
+    public static final RegistryObject<Item> FLOUR = ITEMS.register("flour", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Flour"));
+    public static final RegistryObject<Item> BUTTER = ITEMS.register("butter", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Butter"));
 
     // Ingredients
     public static final RegistryObject<Item> SALT_PILE = ITEMS.register("salt_pile", () -> new SkyrimIngredient(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Salt Pile", SkyrimIngredient.IngredientEffect.WEAKNESS_TO_MAGIC, SkyrimIngredient.IngredientEffect.FORTIFY_RESTORATION, SkyrimIngredient.IngredientEffect.SLOW, SkyrimIngredient.IngredientEffect.REGENERATE_MAGICKA));

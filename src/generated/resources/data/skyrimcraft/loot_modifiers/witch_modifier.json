@@ -94,6 +94,13 @@
       "useLooting": true
     },
     {
+      "item": "skyrimcraft:mora_tapinella",
+      "minItem": 0.0,
+      "maxItem": 1.0,
+      "change": 0.3,
+      "useLooting": true
+    },
+    {
       "item": "skyrimcraft:vampire_dust",
       "minItem": 0.0,
       "maxItem": 1.0,

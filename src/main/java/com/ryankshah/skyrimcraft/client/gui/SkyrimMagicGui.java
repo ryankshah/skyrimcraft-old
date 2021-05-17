@@ -104,10 +104,16 @@ public class SkyrimMagicGui extends Screen
 
         renderMagicka(matrixStack);
 
+        int MIN_Y = 30;
+        int MAX_Y = height / 2 + 14 * 6 - 10;
+
         int i;
         for(i = 0; i < spellTypes.size(); i++) {
+            int y = this.height / 2 + 14 * i - this.currentSpellType * 7;
+            if(y <= MIN_Y || y >= MAX_Y)
+                continue;
             String spellTypeName = spellTypes.get(i).toString();
-            drawString(matrixStack, font, spellTypeName, this.width - 20 - font.width(spellTypeName), this.height / 2 + 14 * i - this.currentSpellType * 7, i == this.currentSpellType ? 0x00FFFFFF : 0x00C0C0C0);
+            drawString(matrixStack, font, spellTypeName, this.width - 20 - font.width(spellTypeName), y, i == this.currentSpellType ? 0x00FFFFFF : 0x00C0C0C0);
         }
 
         // Get ISpell.SpellType
@@ -138,6 +144,10 @@ public class SkyrimMagicGui extends Screen
                 this.currentSpellObject = spell;
                 drawSpellInformation(matrixStack, currentSpellObject, partialTicks);
             }
+
+            int y = this.height / 2 + 14 * j - this.currentSpell * 7;
+            if(y <= MIN_Y || y >= MAX_Y)
+                continue;
 
             drawString(matrixStack, font, displayName, this.width - 183, this.height / 2 + 14 * j - this.currentSpell * 7, color.get());
         }

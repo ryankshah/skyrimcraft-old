@@ -87,16 +87,19 @@ public class SkyrimOvenGui extends Screen
             fillGradient(matrixStack, 92, 2, 93, this.height - 2, 0xAAFFFFFF, 0xAAFFFFFF);
         }
 
+        int MIN_Y = 30;
+        int MAX_Y = height / 2 + 14 * 6 - 10;
+
         if (!this.items.isEmpty()) {
             Object[] categories = this.getCategories(this.items);
 
             int i;
             for(i = Math.max(this.currentCategory - 6, 0); i < (Math.min(this.currentCategory + 6, categories.length)); ++i) {
-                if (i == this.currentCategory) {
-                    drawString(matrixStack, font, ((String)categories[i]).toUpperCase(), 18, height / 2 + 14 * i - this.currentCategory * 7, 16777215);
-                } else {
-                    drawString(matrixStack, font, ((String)categories[i]).toUpperCase(), 18, height / 2 + 14 * i - this.currentCategory * 7, 12632256);
-                }
+                int y = this.height / 2 + 14 * i - this.currentCategory * 7;
+                if(y <= MIN_Y || y >= MAX_Y)
+                    continue;
+
+                drawString(matrixStack, font, ((String)categories[i]).toUpperCase(), 18, y, i == currentCategory ? 16777215 : 12632256);
             }
 
             if (this.itemList != null) {
@@ -105,12 +108,15 @@ public class SkyrimOvenGui extends Screen
 
                     if (i == this.currentItem) {
                         this.currentRecipeObject = recipe;
-                        drawString(matrixStack, font, recipe.getItemStack().getHoverName(), 98, height / 2 + 14 * i - this.currentItem * 7, 16777215);
                         this.drawItemImage(matrixStack, recipe.getItemStack(), width - 100, height / 2 - 70, this.spin);
                         this.drawItemInformation(matrixStack, recipe);
-                    } else {
-                        drawString(matrixStack, font, recipe.getItemStack().getHoverName(), 98, height / 2 + 14 * i - this.currentItem * 7, 12632256);
                     }
+
+                    int y = this.height / 2 + 14 * i - this.currentItem * 7;
+                    if(y <= MIN_Y || y >= MAX_Y)
+                        continue;
+
+                    drawString(matrixStack, font, recipe.getItemStack().getHoverName(), 98, y, i == currentItem ? 16777215 : 12632256);
                 }
             }
         }

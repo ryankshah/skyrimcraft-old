@@ -52,13 +52,37 @@
       "item": "skyrimcraft:dwarven_oil",
       "minItem": 1.0,
       "maxItem": 2.0,
-      "chance": 0.4
+      "chance": 0.3825
     },
     {
       "item": "skyrimcraft:fire_salts",
       "minItem": 1.0,
       "maxItem": 2.0,
-      "chance": 0.4
+      "chance": 0.325
+    },
+    {
+      "item": "skyrimcraft:mora_tapinella",
+      "minItem": 1.0,
+      "maxItem": 2.0,
+      "chance": 0.375
+    },
+    {
+      "item": "skyrimcraft:giants_toe",
+      "minItem": 1.0,
+      "maxItem": 2.0,
+      "chance": 0.2
+    },
+    {
+      "item": "skyrimcraft:vampire_dust",
+      "minItem": 1.0,
+      "maxItem": 2.0,
+      "chance": 0.3
+    },
+    {
+      "item": "skyrimcraft:creep_cluster",
+      "minItem": 1.0,
+      "maxItem": 2.0,
+      "chance": 0.375
     }
   ],
   "type": "skyrimcraft:chest_loot"

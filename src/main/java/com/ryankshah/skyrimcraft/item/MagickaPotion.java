@@ -17,8 +17,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.item.Item.Properties;
-
 public class MagickaPotion extends SkyrimPotion
 {
     private float replenishValue;
@@ -45,18 +43,21 @@ public class MagickaPotion extends SkyrimPotion
     @Override
     public List<ItemStack> getIngredients() {
         List<ItemStack> ingredients = new ArrayList<>();
-        if (this == ModItems.MINOR_MAGICKA_POTION.get() || this == ModItems.MAGICKA_POTION.get()) {
-            ingredients.add(new ItemStack(ModItems.CREEP_CLUSTER.get(), 1));
+        if (this == ModItems.MINOR_MAGICKA_POTION.get()) {
+            ingredients.add(new ItemStack(ModItems.GRASS_POD.get(), 1));
             ingredients.add(new ItemStack(ModBlocks.RED_MOUNTAIN_FLOWER_ITEM.get(), 1));
+        } else if(this == ModItems.MAGICKA_POTION.get()) {
+            ingredients.add(new ItemStack(ModItems.GRASS_POD.get(), 1));
+            ingredients.add(new ItemStack(ModItems.BRIAR_HEART.get(), 1));
         } else if (this == ModItems.PLENTIFUL_MAGICKA_POTION.get()) {
             ingredients.add(new ItemStack(ModItems.VAMPIRE_DUST.get(), 1));
             ingredients.add(new ItemStack(ModItems.BRIAR_HEART.get(), 1));
         } else if (this == ModItems.VIGOROUS_MAGICKA_POTION.get()) {
-            ingredients.add(new ItemStack(ModItems.GRASS_POD.get(), 1));
-            ingredients.add(new ItemStack(ModItems.MORA_TAPINELLA.get(), 1));
-        } else if (this == ModItems.EXTREME_MAGICKA_POTION.get()) {
-            ingredients.add(new ItemStack(ModItems.GRASS_POD.get(), 1));
+            ingredients.add(new ItemStack(ModItems.CREEP_CLUSTER.get(), 1));
             ingredients.add(new ItemStack(ModBlocks.RED_MOUNTAIN_FLOWER_ITEM.get(), 1));
+        } else if (this == ModItems.EXTREME_MAGICKA_POTION.get()) {
+            ingredients.add(new ItemStack(ModItems.CREEP_CLUSTER.get(), 1));
+            ingredients.add(new ItemStack(ModItems.MORA_TAPINELLA.get(), 1));
         } else if (this == ModItems.ULTIMATE_MAGICKA_POTION.get()) {
             ingredients.add(new ItemStack(ModItems.MORA_TAPINELLA.get(), 1));
             ingredients.add(new ItemStack(ModBlocks.RED_MOUNTAIN_FLOWER_ITEM.get(), 1));
@@ -71,7 +72,7 @@ public class MagickaPotion extends SkyrimPotion
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new StringTextComponent("Replenishes " + (int)replenishValue + " magicka"));
+        tooltip.add(new StringTextComponent((int)replenishValue == 20 ? "Completely replenishes your magicka" : "Replenishes " + (int)replenishValue + " magicka"));
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 }

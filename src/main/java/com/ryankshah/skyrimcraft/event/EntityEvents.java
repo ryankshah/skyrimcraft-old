@@ -24,7 +24,6 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = Skyrimcraft.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EntityEvents
 {
-    // TODO: Check entities targeting player (i.e. via LivingSetAttackTargetEvent)
     @SubscribeEvent
     public static void entitySetAttackTarget(LivingSetAttackTargetEvent event) {
         if(event.getTarget() instanceof ServerPlayerEntity) {
@@ -84,6 +83,8 @@ public class EntityEvents
             event.getTrades().get(1).add(new RandomTradeBuilder(8, 4, 0.175F).setEmeraldPrice(4, 7).setForSale(ModItems.BRIAR_HEART.get(), 1, 2).build());
             event.getTrades().get(2).add(new RandomTradeBuilder(3, 6, 0.275F).setEmeraldPrice(13, 25).setForSale(ModItems.VAMPIRE_DUST.get(), 1, 2).build());
             event.getTrades().get(2).add(new RandomTradeBuilder(3, 6, 0.275F).setEmeraldPrice(6, 12).setForSale(ModItems.MORA_TAPINELLA.get(), 1, 2).build());
+            event.getTrades().get(2).add(new RandomTradeBuilder(3, 6, 0.275F).setEmeraldPrice(11, 25).setForSale(ModItems.DWARVEN_OIL.get(), 1, 2).build());
+            event.getTrades().get(2).add(new RandomTradeBuilder(3, 6, 0.275F).setEmeraldPrice(14, 32).setForSale(ModItems.FIRE_SALTS.get(), 1, 2).build());
             event.getTrades().get(3).add(new RandomTradeBuilder(1, 10, 0.675F).setEmeraldPrice(26, 45).setForSale(ModItems.GIANTS_TOE.get(), 1, 1).build());
         }
         if(event.getType() == VillagerProfession.FARMER) {

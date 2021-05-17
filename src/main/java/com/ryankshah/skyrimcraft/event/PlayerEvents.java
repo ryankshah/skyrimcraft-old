@@ -95,6 +95,9 @@ public class PlayerEvents
     @SubscribeEvent
     public static void onClientPlayerTick(TickEvent.PlayerTickEvent event) {
         PlayerEntity playerEntity = event.player;
+        if(!playerEntity.isAlive())
+            return;
+
         ISkyrimPlayerData cap = playerEntity.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("playerevents playertick"));
         // Check we're only doing the updates at the end of the tick phase
         if(event.phase == TickEvent.Phase.END) {
