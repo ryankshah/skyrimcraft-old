@@ -147,6 +147,24 @@ public class Networking
                 .decoder(PacketUpdateTargetingEntities::new)
                 .consumer(PacketUpdateTargetingEntities::handle)
                 .add();
+
+        INSTANCE.messageBuilder(PacketAddXpToSkillOnServer.class, nextID())
+                .encoder(PacketAddXpToSkillOnServer::toBytes)
+                .decoder(PacketAddXpToSkillOnServer::new)
+                .consumer(PacketAddXpToSkillOnServer::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketUpdateCharacter.class, nextID())
+                .encoder(PacketUpdateCharacter::toBytes)
+                .decoder(PacketUpdateCharacter::new)
+                .consumer(PacketUpdateCharacter::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketAddToLevelUpdates.class, nextID())
+                .encoder(PacketAddToLevelUpdates::toBytes)
+                .decoder(PacketAddToLevelUpdates::new)
+                .consumer(PacketAddToLevelUpdates::handle)
+                .add();
     }
 
     public static void sendToClient(Object packet, ServerPlayerEntity player) {

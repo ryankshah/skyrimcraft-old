@@ -1,10 +1,14 @@
-package com.ryankshah.skyrimcraft.spell.entity;
+package com.ryankshah.skyrimcraft.character.magic.entity;
 
 import com.ryankshah.skyrimcraft.util.ModEntityType;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.IPacket;
@@ -31,11 +35,11 @@ public class DisarmEntity extends Entity
     private Vector3d startingPosition;
 
     public DisarmEntity(World worldIn) {
-        super(ModEntityType.SHOUT_UNRELENTING_FORCE_ENTITY.get(), worldIn);
+        super(ModEntityType.SHOUT_DISARM_ENTITY.get(), worldIn);
     }
 
     public DisarmEntity(World worldIn, LivingEntity shooter, double accelX, double accelY, double accelZ) {
-        super(ModEntityType.SHOUT_UNRELENTING_FORCE_ENTITY.get(), worldIn);
+        super(ModEntityType.SHOUT_DISARM_ENTITY.get(), worldIn);
         this.shootingEntity = shooter;
         this.setPos(shooter.getForward().x, shooter.getForward().y, shooter.getForward().z);
         this.moveTo(shooter.getX(), shooter.getY(), shooter.getZ(), shooter.yRot, shooter.xRot);
@@ -78,7 +82,7 @@ public class DisarmEntity extends Entity
     @Override
     public void tick() {
         if(!this.level.isClientSide)
-            if(startingPosition.distanceToSqr(getX(), getY(), getZ()) >= 32D)
+            if(startingPosition.distanceToSqr(getX(), getY(), getZ()) >= 64D)
                 this.remove();
 
         if (this.level.isClientSide || (this.shootingEntity == null || !this.shootingEntity.removed) && this.level.hasChunkAt(new BlockPos(this.getX(), this.getY(), this.getZ()))) {
@@ -94,16 +98,6 @@ public class DisarmEntity extends Entity
             this.setPos(getX() + vec3d.x, getY() + vec3d.y, getZ() + vec3d.z);
 
             float f = this.getMotionFactor();
-
-//            float radius = 2f;
-//            // Get origins
-//            Vector3d origin = new Vector3d(getX(), getY(), getZ());
-//            Vector3d normal = getLookAngle();
-//
-//            Set<Vector3d> circlePoints = ClientUtil.circle(origin, normal, radius, 8);
-//            for(Vector3d point : circlePoints) {
-//                this.level.addParticle(ParticleTypes.CLOUD, getForward().x + point.x, getForward().y + point.y, getForward().z + point.z, vec3d.x, vec3d.y, vec3d.z);
-//            }
 
             this.setDeltaMovement(vec3d.add(this.accelerationX, this.accelerationY, this.accelerationZ).scale(f));
             this.setPos(this.getX(), this.getY(), this.getZ());
@@ -123,9 +117,18 @@ public class DisarmEntity extends Entity
                 Entity entity = ((EntityRayTraceResult)result).getEntity();
                 if(entity instanceof LivingEntity) {
                     LivingEntity livingEntity = (LivingEntity)entity;
-                    if(!livingEntity.getMainHandItem().isEmpty()) {
-                        livingEntity.releaseUsingItem();
+                    ItemStack mainHand = livingEntity.getMainHandItem();
+
+                    // Check its not vanishing curse and there is indeed something in the entity's main hand
+                    if(!livingEntity.getMainHandItem().isEmpty() && !EnchantmentHelper.hasVanishingCurse(mainHand)) {
+                        ItemEntity mainHandItemEntity = new ItemEntity(this.level, this.getX(), this.getY(), this.getZ(), mainHand);
+                        this.level.addFreshEntity(mainHandItemEntity);
+                        livingEntity.setItemSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
                     }
+
+                    // Stagger entity
+                    if(!entity.isInWater() || !entity.isInLava())
+                        ((LivingEntity)entity).knockback(1F, (double)MathHelper.sin(this.yRot * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(this.yRot * ((float)Math.PI / 180F))));
                 }
 //                if(!entity.isInWater() || !entity.isInLava())
 //                    ((LivingEntity)entity).knockback(2F, (double)MathHelper.sin(this.yRot * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(this.yRot * ((float)Math.PI / 180F))));

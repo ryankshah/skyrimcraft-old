@@ -1,6 +1,7 @@
-package com.ryankshah.skyrimcraft.spell;
+package com.ryankshah.skyrimcraft.character.magic.shout;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
+import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.util.ClientUtil;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.particles.ParticleTypes;

@@ -1,4 +1,4 @@
-package com.ryankshah.skyrimcraft.spell.entity;
+package com.ryankshah.skyrimcraft.character.magic.entity;
 
 import com.ryankshah.skyrimcraft.util.ModEntityType;
 import net.minecraft.block.AbstractFireBlock;

@@ -1,6 +1,5 @@
 package com.ryankshah.skyrimcraft.util;
 
-import com.sun.javafx.geom.Vec3d;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -9,7 +8,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
-import java.util.Vector;
 import java.util.function.Predicate;
 
 public class RayTraceUtil

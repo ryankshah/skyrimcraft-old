@@ -24,7 +24,7 @@ public class SpectralLayerRenderer extends LayerRenderer<AbstractClientPlayerEnt
 
     @Override
     public void render(MatrixStack p_225628_1_, IRenderTypeBuffer p_225628_2_, int p_225628_3_, AbstractClientPlayerEntity p_225628_4_, float p_225628_5_, float p_225628_6_, float p_225628_7_, float p_225628_8_, float p_225628_9_, float p_225628_10_) {
-        if(p_225628_4_.hasEffect(ModEffects.SPECTRAL.get())) {
+        if(p_225628_4_.hasEffect(ModEffects.SPECTRAL.get()) || p_225628_4_.hasEffect(ModEffects.ETHEREAL.get())) {
             RenderSystem.enableBlend();
             RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
             IVertexBuilder ivertexbuilder = p_225628_2_.getBuffer(RenderType.entityTranslucentCull(p_225628_4_.getSkinTextureLocation()));

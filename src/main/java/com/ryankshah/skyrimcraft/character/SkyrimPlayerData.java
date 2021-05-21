@@ -1,14 +1,22 @@
 package com.ryankshah.skyrimcraft.character;
 
-import com.ryankshah.skyrimcraft.spell.ISpell;
+import com.ryankshah.skyrimcraft.character.magic.ISpell;
+import com.ryankshah.skyrimcraft.character.skill.ISkill;
+import com.ryankshah.skyrimcraft.character.skill.SkillRegistry;
+import com.ryankshah.skyrimcraft.network.Networking;
+import com.ryankshah.skyrimcraft.network.character.PacketAddToLevelUpdates;
 import com.ryankshah.skyrimcraft.util.CompassFeature;
+import com.ryankshah.skyrimcraft.util.LevelUpdate;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraftforge.fml.RegistryObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class SkyrimPlayerData implements ISkyrimPlayerData
 {
@@ -26,6 +34,11 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
 
     private List<CompassFeature> compassFeatures;
 
+    private int characterLevel;
+    private int characterTotalXp;
+    private float characterXpProgress;
+    private Map<Integer, ISkill> skills;
+
     public SkyrimPlayerData() {
         knownSpells = new ArrayList<>();
         compassFeatures = new ArrayList<>();
@@ -33,6 +46,8 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
         shoutsOnCooldown = new HashMap<>();
         targetEntity = null;
         targetingEntities = new ArrayList<>();
+        skills = new HashMap<>();
+        skills.putAll(SkillRegistry.SKILLS.getEntries().stream().map(RegistryObject::get).collect(Collectors.toMap(ISkill::getID, ISkill::getSkill)));//SkillRegistry.SKILLS.getEntries().stream().map(RegistryObject::get).collect(Collectors.toList()); //new ArrayList<>(SkillRegistry.SKILLS_REGISTRY.get().getValues());
 
         magicka_regen_modifier = 1.0f;
 
@@ -48,6 +63,8 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
         shoutsOnCooldown = new HashMap<>();
         targetEntity = null;
         targetingEntities = new ArrayList<>();
+        skills = new HashMap<>();
+        skills.putAll(SkillRegistry.SKILLS.getEntries().stream().map(RegistryObject::get).collect(Collectors.toMap(ISkill::getID, ISkill::getSkill)));//SkillRegistry.SKILLS.getEntries().stream().map(RegistryObject::get).collect(Collectors.toList()); //new ArrayList<>(SkillRegistry.SKILLS_REGISTRY.get().getValues());
 
         magicka_regen_modifier = 1.0f;
 
@@ -195,5 +212,73 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
     @Override
     public List<CompassFeature> getCompassFeatures() {
         return compassFeatures;
+    }
+
+    @Override
+    public void setCharacterLevel(int level) {
+        this.characterLevel = level;
+    }
+
+    @Override
+    public int getCharacterLevel() {
+        return calculateCharacterLevelFromXp();
+    }
+
+    @Override
+    public int getCharacterXp() {
+        return this.characterTotalXp;
+    }
+
+    @Override
+    public void addCharacterXp(int amount, ServerPlayerEntity playerEntity) {
+        int level = getCharacterLevel();
+        this.characterTotalXp += amount;
+        if(getCharacterLevel() > level)
+            Networking.sendToClient(new PacketAddToLevelUpdates(new LevelUpdate("characterLevel", getCharacterLevel(), 200)), playerEntity);
+    }
+
+    @Override
+    public void setCharacterXp(int totalXp) {
+        this.characterTotalXp = totalXp;
+    }
+
+    @Override
+    public Map<Integer, ISkill> getSkills() {
+        return skills;
+    }
+
+    @Override
+    public void addXpToSkill(int id, int baseXp, ServerPlayerEntity playerEntity) {
+        ISkill skill = skills.get(id);
+        ISkill skillOld = new ISkill(skill);
+
+        System.out.println(skill);
+        System.out.println(characterTotalXp);
+
+        int oldSkillLevel = skillOld.getLevel();
+        skill.giveExperiencePoints(baseXp);
+
+        if(skill.getLevel() > oldSkillLevel) {
+            // The skill has leveled up, so send packet to client to add to the skyrim ingame gui levelUpdates list.
+            Networking.sendToClient(new PacketAddToLevelUpdates(new LevelUpdate(skill.getName(), skill.getLevel(), 200)), playerEntity);
+            addCharacterXp(skill.getLevel(), playerEntity);
+        }
+
+        //skills.put(skill.getID(), skill);
+    }
+
+    @Override
+    public void setSkills(Map<Integer, ISkill> skills) {
+        this.skills = skills;
+    }
+
+    private int calculateCharacterLevelFromXp() {
+        return (int)Math.floor(-2.5 + Math.sqrt(8 * characterTotalXp + 1225) / 10);
+    }
+
+    // from https://elderscrolls.fandom.com/wiki/User:Documentalist/Character_level_calculation_(Skyrim)
+    @Override
+    public double getXpNeededForNextCharacterLevel(int level) {
+        return 12.5*Math.pow(level+1, 2) + 62.5*level - 75;
     }
 }

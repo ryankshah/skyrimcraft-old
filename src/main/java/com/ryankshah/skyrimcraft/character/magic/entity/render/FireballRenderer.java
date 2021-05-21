@@ -1,9 +1,9 @@
-package com.ryankshah.skyrimcraft.spell.entity.render;
+package com.ryankshah.skyrimcraft.character.magic.entity.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import com.ryankshah.skyrimcraft.spell.entity.FireballEntity;
+import com.ryankshah.skyrimcraft.character.magic.entity.FireballEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;

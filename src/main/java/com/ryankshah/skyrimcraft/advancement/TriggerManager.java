@@ -1,11 +1,9 @@
 package com.ryankshah.skyrimcraft.advancement;
 
-import com.ryankshah.skyrimcraft.spell.ISpell;
+import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import net.minecraft.advancements.CriteriaTriggers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class TriggerManager

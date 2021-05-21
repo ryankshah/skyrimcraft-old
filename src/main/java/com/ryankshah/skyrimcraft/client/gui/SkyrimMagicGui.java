@@ -7,7 +7,7 @@ import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.event.ForgeClientEvents;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.network.spell.PacketUpdateSelectedSpellOnServer;
-import com.ryankshah.skyrimcraft.spell.ISpell;
+import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
@@ -125,8 +125,8 @@ public class SkyrimMagicGui extends Screen
             ISpell spell = spellsListForCurrentSpellType.get(j);
             String displayName = spell.getName();
 
-            if (displayName.length() >= 14) {
-                displayName = displayName.substring(0, 12) + "..";
+            if (displayName.length() >= 12) {
+                displayName = displayName.substring(0, 10) + "..";
             }
 
             AtomicInteger color = new AtomicInteger(0x00C0C0C0);

@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
-import com.ryankshah.skyrimcraft.spell.ISpell;
+import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
@@ -41,21 +41,37 @@ public class SkyrimMenuScreen extends Screen
 
         blit(matrixStack, this.width / 2 - 103, this.height / 2 - 50, 24, 81, 207, 100);
 
-        drawCenteredString(matrixStack, font, SKILLS, this.width / 2, this.height / 2 - 65, 0x00FFFFFF);
-        drawCenteredString(matrixStack, font, MAP, this.width / 2, this.height / 2 + 55, 0x00FFFFFF);
-        drawCenteredString(matrixStack, font, ITEMS, this.width / 2 + 103 + font.width(ITEMS), this.height / 2 - 4, 0x00FFFFFF);
-        drawCenteredString(matrixStack, font, MAGIC, this.width / 2 - 103 - font.width(MAGIC), this.height / 2 - 4, 0x00FFFFFF);
-
         minecraft.getTextureManager().bind(MENU_ICONS);
 
         if(currentDirection == Direction.NORTH) {
             blit(matrixStack, this.width / 2 - 9, this.height / 2 - 90 - 9, 0, 0, 18, 17);
+            drawCenteredString(matrixStack, font, SKILLS, this.width / 2, this.height / 2 - 65, 0x00FFFFFF);
+            drawCenteredString(matrixStack, font, MAP, this.width / 2, this.height / 2 + 55, 0x00FFFFFF);
+            drawCenteredString(matrixStack, font, ITEMS, this.width / 2 + 103 + font.width(ITEMS), this.height / 2 - 4, 0x00FFFFFF);
+            drawCenteredString(matrixStack, font, MAGIC, this.width / 2 - 103 - font.width(MAGIC), this.height / 2 - 4, 0x00FFFFFF);
         } else if(currentDirection == Direction.SOUTH) {
             blit(matrixStack, this.width / 2 - 9, this.height / 2 + 70 + 9, 18, 0, 18, 17);
+            drawCenteredString(matrixStack, font, SKILLS, this.width / 2, this.height / 2 - 65, 0x00FFFFFF);
+            drawCenteredString(matrixStack, font, MAP, this.width / 2, this.height / 2 + 55, 0x00FFFFFF);
+            drawCenteredString(matrixStack, font, ITEMS, this.width / 2 + 103 + font.width(ITEMS), this.height / 2 - 4, 0x00FFFFFF);
+            drawCenteredString(matrixStack, font, MAGIC, this.width / 2 - 103 - font.width(MAGIC), this.height / 2 - 4, 0x00FFFFFF);
         } else if(currentDirection == Direction.EAST) {
             blit(matrixStack, this.width / 2 - 170 - 9, this.height / 2 - 9, 53, 0, 18, 17);
+            drawCenteredString(matrixStack, font, SKILLS, this.width / 2, this.height / 2 - 65, 0x00FFFFFF);
+            drawCenteredString(matrixStack, font, MAP, this.width / 2, this.height / 2 + 55, 0x00FFFFFF);
+            drawCenteredString(matrixStack, font, ITEMS, this.width / 2 + 103 + font.width(ITEMS), this.height / 2 - 4, 0x00FFFFFF);
+            drawCenteredString(matrixStack, font, MAGIC, this.width / 2 - 103 - font.width(MAGIC), this.height / 2 - 4, 0x00FFFFFF);
         } else if(currentDirection == Direction.WEST) {
             blit(matrixStack, this.width / 2 + 170 + 9, this.height / 2 - 9, 36, 0, 18, 17);
+            drawCenteredString(matrixStack, font, SKILLS, this.width / 2, this.height / 2 - 65, 0x00FFFFFF);
+            drawCenteredString(matrixStack, font, MAP, this.width / 2, this.height / 2 + 55, 0x00FFFFFF);
+            drawCenteredString(matrixStack, font, ITEMS, this.width / 2 + 103 + font.width(ITEMS), this.height / 2 - 4, 0x00FFFFFF);
+            drawCenteredString(matrixStack, font, MAGIC, this.width / 2 - 103 - font.width(MAGIC), this.height / 2 - 4, 0x00FFFFFF);
+        } else {
+            drawCenteredString(matrixStack, font, SKILLS, this.width / 2, this.height / 2 - 65, 0x00FFFFFF);
+            drawCenteredString(matrixStack, font, MAP, this.width / 2, this.height / 2 + 55, 0x00FFFFFF);
+            drawCenteredString(matrixStack, font, ITEMS, this.width / 2 + 103 + font.width(ITEMS), this.height / 2 - 4, 0x00FFFFFF);
+            drawCenteredString(matrixStack, font, MAGIC, this.width / 2 - 103 - font.width(MAGIC), this.height / 2 - 4, 0x00FFFFFF);
         }
 
         minecraft.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);

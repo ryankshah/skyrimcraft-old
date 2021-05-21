@@ -2,7 +2,7 @@ package com.ryankshah.skyrimcraft.util;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.item.*;
-import com.ryankshah.skyrimcraft.spell.SpellRegistry;
+import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;

@@ -6,11 +6,12 @@ import com.ryankshah.skyrimcraft.advancement.TriggerManager;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.SkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.SkyrimPlayerDataStorage;
+import com.ryankshah.skyrimcraft.character.skill.SkillRegistry;
 import com.ryankshah.skyrimcraft.data.ModGlobalLootTableProvider;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.network.Networking;
-import com.ryankshah.skyrimcraft.spell.ISpell;
-import com.ryankshah.skyrimcraft.spell.SpellRegistry;
+import com.ryankshah.skyrimcraft.character.magic.ISpell;
+import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
 import com.ryankshah.skyrimcraft.util.*;
 import com.ryankshah.skyrimcraft.worldgen.WorldGen;
 import com.ryankshah.skyrimcraft.worldgen.structure.ModConfiguredStructures;
@@ -59,7 +60,8 @@ import java.util.Map;
  *     - Update model + textures for alchemy table
  *     - World generation for creep clusters and other ingredients
  *     - Add more ingredients
- *     - Sort out how ingredients will be obtainable (i.e. giants toes currently tradeable in village, but we need giants! etc.)
+ *     - Sort out how ingredients will be obtainable (i.e. giants toes and others currently
+ *       tradeable by villagers or gen in structures, but we need giants, mobs, etc.)
  *   - Add oven recipes:
  *     - Apple Dumpling
  *     - Braided Bread (?)
@@ -70,7 +72,6 @@ import java.util.Map;
  *     - Snowberry Crostata
  *   - Continue working on the ingame GUI overlay:
  *     - Render the boss health similarly to target entities?
- *   - Fix the positioning of the text + icons in SkyrimMenuScreen
  *   - Work on the character level system ( https://elderscrolls.fandom.com/wiki/Character_Level )
  *     - Character level is determined solely on skill levels
  *     - "Simply follow the prompts on the screen, select which of the three statistics to raise (Stamina, Health,
@@ -100,6 +101,7 @@ public class Skyrimcraft
         ModItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModSounds.SOUND_EVENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
         SpellRegistry.SPELLS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        SkillRegistry.SKILLS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModEntityType.ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModEffects.EFFECTS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModStructures.STRUCTURES.register(FMLJavaModLoadingContext.get().getModEventBus());
@@ -125,6 +127,7 @@ public class Skyrimcraft
             BaseTrigger spellTrigger = new BaseTrigger("learned_spell_" + spell.get().getName().toLowerCase().replace(" ", "_"));
             TriggerManager.TRIGGERS.put(spell.get(), spellTrigger);
         }
+        // TODO: add skill triggers?
         TriggerManager.init();
 
         ModStructures.setupStructures();

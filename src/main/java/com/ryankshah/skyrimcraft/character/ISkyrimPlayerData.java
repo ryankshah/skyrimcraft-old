@@ -1,8 +1,10 @@
 package com.ryankshah.skyrimcraft.character;
 
-import com.ryankshah.skyrimcraft.spell.ISpell;
+import com.ryankshah.skyrimcraft.character.magic.ISpell;
+import com.ryankshah.skyrimcraft.character.skill.ISkill;
 import com.ryankshah.skyrimcraft.util.CompassFeature;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -43,4 +45,16 @@ public interface ISkyrimPlayerData
     public void addMapFeature(CompassFeature feature);
     public void setCompassFeatures(List<CompassFeature> compassFeatures);
     public List<CompassFeature> getCompassFeatures();
+
+    /* SKILL FIELDS */
+    public void setCharacterLevel(int level);
+    public int getCharacterLevel();
+    public int getCharacterXp();
+    public void setCharacterXp(int xp);
+    public void addCharacterXp(int amount, ServerPlayerEntity playerEntity);
+    public double getXpNeededForNextCharacterLevel(int level);
+    public void setSkills(Map<Integer, ISkill> skills);
+    public Map<Integer, ISkill> getSkills();
+    //public void addXpToSkill(ISkill skill);
+    public void addXpToSkill(int id, int baseXp, ServerPlayerEntity playerEntity);
 }

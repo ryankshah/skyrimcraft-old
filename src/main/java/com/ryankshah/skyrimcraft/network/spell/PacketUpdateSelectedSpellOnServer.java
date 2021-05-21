@@ -2,8 +2,8 @@ package com.ryankshah.skyrimcraft.network.spell;
 
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.network.Networking;
-import com.ryankshah.skyrimcraft.spell.ISpell;
-import com.ryankshah.skyrimcraft.spell.SpellRegistry;
+import com.ryankshah.skyrimcraft.character.magic.ISpell;
+import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
@@ -66,9 +66,7 @@ public class PacketUpdateSelectedSpellOnServer
 
         ctx.get().enqueueWork(() -> {
             ctx.get().getSender().getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((cap) -> {
-                System.out.println(cap.getSelectedSpells());
                 cap.setSelectedSpell(pos, spell);
-                System.out.println(cap.getSelectedSpells());
                 Networking.sendToClient(new PacketUpdateSelectedSpells(cap.getSelectedSpells()), sendingPlayer);
             });
         });

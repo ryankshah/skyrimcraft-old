@@ -1,7 +1,7 @@
-package com.ryankshah.skyrimcraft.spell.entity.render;
+package com.ryankshah.skyrimcraft.character.magic.entity.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.ryankshah.skyrimcraft.spell.entity.DisarmEntity;
+import com.ryankshah.skyrimcraft.character.magic.entity.DisarmEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;

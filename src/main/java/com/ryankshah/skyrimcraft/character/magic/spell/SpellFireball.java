@@ -1,8 +1,8 @@
-package com.ryankshah.skyrimcraft.spell;
+package com.ryankshah.skyrimcraft.character.magic.spell;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import com.ryankshah.skyrimcraft.spell.entity.FireballEntity;
-import com.ryankshah.skyrimcraft.util.ModSounds;
+import com.ryankshah.skyrimcraft.character.magic.ISpell;
+import com.ryankshah.skyrimcraft.character.magic.entity.FireballEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -59,6 +59,11 @@ public class SpellFireball extends ISpell implements IForgeRegistryEntry<ISpell>
     @Override
     public SpellDifficulty getDifficulty() {
         return SpellDifficulty.NA;
+    }
+
+    @Override
+    public int getBaseXp() {
+        return 4;
     }
 
     @Override

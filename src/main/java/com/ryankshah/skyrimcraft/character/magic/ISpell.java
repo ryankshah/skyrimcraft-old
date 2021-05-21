@@ -1,8 +1,11 @@
-package com.ryankshah.skyrimcraft.spell;
+package com.ryankshah.skyrimcraft.character.magic;
 
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
+import com.ryankshah.skyrimcraft.character.skill.SkillRegistry;
+import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.network.Networking;
+import com.ryankshah.skyrimcraft.network.character.PacketAddXpToSkillOnServer;
 import com.ryankshah.skyrimcraft.network.spell.PacketConsumeMagicka;
 import com.ryankshah.skyrimcraft.network.spell.PacketUpdateShoutCooldownOnServer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -115,6 +118,12 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
     public float getSoundLength() { return 0f; }
 
     /**
+     * If true, spell can interrupt effects - i.e. EtherealEffect
+     * @return can interrupt
+     */
+    public boolean canInterrupt() { return true; }
+
+    /**
      * Get the spell difficulty {@link SpellDifficulty}
      *
      * @return {@link SpellDifficulty}
@@ -132,6 +141,10 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
         }
     }
 
+    public int getBaseXp() {
+        return 0;
+    }
+
     public void cast() {
         if(canCast() == CastResult.SUCCESS) {
             onCast();
@@ -144,14 +157,26 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
      * Specifies what happens on spell cast
      */
     public void onCast() {
-        ISkyrimPlayerData cap = caster.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("spell onCast"));
+        if(getType() == SpellType.DESTRUCTION)
+            Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.DESTRUCTION.get().getID(), getBaseXp()));
+        else if(getType() == SpellType.ALTERATION)
+            Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.ALTERATION.get().getID(), getBaseXp()));
+        else if(getType() == SpellType.RESTORATION)
+            Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.RESTORATION.get().getID(), getBaseXp()));
+        else if(getType() == SpellType.ILLUSION)
+            Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.ILLUSION.get().getID(), getBaseXp()));
+        else if(getType() == SpellType.CONJURATION)
+            Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.CONJURATION.get().getID(), getBaseXp()));
+
+        if(caster.hasEffect(ModEffects.ETHEREAL.get()) && canInterrupt())
+            caster.removeEffect(ModEffects.ETHEREAL.get());
+
         if(!caster.isCreative()) {
             if (getType() == SpellType.SHOUT)
                 Networking.sendToServer(new PacketUpdateShoutCooldownOnServer(this, getCooldown()));
             else
                 Networking.sendToServer(new PacketConsumeMagicka(getCost()));
         }
-        // TODO: Create a var in cap to track cast time (sound length of current cast) on use packets to sync with player tick
         caster.getCommandSenderWorld().playSound(null, caster.getX(), caster.getY(), caster.getZ(), getSound(), SoundCategory.PLAYERS, 1f, 1f);
     }
 

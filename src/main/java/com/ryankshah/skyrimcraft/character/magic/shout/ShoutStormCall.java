@@ -1,6 +1,7 @@
-package com.ryankshah.skyrimcraft.spell;
+package com.ryankshah.skyrimcraft.character.magic.shout;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
+import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.util.RayTraceUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;

@@ -21,6 +21,11 @@ public class FrozenEffect extends Effect implements IForgeRegistryEntry<Effect>
     }
 
     @Override
+    public boolean isDurationEffectTick(int p_76397_1_, int p_76397_2_) {
+        return true;
+    }
+
+    @Override
     public void applyEffectTick(LivingEntity livingEntity, int p_76394_2_) {
         if(livingEntity instanceof CreatureEntity)
             ((CreatureEntity) livingEntity).goalSelector.setControlFlag(Goal.Flag.MOVE, false);

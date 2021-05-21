@@ -1,6 +1,7 @@
-package com.ryankshah.skyrimcraft.spell;
+package com.ryankshah.skyrimcraft.character.magic.spell;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
+import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
@@ -61,8 +62,15 @@ public class SpellTurnUndead extends ISpell implements IForgeRegistryEntry<ISpel
     }
 
     @Override
+    public int getBaseXp() {
+        return 6;
+    }
+
+    @Override
     public void onCast() {
         // 600 = 30s (30 * 20 ticks/s)
+        // moved to ISpell#onCast
+        //Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.RESTORATION.get().getID(), getBaseXp()));
         getCaster().addEffect(new EffectInstance(ModEffects.UNDEAD_FLEE.get(), 600, 0, false, true, true));
         super.onCast();
     }

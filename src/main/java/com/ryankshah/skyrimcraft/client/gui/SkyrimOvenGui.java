@@ -19,6 +19,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
@@ -211,6 +212,7 @@ public class SkyrimOvenGui extends Screen
             }
 
             this.player.addItem(this.currentRecipeObject.getItemStack().copy());
+            player.playSound(SoundEvents.CAMPFIRE_CRACKLE, 1.0F, 1.0F);
             this.player.giveExperiencePoints(2);
         }
 

@@ -1,7 +1,8 @@
 package com.ryankshah.skyrimcraft.character;
 
-import com.ryankshah.skyrimcraft.spell.ISpell;
-import com.ryankshah.skyrimcraft.spell.SpellRegistry;
+import com.ryankshah.skyrimcraft.character.magic.ISpell;
+import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
+import com.ryankshah.skyrimcraft.character.skill.ISkill;
 import com.ryankshah.skyrimcraft.util.CompassFeature;
 import net.minecraft.nbt.*;
 import net.minecraft.util.Direction;
@@ -51,6 +52,15 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
             tag.put("feature"+counter++, feature.serialise());
         }
 
+        tag.putInt("totalCharacterXp", instance.getCharacterXp());
+
+        Map<Integer, ISkill> skills = instance.getSkills();
+        tag.putInt("skillsSize", skills.size());
+        counter = 0;
+        for(Map.Entry<Integer, ISkill> skill : skills.entrySet()) {
+            tag.put("skill"+skill.getKey(), skill.getValue().serialise());
+        }
+
         List<Integer> targetingEntities = instance.getTargetingEntities();
         tag.putInt("targetingEntitiesSize", targetingEntities.size());
         counter = 0;
@@ -68,6 +78,7 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
         Map<ISpell, Float> shoutsAndCooldowns = new HashMap<>();
         List<CompassFeature> compassFeatures = new ArrayList<>();
         List<Integer> targetingEntities = new ArrayList<>();
+        Map<Integer, ISkill> skills = new HashMap<>();
 
         float magicka = tag.getFloat("magicka");
         float magicka_regen_modifier = tag.getFloat("magicka_regen_modifier");
@@ -93,6 +104,14 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
             compassFeatures.add(CompassFeature.deserialise(comp));
         }
 
+        int totalCharacterXp = tag.getInt("totalCharacterXp");
+
+        int skillsSize = tag.getInt("skillsSize");
+        for(int i = 0; i < skillsSize; i++) {
+            CompoundNBT comp = tag.getCompound("skill"+i);
+            skills.put(i, ISkill.deserialise(comp));
+        }
+
         int targetingEntitiesSize = tag.getInt("targetingEntitiesSize");
         for(int i = 0; i < targetingEntitiesSize; i++) {
             targetingEntities.add(tag.getInt("targetingEntity"+i));
@@ -105,5 +124,7 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
         instance.setCompassFeatures(compassFeatures);
         instance.setTargetingEntities(targetingEntities);
         instance.setMagickaRegenModifier(magicka_regen_modifier);
+        instance.setCharacterXp(totalCharacterXp);
+        instance.setSkills(skills);
     }
 }

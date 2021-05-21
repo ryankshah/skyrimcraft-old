@@ -1,12 +1,12 @@
 package com.ryankshah.skyrimcraft.util;
 
 import com.ryankshah.skyrimcraft.worldgen.structure.ModStructures;
-import javafx.util.Pair;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.gen.feature.structure.Structure;
 
+import java.util.AbstractMap;
 import java.util.UUID;
 
 public class CompassFeature
@@ -35,17 +35,17 @@ public class CompassFeature
         return id;
     }
 
-    public Pair<Integer, Integer> getIconUV() {
+    public AbstractMap.SimpleEntry<Integer, Integer> getIconUV() {
         if(feature.equals(Structure.VILLAGE.getRegistryName())) {
-            return new Pair<>(0, 124);
+            return new AbstractMap.SimpleEntry<>(0, 124);
         } else if(feature.equals(Structure.NETHER_BRIDGE.getRegistryName())) {
-            return new Pair<>(16, 124);
+            return new AbstractMap.SimpleEntry<>(16, 124);
         } else if(feature.equals(ModStructures.SHOUT_WALL.getId())) {
-            return new Pair<>(29, 124);
+            return new AbstractMap.SimpleEntry<>(29, 124);
         } else if(feature.equals(Structure.MINESHAFT.getRegistryName())) {
-            return new Pair<>(44, 125);
+            return new AbstractMap.SimpleEntry<>(44, 125);
         } else if(feature.equals(Structure.SHIPWRECK.getRegistryName())) {
-            return new Pair<>(57, 124);
+            return new AbstractMap.SimpleEntry<>(57, 124);
         }
         return null;
     }

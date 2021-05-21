@@ -1,9 +1,9 @@
 package com.ryankshah.skyrimcraft.util;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import com.ryankshah.skyrimcraft.spell.entity.DisarmEntity;
-import com.ryankshah.skyrimcraft.spell.entity.FireballEntity;
-import com.ryankshah.skyrimcraft.spell.entity.UnrelentingForceEntity;
+import com.ryankshah.skyrimcraft.character.magic.entity.DisarmEntity;
+import com.ryankshah.skyrimcraft.character.magic.entity.FireballEntity;
+import com.ryankshah.skyrimcraft.character.magic.entity.UnrelentingForceEntity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;

@@ -3,19 +3,28 @@ package com.ryankshah.skyrimcraft.event;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
+import com.ryankshah.skyrimcraft.character.skill.SkillRegistry;
+import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.goal.UndeadFleeGoal;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.network.character.PacketAddToTargetingEntities;
-import com.ryankshah.skyrimcraft.network.character.PacketRemoveTargetingEntity;
+import com.ryankshah.skyrimcraft.network.character.PacketAddXpToSkillOnServer;
+import com.ryankshah.skyrimcraft.network.character.PacketUpdatePlayerTargetOnServer;
 import com.ryankshah.skyrimcraft.util.ModBlocks;
 import com.ryankshah.skyrimcraft.util.ModItems;
 import com.ryankshah.skyrimcraft.util.RandomTradeBuilder;
 import net.minecraft.entity.CreatureAttribute;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ShootableItem;
+import net.minecraft.item.SwordItem;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,19 +34,55 @@ import net.minecraftforge.fml.common.Mod;
 public class EntityEvents
 {
     @SubscribeEvent
+    public static void onEntityHit(LivingHurtEvent event) {
+        if(event.getSource().getEntity() instanceof PlayerEntity) {
+            PlayerEntity playerEntity = (PlayerEntity) event.getSource().getEntity();
+
+            if (event.getEntityLiving() != null) {
+                if (playerEntity.hasEffect(ModEffects.ETHEREAL.get()))
+                    playerEntity.removeEffect(ModEffects.ETHEREAL.get());
+
+                if (playerEntity.getMainHandItem().getItem() instanceof ShootableItem) {
+                    Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.ARCHERY.get().getID(), SkillRegistry.BASE_ARCHERY_XP));
+                } else if(playerEntity.getMainHandItem().getItem() instanceof SwordItem) {
+                    Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.ONE_HANDED.get().getID(), (int)event.getAmount()));
+                }
+
+                playerEntity.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((cap) -> {
+                    if (event.getEntityLiving().isAlive()) {
+                        Networking.sendToServer(new PacketUpdatePlayerTargetOnServer(event.getEntityLiving()));
+                    } else {
+                        Networking.sendToServer(new PacketUpdatePlayerTargetOnServer((LivingEntity) null));
+                    }
+                });
+
+            }
+        } else if(event.getEntityLiving() instanceof PlayerEntity) {
+            PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
+            if(playerEntity.isDamageSourceBlocked(event.getSource())) {
+                Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.BLOCK.get().getID(), SkillRegistry.BASE_BLOCK_XP));
+            }
+
+            if(playerEntity.getArmorValue() > 0) {
+                // minecraft armors will default to light armor for now.
+                // TODO: Check all the slots and check the type of armor (perhaps leather, iron and gold will be
+                //       classed as "light armor" with diamond and netherite as the heavy armors for default mc.
+                //       All other mod armors outside of skyrim will be classed as light armor. Perhaps instead,
+                //       there may be a different way we can define these...
+                Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.LIGHT_ARMOR.get().getID(), (int)(playerEntity.getArmorValue() * playerEntity.getArmorCoverPercentage())));
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void entitySetAttackTarget(LivingSetAttackTargetEvent event) {
         if(event.getTarget() instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) event.getTarget();
             ISkyrimPlayerData cap = player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("set attack target event"));
 
-            if (event.getEntityLiving() == null || !event.getEntityLiving().isAlive()) {
-                Networking.sendToServer(new PacketRemoveTargetingEntity(event.getEntityLiving().getId()));
-            } else {
-                // Check the entity is not already in the target list
-                if(!cap.getTargetingEntities().contains(event.getEntityLiving().getId()) //&& cap.getTargetingEntities().size() <= 10
-                        && event.getEntityLiving().isAlive()) {
-                    Networking.sendToServer(new PacketAddToTargetingEntities(event.getEntityLiving().getId()));
-                }
+            if(!cap.getTargetingEntities().contains(event.getEntityLiving().getId()) //&& cap.getTargetingEntities().size() <= 10
+                    && event.getEntityLiving().isAlive()) {
+                Networking.sendToServer(new PacketAddToTargetingEntities(event.getEntityLiving().getId()));
             }
         }
     }
@@ -99,7 +144,5 @@ public class EntityEvents
         if(event.getType() == VillagerProfession.LEATHERWORKER) {
             event.getTrades().get(2).add(new RandomTradeBuilder(4, 4, 0.125F).setEmeraldPrice(4, 6).setForSale(ModItems.LEATHER_STRIPS.get(), 1, 2).build());
         }
-
-        // Add seeds (and some foods? i.e. breads?) to farmer
     }
 }

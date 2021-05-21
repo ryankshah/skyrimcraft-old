@@ -4,7 +4,7 @@ import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.network.spell.PacketAddToKnownSpells;
-import com.ryankshah.skyrimcraft.spell.ISpell;
+import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -20,8 +20,6 @@ import net.minecraftforge.fml.RegistryObject;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import net.minecraft.item.Item.Properties;
 
 public class SpellBook extends SkyrimItem
 {

@@ -1,8 +1,8 @@
 package com.ryankshah.skyrimcraft.network.spell;
 
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
-import com.ryankshah.skyrimcraft.spell.ISpell;
-import com.ryankshah.skyrimcraft.spell.SpellRegistry;
+import com.ryankshah.skyrimcraft.character.magic.ISpell;
+import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;

@@ -4,8 +4,8 @@ import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.network.spell.PacketAddToKnownSpells;
-import com.ryankshah.skyrimcraft.spell.ISpell;
-import com.ryankshah.skyrimcraft.spell.SpellRegistry;
+import com.ryankshah.skyrimcraft.character.magic.ISpell;
+import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -68,17 +68,18 @@ public class ShoutBlock extends SkyrimBlock
                     if (shouts.size() > 0) {
                         ISpell shout = shouts.get(random.nextInt(shouts.size()));
                         Networking.sendToServer(new PacketAddToKnownSpells(shout));
+
+                        p_225533_2_.setBlockAndUpdate(p_225533_3_, p_225533_1_.setValue(SHOUT_GIVEN, true));
+                        for(BlockState state : nearbyShoutBlocks) {
+                            if(state.hasProperty(SHOUT_GIVEN) && !state.getValue(SHOUT_GIVEN)) {
+                                state.setValue(SHOUT_GIVEN, true);
+                            }
+                        }
+
                     } else
                         playerEntity.displayClientMessage(new TranslationTextComponent("shoutblock.allshoutsknown"), false);
                 } else {
                     Networking.sendToServer(new PacketAddToKnownSpells(SpellRegistry.UNRELENTING_FORCE.get()));
-                }
-
-                p_225533_2_.setBlockAndUpdate(p_225533_3_, p_225533_1_.setValue(SHOUT_GIVEN, true));
-                for(BlockState state : nearbyShoutBlocks) {
-                    if(state.hasProperty(SHOUT_GIVEN) && !state.getValue(SHOUT_GIVEN)) {
-                        state.setValue(SHOUT_GIVEN, true);
-                    }
                 }
             } else {
                 playerEntity.displayClientMessage(new TranslationTextComponent("shoutblock.used"), false);

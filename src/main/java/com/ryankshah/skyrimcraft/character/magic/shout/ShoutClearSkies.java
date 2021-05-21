@@ -1,41 +1,40 @@
-package com.ryankshah.skyrimcraft.spell;
+package com.ryankshah.skyrimcraft.character.magic.shout;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import com.ryankshah.skyrimcraft.spell.entity.FireballEntity;
-import com.ryankshah.skyrimcraft.spell.entity.UnrelentingForceEntity;
-import com.ryankshah.skyrimcraft.util.ModSounds;
+import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShoutUnrelentingForce extends ISpell implements IForgeRegistryEntry<ISpell>
+public class ShoutClearSkies extends ISpell implements IForgeRegistryEntry<ISpell>
 {
-    public ShoutUnrelentingForce(int identifier) {
+    public ShoutClearSkies(int identifier) {
         super(identifier);
     }
 
     @Override
     public String getName() {
-        return "Unrelenting Force";
+        return "Clear Skies";
     }
 
     @Override
     public List<String> getDescription() {
         List<String> desc = new ArrayList<>();
-        desc.add("Your voice is raw power,");
-        desc.add("pushing aside anything that");
-        desc.add("stands in your path");
+        desc.add("Minecraft yields before your");
+        desc.add("Thu'um, as you clear away fog");
+        desc.add("and inclement weather");
         return desc;
     }
 
     @Override
     public SoundEvent getSound() {
         //return ModSounds.UNRELENTING_FORCE.get();
-        return SoundEvents.LIGHTNING_BOLT_IMPACT;
+        return SoundEvents.LIGHTNING_BOLT_THUNDER;
     }
 
     @Override
@@ -45,7 +44,7 @@ public class ShoutUnrelentingForce extends ISpell implements IForgeRegistryEntry
 
     @Override
     public ResourceLocation getDisplayAnimation() {
-        return new ResourceLocation(Skyrimcraft.MODID, "spells/unrelenting_force.png");
+        return new ResourceLocation(Skyrimcraft.MODID, "spells/clear_skies.png");
     }
 
     @Override
@@ -55,7 +54,7 @@ public class ShoutUnrelentingForce extends ISpell implements IForgeRegistryEntry
 
     @Override
     public float getCooldown() {
-        return 20.0f;
+        return 60.0f;
     }
 
     @Override
@@ -70,10 +69,10 @@ public class ShoutUnrelentingForce extends ISpell implements IForgeRegistryEntry
 
     @Override
     public void onCast() {
-        UnrelentingForceEntity entity = new UnrelentingForceEntity(getCaster().getCommandSenderWorld(), getCaster(), getCaster().getLookAngle().x * 1, getCaster().getLookAngle().y * 1, getCaster().getLookAngle().z * 1);
-        entity.setPos(entity.getX(), getCaster().getY() + getCaster().getEyeHeight(), entity.getZ());
-        getCaster().getCommandSenderWorld().addFreshEntity(entity);
-
+        if(getCaster().level instanceof ServerWorld) {
+            ServerWorld world = (ServerWorld) getCaster().level;
+            world.setWeatherParameters(6000, 0, false, false);
+        }
         super.onCast();
     }
 }

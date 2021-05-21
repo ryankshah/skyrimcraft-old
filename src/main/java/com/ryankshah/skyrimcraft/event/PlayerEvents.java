@@ -3,18 +3,16 @@ package com.ryankshah.skyrimcraft.event;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
+import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.character.render.SpectralLayerRenderer;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.network.character.PacketAddToCompassFeaturesOnClient;
-import com.ryankshah.skyrimcraft.network.character.PacketUpdatePlayerTargetOnServer;
 import com.ryankshah.skyrimcraft.network.spell.PacketUpdateShoutCooldownOnServer;
-import com.ryankshah.skyrimcraft.spell.ISpell;
 import com.ryankshah.skyrimcraft.util.CompassFeature;
 import com.ryankshah.skyrimcraft.util.ModAttributes;
 import com.ryankshah.skyrimcraft.worldgen.structure.ModStructures;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.potion.Effects;
@@ -24,7 +22,6 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
@@ -39,25 +36,11 @@ public class PlayerEvents
 {
     public static boolean hasLayer = false, flag = false;
 
-    @SubscribeEvent
-    public static void onEntityHit(AttackEntityEvent event) {
-        PlayerEntity playerEntity = event.getPlayer();
-
-        if (event.getTarget() != null && event.getTarget() instanceof LivingEntity) {
-            LivingEntity targetEntity = (LivingEntity) event.getTarget();
-
-            playerEntity.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((cap) -> {
-                if (targetEntity.isAlive()) {
-                    Networking.sendToServer(new PacketUpdatePlayerTargetOnServer(targetEntity));
-                } else {
-//                    if(cap.getTargetingEntities().contains(targetEntity.getId()))
-//                        Networking.sendToServer(new PacketRemoveTargetingEntity(targetEntity));
-                    Networking.sendToServer(new PacketUpdatePlayerTargetOnServer((LivingEntity) null));
-                }
-            });
-
-        }
-    }
+//    @SubscribeEvent
+//    public static void playerLevelChangeEvent(PlayerXpEvent.LevelChange event) {
+//        SkyrimIngameGui.newLevel = event.getPlayer().experienceLevel;
+//        SkyrimIngameGui.levelUpRenderTime = 200;
+//    }
 
     @SubscribeEvent
     public static void onRenderPlayer(RenderPlayerEvent event) {
@@ -67,7 +50,7 @@ public class PlayerEvents
             hasLayer = true;
         }
 
-        if (player.hasEffect(ModEffects.SPECTRAL.get()) && !flag) {
+        if ((player.hasEffect(ModEffects.SPECTRAL.get()) || player.hasEffect(ModEffects.ETHEREAL.get())) && !flag) {
             flag = true;
             player.setInvisible(true);
             flag = false;
@@ -76,24 +59,8 @@ public class PlayerEvents
         }
     }
 
-//    @SubscribeEvent
-//    public static void onRenderPlayerPost(RenderPlayerEvent.Post event) {
-//        ClientPlayerEntity player = (ClientPlayerEntity)event.getPlayer();
-//        if(player.hasEffect(ModEffects.SPECTRAL.get())) {
-//
-//        }
-//    }
-
-//    @SubscribeEvent
-//    public static void onRenderPlayerPost(RenderPlayerEvent.Post event) {
-//        ClientPlayerEntity player = (ClientPlayerEntity)event.getPlayer();
-//        if(player.hasEffect(ModEffects.SPECTRAL.get())) {
-//            renderSpectralPlayer(event, player);
-//        }
-//    }
-
     @SubscribeEvent
-    public static void onClientPlayerTick(TickEvent.PlayerTickEvent event) {
+    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         PlayerEntity playerEntity = event.player;
         if(!playerEntity.isAlive())
             return;
@@ -101,11 +68,13 @@ public class PlayerEvents
         ISkyrimPlayerData cap = playerEntity.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("playerevents playertick"));
         // Check we're only doing the updates at the end of the tick phase
         if(event.phase == TickEvent.Phase.END) {
-            for(Map.Entry<ISpell, Float> entry : cap.getShoutsAndCooldowns().entrySet()) {
-                if(entry.getValue() < 0f)
-                    Networking.sendToServer(new PacketUpdateShoutCooldownOnServer(entry.getKey(), 0f));
-                if(entry.getValue() > 0f)
-                    Networking.sendToServer(new PacketUpdateShoutCooldownOnServer(entry.getKey(), cap.getShoutCooldown(entry.getKey())-0.05f));
+            if(!cap.getShoutsAndCooldowns().isEmpty()) {
+                for (Map.Entry<ISpell, Float> entry : cap.getShoutsAndCooldowns().entrySet()) {
+                    if (entry.getValue() <= 0f)
+                        Networking.sendToServer(new PacketUpdateShoutCooldownOnServer(entry.getKey(), 0f));
+                    if (entry.getValue() > 0f)
+                        Networking.sendToServer(new PacketUpdateShoutCooldownOnServer(entry.getKey(), cap.getShoutCooldown(entry.getKey()) - 0.05f));
+                }
             }
 
             if(!playerEntity.hasEffect(ModEffects.REGEN_MAGICKA.get()))
@@ -137,6 +106,12 @@ public class PlayerEvents
                             }
                         }
                     }
+                }
+
+                // check ethereal
+                if(!player.hasEffect(ModEffects.ETHEREAL.get())) {
+                    if(player.isInvulnerable() && (!player.isCreative() || !player.isSpectator()))
+                        player.setInvulnerable(false);
                 }
             }
         }
