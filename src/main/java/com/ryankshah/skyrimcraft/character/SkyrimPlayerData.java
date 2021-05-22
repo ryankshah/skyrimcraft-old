@@ -1,8 +1,8 @@
 package com.ryankshah.skyrimcraft.character;
 
+import com.ryankshah.skyrimcraft.character.feature.Race;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.character.skill.ISkill;
-import com.ryankshah.skyrimcraft.character.skill.SkillRegistry;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.network.character.PacketAddToLevelUpdates;
 import com.ryankshah.skyrimcraft.util.CompassFeature;
@@ -10,13 +10,11 @@ import com.ryankshah.skyrimcraft.util.LevelUpdate;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraftforge.fml.RegistryObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class SkyrimPlayerData implements ISkyrimPlayerData
 {
@@ -39,6 +37,10 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
     private float characterXpProgress;
     private Map<Integer, ISkill> skills;
 
+    private Race race;
+
+    private boolean hasSetup = false;
+
     public SkyrimPlayerData() {
         knownSpells = new ArrayList<>();
         compassFeatures = new ArrayList<>();
@@ -46,8 +48,10 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
         shoutsOnCooldown = new HashMap<>();
         targetEntity = null;
         targetingEntities = new ArrayList<>();
-        skills = new HashMap<>();
-        skills.putAll(SkillRegistry.SKILLS.getEntries().stream().map(RegistryObject::get).collect(Collectors.toMap(ISkill::getID, ISkill::getSkill)));//SkillRegistry.SKILLS.getEntries().stream().map(RegistryObject::get).collect(Collectors.toList()); //new ArrayList<>(SkillRegistry.SKILLS_REGISTRY.get().getValues());
+        //skills.putAll(SkillRegistry.SKILLS.getEntries().stream().map(RegistryObject::get).collect(Collectors.toMap(ISkill::getID, ISkill::getSkill)));//SkillRegistry.SKILLS.getEntries().stream().map(RegistryObject::get).collect(Collectors.toList()); //new ArrayList<>(SkillRegistry.SKILLS_REGISTRY.get().getValues());
+
+        race = Race.NORD;
+        skills = race.getStartingSkills();
 
         magicka_regen_modifier = 1.0f;
 
@@ -63,8 +67,10 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
         shoutsOnCooldown = new HashMap<>();
         targetEntity = null;
         targetingEntities = new ArrayList<>();
-        skills = new HashMap<>();
-        skills.putAll(SkillRegistry.SKILLS.getEntries().stream().map(RegistryObject::get).collect(Collectors.toMap(ISkill::getID, ISkill::getSkill)));//SkillRegistry.SKILLS.getEntries().stream().map(RegistryObject::get).collect(Collectors.toList()); //new ArrayList<>(SkillRegistry.SKILLS_REGISTRY.get().getValues());
+        //skills.putAll(SkillRegistry.SKILLS.getEntries().stream().map(RegistryObject::get).collect(Collectors.toMap(ISkill::getID, ISkill::getSkill)));//SkillRegistry.SKILLS.getEntries().stream().map(RegistryObject::get).collect(Collectors.toList()); //new ArrayList<>(SkillRegistry.SKILLS_REGISTRY.get().getValues());
+
+        race = Race.NORD;
+        skills = race.getStartingSkills();
 
         magicka_regen_modifier = 1.0f;
 
@@ -265,6 +271,26 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
         }
 
         //skills.put(skill.getID(), skill);
+    }
+
+    @Override
+    public void setRace(Race race) {
+        this.race = race;
+    }
+
+    @Override
+    public Race getRace() {
+        return this.race;
+    }
+
+    @Override
+    public boolean hasSetup() {
+        return hasSetup;
+    }
+
+    @Override
+    public void setHasSetup(boolean hasSetup) {
+        this.hasSetup = hasSetup;
     }
 
     @Override

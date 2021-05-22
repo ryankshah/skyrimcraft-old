@@ -15,7 +15,6 @@ import com.ryankshah.skyrimcraft.util.ModItems;
 import com.ryankshah.skyrimcraft.util.RandomTradeBuilder;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -43,9 +42,9 @@ public class EntityEvents
                     playerEntity.removeEffect(ModEffects.ETHEREAL.get());
 
                 if (playerEntity.getMainHandItem().getItem() instanceof ShootableItem) {
-                    Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.ARCHERY.get().getID(), SkillRegistry.BASE_ARCHERY_XP));
+                    Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.ARCHERY.getID(), SkillRegistry.BASE_ARCHERY_XP));
                 } else if(playerEntity.getMainHandItem().getItem() instanceof SwordItem) {
-                    Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.ONE_HANDED.get().getID(), (int)event.getAmount()));
+                    Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.ONE_HANDED.getID(), (int)event.getAmount()));
                 }
 
                 playerEntity.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((cap) -> {
@@ -60,7 +59,7 @@ public class EntityEvents
         } else if(event.getEntityLiving() instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
             if(playerEntity.isDamageSourceBlocked(event.getSource())) {
-                Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.BLOCK.get().getID(), SkillRegistry.BASE_BLOCK_XP));
+                Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.BLOCK.getID(), SkillRegistry.BASE_BLOCK_XP));
             }
 
             if(playerEntity.getArmorValue() > 0) {
@@ -69,7 +68,7 @@ public class EntityEvents
                 //       classed as "light armor" with diamond and netherite as the heavy armors for default mc.
                 //       All other mod armors outside of skyrim will be classed as light armor. Perhaps instead,
                 //       there may be a different way we can define these...
-                Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.LIGHT_ARMOR.get().getID(), (int)(playerEntity.getArmorValue() * playerEntity.getArmorCoverPercentage())));
+                Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.LIGHT_ARMOR.getID(), (int)(playerEntity.getArmorValue() * playerEntity.getArmorCoverPercentage())));
             }
         }
     }

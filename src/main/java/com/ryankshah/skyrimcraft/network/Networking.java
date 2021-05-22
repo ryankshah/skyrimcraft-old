@@ -165,6 +165,18 @@ public class Networking
                 .decoder(PacketAddToLevelUpdates::new)
                 .consumer(PacketAddToLevelUpdates::handle)
                 .add();
+
+        INSTANCE.messageBuilder(PacketOpenCharacterCreationScreen.class, nextID())
+                .encoder(PacketOpenCharacterCreationScreen::toBytes)
+                .decoder(PacketOpenCharacterCreationScreen::new)
+                .consumer(PacketOpenCharacterCreationScreen::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketCreateCharacterOnServer.class, nextID())
+                .encoder(PacketCreateCharacterOnServer::toBytes)
+                .decoder(PacketCreateCharacterOnServer::new)
+                .consumer(PacketCreateCharacterOnServer::handle)
+                .add();
     }
 
     public static void sendToClient(Object packet, ServerPlayerEntity player) {

@@ -1,5 +1,6 @@
 package com.ryankshah.skyrimcraft.character;
 
+import com.ryankshah.skyrimcraft.character.feature.Race;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
 import com.ryankshah.skyrimcraft.character.skill.ISkill;
@@ -22,6 +23,8 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
     @Override
     public INBT writeNBT(Capability<ISkyrimPlayerData> capability, ISkyrimPlayerData instance, Direction side) {
         CompoundNBT tag = new CompoundNBT();
+
+        tag.putBoolean("hasSetup", instance.hasSetup());
 
         tag.putFloat("magicka", instance.getMagicka());
         tag.putFloat("magicka_regen_modifier", instance.getMagickaRegenModifier());
@@ -56,10 +59,12 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
 
         Map<Integer, ISkill> skills = instance.getSkills();
         tag.putInt("skillsSize", skills.size());
-        counter = 0;
         for(Map.Entry<Integer, ISkill> skill : skills.entrySet()) {
             tag.put("skill"+skill.getKey(), skill.getValue().serialise());
         }
+
+        tag.putInt("raceID", instance.getRace().getId());
+        tag.putString("raceName", instance.getRace().getName());
 
         List<Integer> targetingEntities = instance.getTargetingEntities();
         tag.putInt("targetingEntitiesSize", targetingEntities.size());
@@ -79,6 +84,8 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
         List<CompassFeature> compassFeatures = new ArrayList<>();
         List<Integer> targetingEntities = new ArrayList<>();
         Map<Integer, ISkill> skills = new HashMap<>();
+
+        boolean hasSetup = tag.getBoolean("hasSetup");
 
         float magicka = tag.getFloat("magicka");
         float magicka_regen_modifier = tag.getFloat("magicka_regen_modifier");
@@ -112,11 +119,15 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
             skills.put(i, ISkill.deserialise(comp));
         }
 
+        int raceID = tag.getInt("raceID");
+        String raceName = tag.getString("raceName");
+
         int targetingEntitiesSize = tag.getInt("targetingEntitiesSize");
         for(int i = 0; i < targetingEntitiesSize; i++) {
             targetingEntities.add(tag.getInt("targetingEntity"+i));
         }
 
+        instance.setHasSetup(hasSetup);
         instance.setMagicka(magicka);
         instance.setKnownSpells(knownSpells);
         instance.setShoutsWithCooldowns(shoutsAndCooldowns);
@@ -125,6 +136,7 @@ public class SkyrimPlayerDataStorage implements Capability.IStorage<ISkyrimPlaye
         instance.setTargetingEntities(targetingEntities);
         instance.setMagickaRegenModifier(magicka_regen_modifier);
         instance.setCharacterXp(totalCharacterXp);
+        instance.setRace(new Race(raceID, raceName, skills));
         instance.setSkills(skills);
     }
 }

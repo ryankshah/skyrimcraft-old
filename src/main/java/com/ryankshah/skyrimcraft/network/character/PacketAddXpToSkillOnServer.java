@@ -58,7 +58,7 @@ public class PacketAddXpToSkillOnServer
                 cap.addXpToSkill(id, baseXp, sendingPlayer);
 //                System.out.println(cap.getSkills());
 //                System.out.println(cap.getCharacterXp());
-                Networking.sendToClient(new PacketUpdateCharacter(cap.getCharacterXp(), cap.getSkills()), sendingPlayer);
+                Networking.sendToClient(new PacketUpdateCharacter(cap.getCharacterXp(), cap.getSkills(), cap.getRace()), sendingPlayer);
             });
         });
         return true;

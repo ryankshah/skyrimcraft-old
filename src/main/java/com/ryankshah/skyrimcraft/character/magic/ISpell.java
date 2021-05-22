@@ -158,15 +158,15 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
      */
     public void onCast() {
         if(getType() == SpellType.DESTRUCTION)
-            Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.DESTRUCTION.get().getID(), getBaseXp()));
+            Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.DESTRUCTION.getID(), getBaseXp()));
         else if(getType() == SpellType.ALTERATION)
-            Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.ALTERATION.get().getID(), getBaseXp()));
+            Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.ALTERATION.getID(), getBaseXp()));
         else if(getType() == SpellType.RESTORATION)
-            Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.RESTORATION.get().getID(), getBaseXp()));
+            Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.RESTORATION.getID(), getBaseXp()));
         else if(getType() == SpellType.ILLUSION)
-            Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.ILLUSION.get().getID(), getBaseXp()));
+            Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.ILLUSION.getID(), getBaseXp()));
         else if(getType() == SpellType.CONJURATION)
-            Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.CONJURATION.get().getID(), getBaseXp()));
+            Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.CONJURATION.getID(), getBaseXp()));
 
         if(caster.hasEffect(ModEffects.ETHEREAL.get()) && canInterrupt())
             caster.removeEffect(ModEffects.ETHEREAL.get());

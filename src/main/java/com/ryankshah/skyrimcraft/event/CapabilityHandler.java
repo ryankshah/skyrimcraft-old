@@ -44,7 +44,7 @@ public class CapabilityHandler
             Networking.sendToClient(new PacketUpdateShoutCooldowns(cap.getShoutsAndCooldowns()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdateCompassFeatures(cap.getCompassFeatures()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdateMagickaRegenModifierOnClient(cap.getMagickaRegenModifier()), (ServerPlayerEntity)event.getEntity());
-            Networking.sendToClient(new PacketUpdateCharacter(cap.getCharacterXp(), cap.getSkills()), (ServerPlayerEntity) event.getEntity());
+            Networking.sendToClient(new PacketUpdateCharacter(cap.getCharacterXp(), cap.getSkills(), cap.getRace()), (ServerPlayerEntity) event.getEntity());
         }
     }
 
@@ -63,7 +63,7 @@ public class CapabilityHandler
             Networking.sendToClient(new PacketUpdateShoutCooldowns(cap.getShoutsAndCooldowns()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdateCompassFeatures(cap.getCompassFeatures()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdateMagickaRegenModifierOnClient(cap.getMagickaRegenModifier()), (ServerPlayerEntity)event.getEntity());
-            Networking.sendToClient(new PacketUpdateCharacter(cap.getCharacterXp(), cap.getSkills()), (ServerPlayerEntity) event.getEntity());
+            Networking.sendToClient(new PacketUpdateCharacter(cap.getCharacterXp(), cap.getSkills(), cap.getRace()), (ServerPlayerEntity) event.getEntity());
         }
     }
 
@@ -78,7 +78,7 @@ public class CapabilityHandler
             Networking.sendToClient(new PacketUpdateShoutCooldowns(cap.getShoutsAndCooldowns()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdateCompassFeatures(cap.getCompassFeatures()), (ServerPlayerEntity)event.getEntity());
             Networking.sendToClient(new PacketUpdateMagickaRegenModifierOnClient(cap.getMagickaRegenModifier()), (ServerPlayerEntity)event.getEntity());
-            Networking.sendToClient(new PacketUpdateCharacter(cap.getCharacterXp(), cap.getSkills()), (ServerPlayerEntity) event.getEntity());
+            Networking.sendToClient(new PacketUpdateCharacter(cap.getCharacterXp(), cap.getSkills(), cap.getRace()), (ServerPlayerEntity) event.getEntity());
         }
     }
 
@@ -98,6 +98,7 @@ public class CapabilityHandler
                     newCap.setMagickaRegenModifier(1.0F); // reset to default magicka regen modifier
                     newCap.setCharacterXp(originalPlayerCapability.getCharacterXp());
                     newCap.setSkills(originalPlayerCapability.getSkills());
+                    newCap.setRace(originalPlayerCapability.getRace());
                 });
             }
         }

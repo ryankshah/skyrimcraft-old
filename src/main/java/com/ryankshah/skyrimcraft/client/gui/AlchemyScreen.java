@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class SkyrimAlchemyGui extends Screen
+public class AlchemyScreen extends Screen
 {
     protected static final ResourceLocation OVERLAY_ICONS = new ResourceLocation(Skyrimcraft.MODID, "textures/gui/overlay_icons.png");
 
@@ -48,7 +48,7 @@ public class SkyrimAlchemyGui extends Screen
     private AlchemyRecipe currentRecipeObject = null;
     private PlayerEntity player;
 
-    public SkyrimAlchemyGui() {
+    public AlchemyScreen() {
         super(new TranslationTextComponent(Skyrimcraft.MODID + ".alchemygui.title"));
         this.player = Minecraft.getInstance().player;
         this.items = new HashMap<>();

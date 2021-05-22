@@ -1,7 +1,7 @@
 package com.ryankshah.skyrimcraft.block;
 
 import com.ryankshah.skyrimcraft.block.tileentity.OvenTileEntity;
-import com.ryankshah.skyrimcraft.client.gui.SkyrimOvenGui;
+import com.ryankshah.skyrimcraft.client.gui.OvenScreen;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -45,7 +45,7 @@ public class OvenBlock extends SkyrimBlock
     @Override
     public ActionResultType use(BlockState p_225533_1_, World p_225533_2_, BlockPos p_225533_3_, PlayerEntity p_225533_4_, Hand p_225533_5_, BlockRayTraceResult p_225533_6_) {
         if (p_225533_2_.isClientSide) {
-            Minecraft.getInstance().setScreen(new SkyrimOvenGui());
+            Minecraft.getInstance().setScreen(new OvenScreen());
             return ActionResultType.CONSUME;
         } else {
             return ActionResultType.SUCCESS;

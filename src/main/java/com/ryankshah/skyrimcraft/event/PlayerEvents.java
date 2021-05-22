@@ -8,6 +8,7 @@ import com.ryankshah.skyrimcraft.character.render.SpectralLayerRenderer;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.network.character.PacketAddToCompassFeaturesOnClient;
+import com.ryankshah.skyrimcraft.network.character.PacketOpenCharacterCreationScreen;
 import com.ryankshah.skyrimcraft.network.spell.PacketUpdateShoutCooldownOnServer;
 import com.ryankshah.skyrimcraft.util.CompassFeature;
 import com.ryankshah.skyrimcraft.util.ModAttributes;
@@ -22,6 +23,7 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
@@ -124,6 +126,16 @@ public class PlayerEvents
             return new ChunkPos(blockpos1.getX(), blockpos1.getZ());
         } else {
             return null;
+        }
+    }
+
+    // Open the character creation screen if first login / world created
+    @SubscribeEvent
+    public static void playerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+        ISkyrimPlayerData cap = event.getPlayer().getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("player events logged in event"));
+        if(!cap.hasSetup()) {
+            cap.setHasSetup(true);
+            Networking.sendToClient(new PacketOpenCharacterCreationScreen(cap.hasSetup()), (ServerPlayerEntity) event.getPlayer());
         }
     }
 }

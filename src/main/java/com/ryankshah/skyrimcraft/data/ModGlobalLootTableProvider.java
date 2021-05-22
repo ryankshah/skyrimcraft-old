@@ -121,8 +121,8 @@ public class ModGlobalLootTableProvider extends GlobalLootModifierProvider
 
     protected void addMobLootModifiers() {
         NonNullList<PassiveEntityLootModifier.AdditionalItems> witch_evoker_drops = NonNullList.create();
-        witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.FIREBALL_SPELLBOOK.get(), new RandomValueRange(0, 1), 0.245f, false));
-        witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.TURN_UNDEAD_SPELLBOOK.get(), new RandomValueRange(0, 1), 0.245f, false));
+        witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.FIREBALL_SPELLBOOK.get(), new RandomValueRange(0, 1), 0.1f, false));
+        witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.TURN_UNDEAD_SPELLBOOK.get(), new RandomValueRange(0, 1), 0.1f, false));
         witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.MAGICKA_POTION.get(), new RandomValueRange(1, 2), 0.475f, true));
         witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.MINOR_MAGICKA_POTION.get(), new RandomValueRange(2, 3), 0.625f, true));
         witch_evoker_drops.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.PLENTIFUL_MAGICKA_POTION.get(), new RandomValueRange(1, 2), 0.425f, true));
@@ -154,8 +154,8 @@ public class ModGlobalLootTableProvider extends GlobalLootModifierProvider
         ));
 
         NonNullList<PassiveEntityLootModifier.AdditionalItems> modSeedDrops = NonNullList.create();
-        modSeedDrops.add(new PassiveEntityLootModifier.AdditionalItems(ModBlocks.GARLIC.get(), new RandomValueRange(1, 2), 0.45f, false));
-        modSeedDrops.add(new PassiveEntityLootModifier.AdditionalItems(ModBlocks.TOMATO_SEEDS.get(), new RandomValueRange(1, 2), 0.45f, false));
+        modSeedDrops.add(new PassiveEntityLootModifier.AdditionalItems(ModBlocks.GARLIC.get(), new RandomValueRange(1, 2), 0.45f, true));
+        modSeedDrops.add(new PassiveEntityLootModifier.AdditionalItems(ModBlocks.TOMATO_SEEDS.get(), new RandomValueRange(1, 2), 0.45f, true));
 
         add("parrot_modifier", PASSIVE_ENTITY.get(), new PassiveEntityLootModifier(
                 new ILootCondition[]{
@@ -173,7 +173,7 @@ public class ModGlobalLootTableProvider extends GlobalLootModifierProvider
         ));
 
         NonNullList<PassiveEntityLootModifier.AdditionalItems> salmonRoeDrop = NonNullList.create();
-        salmonRoeDrop.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.SALMON_ROE.get(), new RandomValueRange(1, 2), 0.3f, false));
+        salmonRoeDrop.add(new PassiveEntityLootModifier.AdditionalItems(ModItems.SALMON_ROE.get(), new RandomValueRange(1, 2), 0.3f, true));
         add("salmon_modifier", PASSIVE_ENTITY.get(), new PassiveEntityLootModifier(
                 new ILootCondition[]{
                         EntityHasProperty.hasProperties(LootContext.EntityTarget.THIS,

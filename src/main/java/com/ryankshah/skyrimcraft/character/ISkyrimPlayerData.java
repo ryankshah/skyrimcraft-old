@@ -1,5 +1,6 @@
 package com.ryankshah.skyrimcraft.character;
 
+import com.ryankshah.skyrimcraft.character.feature.Race;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.character.skill.ISkill;
 import com.ryankshah.skyrimcraft.util.CompassFeature;
@@ -57,4 +58,11 @@ public interface ISkyrimPlayerData
     public Map<Integer, ISkill> getSkills();
     //public void addXpToSkill(ISkill skill);
     public void addXpToSkill(int id, int baseXp, ServerPlayerEntity playerEntity);
+
+    /* RACE FIELDS */
+    public void setRace(Race race);
+    public Race getRace();
+
+    public boolean hasSetup();
+    public void setHasSetup(boolean hasSetup);
 }

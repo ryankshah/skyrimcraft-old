@@ -6,12 +6,11 @@ import com.ryankshah.skyrimcraft.advancement.TriggerManager;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.SkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.SkyrimPlayerDataStorage;
-import com.ryankshah.skyrimcraft.character.skill.SkillRegistry;
+import com.ryankshah.skyrimcraft.character.magic.ISpell;
+import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
 import com.ryankshah.skyrimcraft.data.ModGlobalLootTableProvider;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.network.Networking;
-import com.ryankshah.skyrimcraft.character.magic.ISpell;
-import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
 import com.ryankshah.skyrimcraft.util.*;
 import com.ryankshah.skyrimcraft.worldgen.WorldGen;
 import com.ryankshah.skyrimcraft.worldgen.structure.ModConfiguredStructures;
@@ -73,14 +72,13 @@ import java.util.Map;
  *   - Continue working on the ingame GUI overlay:
  *     - Render the boss health similarly to target entities?
  *   - Work on the character level system ( https://elderscrolls.fandom.com/wiki/Character_Level )
- *     - Character level is determined solely on skill levels
  *     - "Simply follow the prompts on the screen, select which of the three statistics to raise (Stamina, Health,
  *       or Magicka), then allocate perks to whichever skill tree the player wishes to advance. This can even be done
  *       in combat, and will refill whichever statistic is raised upon level-up, giving the potential to use a
  *       level-up as a means of recovery during a fight".
  *     - the hard limit is actually level 65,535 (Hex number FFFF). Although a level cap in 1.9 was 81.5
- *     - Level calculation: https://elderscrolls.fandom.com/wiki/User:Documentalist/Character_level_calculation_(Skyrim)
  *   - Work on a skills system (https://elderscrolls.fandom.com/wiki/Skills_(Skyrim))
+ *     - Skills system is ready, but need to tinker with the xp rates and add in how XP gains for rest of skills.
  *   - Start working on a quest system
  *     - Certain quests require a character level of either 2, 5, 10, 15, 17, 20, 25, 30, or 80 to start them.
  *   - Start working on a faction system
@@ -101,7 +99,6 @@ public class Skyrimcraft
         ModItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModSounds.SOUND_EVENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
         SpellRegistry.SPELLS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        SkillRegistry.SKILLS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModEntityType.ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModEffects.EFFECTS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModStructures.STRUCTURES.register(FMLJavaModLoadingContext.get().getModEventBus());
@@ -166,7 +163,7 @@ public class Skyrimcraft
     public static final ItemGroup TAB_MAGIC = new ItemGroup("skyrimcraft.magic") {
         @Override
         public ItemStack makeIcon() {
-            return new ItemStack(ModItems.ULTIMATE_MAGICKA_POTION.get());
+            return new ItemStack(ModItems.FIREBALL_SPELLBOOK.get());
         }
     };
 

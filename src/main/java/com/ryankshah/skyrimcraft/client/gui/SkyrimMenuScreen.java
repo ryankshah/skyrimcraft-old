@@ -95,7 +95,9 @@ public class SkyrimMenuScreen extends Screen
         else if(keyCode == GLFW_KEY_ENTER) {
             if(currentDirection == Direction.NORTH) {
                 minecraft.setScreen(null);
-                minecraft.player.displayClientMessage(new TranslationTextComponent("skyrimcraft.menu.option.unavailable"), false);
+                minecraft.setScreen(new CharacterCreationScreen());
+//                minecraft.setScreen(null);
+//                minecraft.player.displayClientMessage(new TranslationTextComponent("skyrimcraft.menu.option.unavailable"), false);
             } else if(currentDirection == Direction.SOUTH) {
                 minecraft.setScreen(null);
                 minecraft.player.displayClientMessage(new TranslationTextComponent("skyrimcraft.menu.option.unavailable"), false);
@@ -113,7 +115,7 @@ public class SkyrimMenuScreen extends Screen
                     minecraft.player.displayClientMessage(new TranslationTextComponent("skyrimcraft.menu.option.magic.none"), false);
                 } else {
                     minecraft.setScreen(null);
-                    minecraft.setScreen(new SkyrimMagicGui(knownSpells.get()));
+                    minecraft.setScreen(new MagicScreen(knownSpells.get()));
                 }
             }  else
                 minecraft.player.displayClientMessage(new TranslationTextComponent("skyrimcraft.menu.option.invalid"), false);

@@ -1,6 +1,6 @@
 package com.ryankshah.skyrimcraft.block;
 
-import com.ryankshah.skyrimcraft.client.gui.SkyrimAlchemyGui;
+import com.ryankshah.skyrimcraft.client.gui.AlchemyScreen;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -38,7 +38,7 @@ public class AlchemyTableBlock extends SkyrimBlock
     @Override
     public ActionResultType use(BlockState p_225533_1_, World p_225533_2_, BlockPos p_225533_3_, PlayerEntity p_225533_4_, Hand p_225533_5_, BlockRayTraceResult p_225533_6_) {
         if (p_225533_2_.isClientSide) {
-            Minecraft.getInstance().setScreen(new SkyrimAlchemyGui());
+            Minecraft.getInstance().setScreen(new AlchemyScreen());
             return ActionResultType.CONSUME;
         } else {
             return ActionResultType.SUCCESS;

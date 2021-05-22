@@ -34,7 +34,7 @@ import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class SkyrimOvenGui extends Screen
+public class OvenScreen extends Screen
 {
     protected static final ResourceLocation OVERLAY_ICONS = new ResourceLocation(Skyrimcraft.MODID, "textures/gui/overlay_icons.png");
 
@@ -48,7 +48,7 @@ public class SkyrimOvenGui extends Screen
     private OvenRecipe currentRecipeObject = null;
     private PlayerEntity player;
 
-    public SkyrimOvenGui() {
+    public OvenScreen() {
         super(new TranslationTextComponent(Skyrimcraft.MODID + ".ovengui.title"));
         this.player = Minecraft.getInstance().player;
         this.items = ArrayListMultimap.create();
