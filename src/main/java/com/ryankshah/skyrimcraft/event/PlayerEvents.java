@@ -4,6 +4,7 @@ import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
+import com.ryankshah.skyrimcraft.character.render.RaceLayerRenderer;
 import com.ryankshah.skyrimcraft.character.render.SpectralLayerRenderer;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.network.Networking;
@@ -49,6 +50,7 @@ public class PlayerEvents
         ClientPlayerEntity player = (ClientPlayerEntity)event.getPlayer();
         if(!hasLayer) {
             event.getRenderer().addLayer(new SpectralLayerRenderer(event.getRenderer(), event.getLight()));
+            event.getRenderer().addLayer(new RaceLayerRenderer(event.getRenderer()));
             hasLayer = true;
         }
 

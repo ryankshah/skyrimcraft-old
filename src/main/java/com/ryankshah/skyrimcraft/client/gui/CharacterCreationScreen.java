@@ -113,11 +113,7 @@ public class CharacterCreationScreen extends Screen
                 this.currentRace = this.races.size() - 1;
 
             currentRaceObject = races.get(currentRace);
-
-            System.out.println(currentRaceObject);
-            System.out.println(currentRaceObject.getId());
-            System.out.println(currentRaceObject.getName());
-            System.out.println(currentRaceObject.getStartingSkills());
+            Networking.sendToServer(new PacketCreateCharacterOnServer(currentRaceObject));
         }
 
         if (keyCode == GLFW_KEY_UP || keyCode == GLFW_KEY_W) {
@@ -127,6 +123,7 @@ public class CharacterCreationScreen extends Screen
                 this.currentRace = 0;
 
             currentRaceObject = races.get(currentRace);
+            Networking.sendToServer(new PacketCreateCharacterOnServer(currentRaceObject));
         }
 
         if (keyCode == GLFW_KEY_ENTER) {
@@ -141,7 +138,7 @@ public class CharacterCreationScreen extends Screen
         float f = (float)Math.atan((double)(p_228187_3_ / 40.0F));
         float f1 = (float)Math.atan((double)(p_228187_4_ / 40.0F));
         RenderSystem.pushMatrix();
-        RenderSystem.translatef((float)p_228187_0_, (float)p_228187_1_, 100F);
+        RenderSystem.translatef((float)p_228187_0_, (float)p_228187_1_, 300F);
         RenderSystem.scalef(1.0F, 1.0F, -1.0F);
         MatrixStack matrixstack = new MatrixStack();
         matrixstack.translate(0.0D, 0.0D, 1000.0D);
