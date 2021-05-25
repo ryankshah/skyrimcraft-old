@@ -7,6 +7,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3d;
@@ -14,7 +17,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ClientUtil
 {
@@ -22,7 +27,7 @@ public class ClientUtil
         return Minecraft.getInstance().level;
     }
 
-    public AbstractClientPlayerEntity getClientPlayer() {
+    public static AbstractClientPlayerEntity getClientPlayer() {
         return Minecraft.getInstance().player;
     }
 
@@ -120,5 +125,37 @@ public class ClientUtil
         ints[2] = (color >>  8 & 255);
         ints[3] = (color       & 255);
         return ints;
+    }
+
+    public static boolean canPlayerBeSeen() {
+        PlayerEntity clientPlayer = getClientPlayer();
+        double maxSeenBound = 20D;
+        List<LivingEntity> entityList = clientPlayer.level.getEntities(clientPlayer, new AxisAlignedBB(clientPlayer.getX() - (double)maxSeenBound, clientPlayer.getY() - (double)maxSeenBound, clientPlayer.getZ() - (double)maxSeenBound, clientPlayer.getX() + (double)maxSeenBound, clientPlayer.getY() + (double)maxSeenBound, clientPlayer.getZ() + (double)maxSeenBound)).stream().filter(entity -> entity instanceof LivingEntity).map(LivingEntity.class::cast).collect(Collectors.toList());
+
+        return entityList.stream().anyMatch(e -> canEntitySee(e, clientPlayer));
+    }
+
+    public static boolean canEntitySee(LivingEntity viewer, LivingEntity beingViewed) {
+        double dx = beingViewed.getX() - viewer.getX();
+        double dz;
+        for (dz = beingViewed.getX() - viewer.getZ(); dx * dx + dz * dz < 1.0E-4D; dz = (Math.random() - Math.random()) * 0.01D) {
+            dx = (Math.random() - Math.random()) * 0.01D;
+        }
+        while (viewer.yRot > 360) {
+            viewer.yRot -= 360;
+        }
+        while (viewer.yRot < -360) {
+            viewer.yRot += 360;
+        }
+        float yaw = (float) (Math.atan2(dz, dx) * 180.0D / Math.PI) - viewer.yRot;
+        yaw = yaw - 90;
+        while (yaw < -180) {
+            yaw += 360;
+        }
+        while (yaw >= 180) {
+            yaw -= 360;
+        }
+
+        return yaw < 60 && yaw > -60 && viewer.canSee(beingViewed);
     }
 }

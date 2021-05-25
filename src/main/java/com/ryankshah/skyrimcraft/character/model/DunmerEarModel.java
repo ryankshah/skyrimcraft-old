@@ -6,15 +6,17 @@ import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.Entity;
 
-public class DunmerEarModel extends EntityModel<Entity>
+public class DunmerEarModel extends EntityModel<AbstractClientPlayerEntity>
 {
+    private PlayerModel<AbstractClientPlayerEntity> playerModel;
+
     private final ModelRenderer Ears;
     private final ModelRenderer Ear_Left;
     private final ModelRenderer Ear_Right;
 
     public DunmerEarModel(PlayerModel<AbstractClientPlayerEntity> model, ModelRenderer head) {
+        this.playerModel = model;
         texWidth = 64;
         texHeight = 64;
 
@@ -23,14 +25,16 @@ public class DunmerEarModel extends EntityModel<Entity>
         Ears.setPos(0.0F, 1.0F, 0.0F);
 
 
-        Ear_Left = new ModelRenderer(model);
+        Ear_Left = new ModelRenderer(this);
+        Ear_Left.copyFrom(Ears);
         Ear_Left.setPos(0.0F, -24.0F, 0.0F);
         Ears.addChild(Ear_Left);
         Ear_Left.texOffs(3, 12).addBox(4.0F, 19.0F, -2.0F, 1.0F, 2.0F, 2.0F, 0.0F, false);
         Ear_Left.texOffs(3, 12).addBox(4.0F, 18.0F, -1.0F, 1.0F, 2.0F, 2.0F, 0.0F, false);
         Ear_Left.texOffs(4, 13).addBox(5.0F, 18.0F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
 
-        Ear_Right = new ModelRenderer(model);
+        Ear_Right = new ModelRenderer(this);
+        Ear_Right.copyFrom(Ears);
         Ear_Right.setPos(-9.0F, -24.0F, 0.0F);
         Ears.addChild(Ear_Right);
         Ear_Right.texOffs(3, 12).addBox(4.0F, 19.0F, -2.0F, 1.0F, 2.0F, 2.0F, 0.0F, false);
@@ -45,8 +49,7 @@ public class DunmerEarModel extends EntityModel<Entity>
     }
 
     @Override
-    public void setupAnim(Entity p_225597_1_, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-
+    public void setupAnim(AbstractClientPlayerEntity p_225597_1_, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
     }
 
     @Override

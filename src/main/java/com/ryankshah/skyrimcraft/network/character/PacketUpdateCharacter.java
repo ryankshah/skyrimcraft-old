@@ -33,12 +33,13 @@ public class PacketUpdateCharacter
             String name = buf.readUtf();
             int level = buf.readInt();
             int totalXp = buf.readInt();
+            float xpProgress = buf.readFloat();
             float skillUseMultiplier = buf.readFloat();
             int skillUseOffset = buf.readInt();
             float skillImproveMultiplier = buf.readFloat();
             int skillImproveOffset = buf.readInt();
 
-            skills.put(id, new ISkill(id, name, level, totalXp, skillUseMultiplier, skillUseOffset, skillImproveMultiplier, skillImproveOffset));
+            skills.put(id, new ISkill(id, name, level, totalXp, xpProgress, skillUseMultiplier, skillUseOffset, skillImproveMultiplier, skillImproveOffset));
         }
         int raceID = buf.readInt();
         String raceName = buf.readUtf();
@@ -59,6 +60,7 @@ public class PacketUpdateCharacter
             buf.writeUtf(skill.getValue().getName());
             buf.writeInt(skill.getValue().getLevel());
             buf.writeInt(skill.getValue().getTotalXp());
+            buf.writeFloat(skill.getValue().getXpProgress());
             buf.writeFloat(skill.getValue().getSkillUseMultiplier());
             buf.writeInt(skill.getValue().getSkillUseOffset());
             buf.writeFloat(skill.getValue().getSkillImproveMultiplier());

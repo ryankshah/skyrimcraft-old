@@ -2,6 +2,7 @@ package com.ryankshah.skyrimcraft.data.lang;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
+import com.ryankshah.skyrimcraft.item.SkyrimArmorItem;
 import com.ryankshah.skyrimcraft.item.SkyrimBlockItem;
 import com.ryankshah.skyrimcraft.item.SkyrimItem;
 import com.ryankshah.skyrimcraft.util.ModBlocks;
@@ -32,8 +33,13 @@ public class LangGenerator extends LanguageProvider
         }
 
         for(RegistryObject<Item> item : ModItems.ITEMS.getEntries()) {
-            SkyrimItem i = (SkyrimItem) item.get();
-            add(i, i.getDisplayName());
+            if(item.get() instanceof SkyrimItem) {
+                SkyrimItem i = (SkyrimItem) item.get();
+                add(i, i.getDisplayName());
+            } else if(item.get() instanceof SkyrimArmorItem) {
+                SkyrimArmorItem i = (SkyrimArmorItem) item.get();
+                add(i, i.getDisplayName());
+            }
         }
 
         for(RegistryObject<Effect> effect : ModEffects.EFFECTS.getEntries()) {
@@ -58,6 +64,10 @@ public class LangGenerator extends LanguageProvider
         add("skyrimcraft.menu.option.unavailable", "This option is currently unavailable!");
         add("skyrimcraft.menu.option.invalid", "Invalid Option!");
         add("skyrimcraft.menu.option.magic.none", "You have not yet learned any spells/shouts!");
+
+        // Skills
+        add("skill.pickpocket.fail", "You fail to pick the %s's pockets!");
+        add("skill.pickpocket.success", "You successfully pick the %s's pockets and get some loot!");
     }
 
     @Override

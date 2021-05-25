@@ -45,6 +45,7 @@ public class CharacterCreationScreen extends Screen
         races = Race.getRaces();
         currentRace = 0;
         currentRaceObject = races.get(currentRace);
+        Networking.sendToServer(new PacketCreateCharacterOnServer(currentRaceObject));
     }
 
     @Override

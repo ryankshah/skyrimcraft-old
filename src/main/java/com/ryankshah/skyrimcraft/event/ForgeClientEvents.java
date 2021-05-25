@@ -4,10 +4,13 @@ import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.client.gui.SkyrimMenuScreen;
 import com.ryankshah.skyrimcraft.network.Networking;
+import com.ryankshah.skyrimcraft.network.skill.PacketHandlePickpocketOnServer;
 import com.ryankshah.skyrimcraft.network.spell.PacketCastSpell;
+import com.ryankshah.skyrimcraft.util.ModEntityType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.event.TickEvent;
@@ -24,6 +27,7 @@ public class ForgeClientEvents
     public static final KeyBinding toggleSkyrimMenu = new KeyBinding("key.togglemenu", KeyConflictContext.UNIVERSAL, InputMappings.Type.KEYSYM, GLFW_KEY_M, CATEGORY);
     public static final KeyBinding toggleSpellSlot1 = new KeyBinding("key.togglespellslot1", KeyConflictContext.UNIVERSAL, InputMappings.Type.KEYSYM, GLFW_KEY_V, CATEGORY);
     public static final KeyBinding toggleSpellSlot2 = new KeyBinding("key.togglespellslot2", KeyConflictContext.UNIVERSAL, InputMappings.Type.KEYSYM, GLFW_KEY_B, CATEGORY);
+    public static final KeyBinding pickpocketKey = new KeyBinding("key.pickpocket", KeyConflictContext.UNIVERSAL, InputMappings.Type.KEYSYM, GLFW_KEY_G, CATEGORY);
 
     // public static final Map<BlockPos, Float> positions = Collections.synchronizedMap(new HashMap<>());
 
@@ -73,6 +77,16 @@ public class ForgeClientEvents
                 else
                     mc.player.displayClientMessage(new TranslationTextComponent("spell.noselect"), false);
             });
+        }
+
+        if(pickpocketKey.consumeClick()) {
+            if (mc.crosshairPickEntity instanceof LivingEntity && mc.player.isCrouching()) {
+                LivingEntity entity = (LivingEntity) mc.crosshairPickEntity;
+
+                if(entity.getTags().contains(ModEntityType.PICKPOCKET_TAG)) {
+                    Networking.sendToServer(new PacketHandlePickpocketOnServer(entity));
+                }
+            }
         }
     }
 }

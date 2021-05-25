@@ -14,14 +14,14 @@
       "minItem": 1.0,
       "maxItem": 2.0,
       "change": 0.45,
-      "useLooting": false
+      "useLooting": true
     },
     {
       "item": "skyrimcraft:tomato_seeds",
       "minItem": 1.0,
       "maxItem": 2.0,
       "change": 0.45,
-      "useLooting": false
+      "useLooting": true
     }
   ],
   "type": "skyrimcraft:passive_entity"

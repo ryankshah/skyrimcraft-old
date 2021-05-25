@@ -14,7 +14,7 @@
       "minItem": 1.0,
       "maxItem": 2.0,
       "change": 0.3,
-      "useLooting": false
+      "useLooting": true
     }
   ],
   "type": "skyrimcraft:passive_entity"

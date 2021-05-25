@@ -2,6 +2,7 @@ package com.ryankshah.skyrimcraft.character.skill;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class ISkill extends ForgeRegistryEntry<ISkill>
@@ -11,11 +12,18 @@ public class ISkill extends ForgeRegistryEntry<ISkill>
     private String name;
     private int level;
     private int totalXp;
+    private float xpProgress;
 
     private float skillUseMultiplier;
     public int skillUseOffset;
     public float skillImproveMultiplier;
     public int skillImproveOffset;
+
+    // For predicate use (@see SkillPreciate)
+    public ISkill(int identifier, int level) {
+        this.identifier = identifier;
+        this.level = level;
+    }
 
     // Main constructor to use
     public ISkill(int identifier, String name, int baseLevel, float skillUseMultiplier, int skillUseOffset, float skillImproveMultiplier, int skillImproveOffset) {
@@ -23,17 +31,19 @@ public class ISkill extends ForgeRegistryEntry<ISkill>
         this.name = name;
         this.level = baseLevel;
         this.totalXp = 0;
+        this.xpProgress = 0;
         this.skillUseMultiplier = skillUseMultiplier;
         this.skillUseOffset = skillUseOffset;
         this.skillImproveMultiplier = skillImproveMultiplier;
         this.skillImproveOffset = skillImproveOffset;
     }
 
-    public ISkill(int identifier, String name, int level, int totalXp, float skillUseMultiplier, int skillUseOffset, float skillImproveMultiplier, int skillImproveOffset) {
+    public ISkill(int identifier, String name, int level, int totalXp, float xpProgress, float skillUseMultiplier, int skillUseOffset, float skillImproveMultiplier, int skillImproveOffset) {
         this.identifier = identifier;
         this.name = name;
         this.level = level;
         this.totalXp = totalXp;
+        this.xpProgress = xpProgress;
         this.skillUseMultiplier = skillUseMultiplier;
         this.skillUseOffset = skillUseOffset;
         this.skillImproveMultiplier = skillImproveMultiplier;
@@ -42,7 +52,7 @@ public class ISkill extends ForgeRegistryEntry<ISkill>
 
     // Dummy constructor
     public ISkill(ISkill skill) {
-        this(skill.identifier, skill.name, skill.level, skill.totalXp, skill.skillUseMultiplier, skill.skillUseOffset, skill.skillImproveMultiplier, skill.skillImproveOffset);
+        this(skill.identifier, skill.name, skill.level, skill.totalXp, skill.xpProgress, skill.skillUseMultiplier, skill.skillUseOffset, skill.skillImproveMultiplier, skill.skillImproveOffset);
     }
 
     /**
@@ -121,6 +131,8 @@ public class ISkill extends ForgeRegistryEntry<ISkill>
         return this.totalXp;
     }
 
+    public float getXpProgress() { return this.xpProgress; }
+
     private void giveXpLevels(int levels) {
         this.level += levels;
         if (this.level < 0) {
@@ -133,8 +145,9 @@ public class ISkill extends ForgeRegistryEntry<ISkill>
     public void giveExperiencePoints(int baseXp) {
         // full calculation: `Skill Use Mult * (base XP * skill specific multipliers) + Skill Use Offset` -- TODO: add in skill specific multipliers
         // minecraft progress calc : (float)amount / (float)this.getXpNeededForNextLevel();
-        this.totalXp += skillUseMultiplier * (baseXp) + skillUseOffset;
-        float xpProgress = totalXp / (float)getXpNeededForNextLevel();
+        float xpToAdd = skillUseMultiplier * (baseXp) + skillUseOffset;
+        this.xpProgress += xpToAdd / (float)this.getXpNeededForNextLevel();
+        this.totalXp = MathHelper.clamp(this.totalXp + (int)xpToAdd, 0, Integer.MAX_VALUE);
 
         if(xpProgress < 0.0F) {
             float f = xpProgress * (float)this.getXpNeededForNextLevel();
@@ -156,7 +169,7 @@ public class ISkill extends ForgeRegistryEntry<ISkill>
 
     // Taken from https://en.uesp.net/wiki/Skyrim:Leveling
     public double getXpNeededForNextLevel() {
-        return level == 0 ? 0 : skillImproveMultiplier * Math.pow((level-1), 1.95) + skillImproveOffset;
+        return level == 0 ? 0 : skillImproveMultiplier * Math.pow((level), 1.95) + skillImproveOffset;
     }
 
     public CompoundNBT serialise() {
@@ -166,6 +179,7 @@ public class ISkill extends ForgeRegistryEntry<ISkill>
         nbt.putString("name", name);
         nbt.putInt("level", level);
         nbt.putInt("totalXp", totalXp);
+        nbt.putFloat("xpProgress", xpProgress);
         nbt.putFloat("skillUseMultiplier", skillUseMultiplier);
         nbt.putInt("skillUseOffset", skillUseOffset);
         nbt.putFloat("skillImproveMultiplier", skillImproveMultiplier);
@@ -179,11 +193,12 @@ public class ISkill extends ForgeRegistryEntry<ISkill>
         String p2 = nbt.getString("name");
         int p3 = nbt.getInt("level");
         int p4 = nbt.getInt("totalXp");
+        float p5 = nbt.getInt("xpProgress");
         float p6 = nbt.getFloat("skillUseMultiplier");
         int p7 = nbt.getInt("skillUseOffset");
         float p8 = nbt.getFloat("skillImproveMultiplier");
         int p9 = nbt.getInt("skillImproveOffset");
-        return new ISkill(p1, p2, p3, p4, p6, p7, p8, p9);
+        return new ISkill(p1, p2, p3, p4, p5, p6, p7, p8, p9);
     }
 
     @Override
@@ -193,6 +208,7 @@ public class ISkill extends ForgeRegistryEntry<ISkill>
         sb.append("name: ").append(name).append(", ");
         sb.append("level: ").append(level).append(", ");
         sb.append("totalXp: ").append(totalXp).append(", ");
+        sb.append("xpProgress: ").append(xpProgress).append(", ");
         sb.append("skillUseMultiplier: ").append(skillUseMultiplier).append(", ");
         sb.append("skillUseOffset: ").append(skillUseOffset).append(", ");
         sb.append("skillImproveMultiplier: ").append(skillImproveMultiplier).append(", ");

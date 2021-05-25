@@ -1,9 +1,10 @@
 package com.ryankshah.skyrimcraft.util;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import com.ryankshah.skyrimcraft.item.*;
 import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
+import com.ryankshah.skyrimcraft.item.*;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -61,6 +62,23 @@ public class ModItems
     public static final RegistryObject<Item> SALMON_ROE = ITEMS.register("salmon_roe", () -> new SkyrimIngredient(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Salmon Roe", SkyrimIngredient.IngredientEffect.RESTORE_STAMINA, SkyrimIngredient.IngredientEffect.WATERBREATHING, SkyrimIngredient.IngredientEffect.FORTIFY_MAGICKA, SkyrimIngredient.IngredientEffect.REGENERATE_MAGICKA));
     public static final RegistryObject<Item> DWARVEN_OIL = ITEMS.register("dwarven_oil", () -> new SkyrimIngredient(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Dwarven Oil", SkyrimIngredient.IngredientEffect.WEAKNESS_TO_MAGIC, SkyrimIngredient.IngredientEffect.FORTIFY_ILLUSION, SkyrimIngredient.IngredientEffect.REGENERATE_MAGICKA, SkyrimIngredient.IngredientEffect.RESTORE_MAGICKA));
     public static final RegistryObject<Item> FIRE_SALTS = ITEMS.register("fire_salts", () -> new SkyrimIngredient(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Fire Salts", SkyrimIngredient.IngredientEffect.WEAKNESS_TO_FROST, SkyrimIngredient.IngredientEffect.RESIST_FIRE, SkyrimIngredient.IngredientEffect.RESTORE_MAGICKA, SkyrimIngredient.IngredientEffect.REGENERATE_MAGICKA));
+
+    // Armors
+    // Ancient nord
+    public static final RegistryObject<Item> ANCIENT_NORD_HELMET = ITEMS.register("ancient_nord_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.ANCIENT_NORD, EquipmentSlotType.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_MATERIALS), "Ancient Nord Helmet"));
+    public static final RegistryObject<Item> ANCIENT_NORD_CHESTPLATE = ITEMS.register("ancient_nord_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.ANCIENT_NORD, EquipmentSlotType.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_MATERIALS), "Ancient Nord Chestplate"));
+    public static final RegistryObject<Item> ANCIENT_NORD_LEGGINGS = ITEMS.register("ancient_nord_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.ANCIENT_NORD, EquipmentSlotType.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_MATERIALS), "Ancient Nord Leggings"));
+    public static final RegistryObject<Item> ANCIENT_NORD_BOOTS = ITEMS.register("ancient_nord_boots", () -> new SkyrimArmorItem(ModArmorMaterial.ANCIENT_NORD, EquipmentSlotType.FEET, new Item.Properties().tab(Skyrimcraft.TAB_MATERIALS), "Ancient Nord Boots"));
+    // Glass
+    public static final RegistryObject<Item> GLASS_HELMET = ITEMS.register("glass_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.GLASS, EquipmentSlotType.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_MATERIALS), "Glass Helmet"));
+    public static final RegistryObject<Item> GLASS_CHESTPLATE = ITEMS.register("glass_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.GLASS, EquipmentSlotType.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_MATERIALS), "Glass Chestplate"));
+    public static final RegistryObject<Item> GLASS_LEGGINGS = ITEMS.register("glass_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.GLASS, EquipmentSlotType.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_MATERIALS), "Glass Leggings"));
+    public static final RegistryObject<Item> GLASS_BOOTS = ITEMS.register("glass_boots", () -> new SkyrimArmorItem(ModArmorMaterial.GLASS, EquipmentSlotType.FEET, new Item.Properties().tab(Skyrimcraft.TAB_MATERIALS), "Glass Boots"));
+    // Daedric
+    public static final RegistryObject<Item> DAEDRIC_HELMET = ITEMS.register("daedric_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.DAEDRIC, EquipmentSlotType.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_MATERIALS), "Daedric Helmet"));
+    public static final RegistryObject<Item> DAEDRIC_CHESTPLATE = ITEMS.register("daedric_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.DAEDRIC, EquipmentSlotType.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_MATERIALS), "Daedric Chestplate"));
+    public static final RegistryObject<Item> DAEDRIC_LEGGINGS = ITEMS.register("daedric_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.DAEDRIC, EquipmentSlotType.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_MATERIALS), "Daedric Leggings"));
+    public static final RegistryObject<Item> DAEDRIC_BOOTS = ITEMS.register("daedric_boots", () -> new SkyrimArmorItem(ModArmorMaterial.DAEDRIC, EquipmentSlotType.FEET, new Item.Properties().tab(Skyrimcraft.TAB_MATERIALS), "Daedric Boots"));
 
     // Spell books
     public static final RegistryObject<Item> FIREBALL_SPELLBOOK = ITEMS.register("fireball_spellbook", () -> new SpellBook(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC).stacksTo(1), "Spellbook", SpellRegistry.FIREBALL));
@@ -153,6 +171,35 @@ public class ModItems
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/dwarven_oil"));
             singleTexture(FIRE_SALTS.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/fire_salts"));
+
+            // Armors
+            // Ancient Nord
+            singleTexture(ANCIENT_NORD_HELMET.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/ancient_nord_helmet"));
+            singleTexture(ANCIENT_NORD_CHESTPLATE.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/ancient_nord_chestplate"));
+            singleTexture(ANCIENT_NORD_LEGGINGS.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/ancient_nord_leggings"));
+            singleTexture(ANCIENT_NORD_BOOTS.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/ancient_nord_boots"));
+            // Glass
+            singleTexture(GLASS_HELMET.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/glass_helmet"));
+            singleTexture(GLASS_CHESTPLATE.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/glass_chestplate"));
+            singleTexture(GLASS_LEGGINGS.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/glass_leggings"));
+            singleTexture(GLASS_BOOTS.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/glass_boots"));
+            // Daedric
+            singleTexture(DAEDRIC_HELMET.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/daedric_helmet"));
+            singleTexture(DAEDRIC_CHESTPLATE.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/daedric_chestplate"));
+            singleTexture(DAEDRIC_LEGGINGS.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/daedric_leggings"));
+            singleTexture(DAEDRIC_BOOTS.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/daedric_boots"));
 
             singleTexture(FIREBALL_SPELLBOOK.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", new ResourceLocation(Skyrimcraft.MODID, "item/spellbook"));

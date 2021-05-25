@@ -1,12 +1,16 @@
 package com.ryankshah.skyrimcraft.character.skill;
 
+import com.google.common.collect.ImmutableList;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SkillRegistry
 {
     public static final int BASE_ARCHERY_XP = 4;
     public static final int BASE_BLOCK_XP = 4;
+    public static final int BASE_PICKPOCKET_XP = 4;
 
     public static ISkill ALTERATION = new ISkill(0, "Alteration", 15, 3f, 0, 2f, 0);
     public static ISkill CONJURATION = new ISkill(1, "Conjuration", 15, 2.1f, 0, 2f, 0);
@@ -50,5 +54,28 @@ public class SkillRegistry
         skills.put(SPEECH.getID(), SPEECH);
 
         return skills;
+    }
+
+    public static List<Integer> getKnownSkillIds() {
+        return ImmutableList.of(
+                ALTERATION.getID(),
+                CONJURATION.getID(),
+                DESTRUCTION.getID(),
+                ILLUSION.getID(),
+                RESTORATION.getID(),
+                ENCHANTING.getID(),
+                ONE_HANDED.getID(),
+                TWO_HANDED.getID(),
+                ARCHERY.getID(),
+                BLOCK.getID(),
+                SMITHING.getID(),
+                HEAVY_ARMOR.getID(),
+                LIGHT_ARMOR.getID(),
+                PICKPOCKET.getID(),
+                LOCKPICKING.getID(),
+                SNEAK.getID(),
+                ALCHEMY.getID(),
+                SPEECH.getID()
+        );
     }
 }

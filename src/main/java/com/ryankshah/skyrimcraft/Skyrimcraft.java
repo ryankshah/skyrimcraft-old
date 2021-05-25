@@ -8,7 +8,8 @@ import com.ryankshah.skyrimcraft.character.SkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.SkyrimPlayerDataStorage;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
-import com.ryankshah.skyrimcraft.data.ModGlobalLootTableProvider;
+import com.ryankshah.skyrimcraft.data.loot_table.condition.type.ModLootConditionTypes;
+import com.ryankshah.skyrimcraft.data.provider.ModGlobalLootTableProvider;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.util.*;
@@ -29,6 +30,7 @@ import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -104,6 +106,8 @@ public class Skyrimcraft
         ModStructures.STRUCTURES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModGlobalLootTableProvider.LOOT_MODIFIERS.register(FMLJavaModLoadingContext.get().getModEventBus());
 
+        ModLootConditionTypes.register();
+
         FMLJavaModLoadingContext.get().getModEventBus().addListener(Skyrimcraft::commonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(Skyrimcraft::addEntityAttributes);
 
@@ -116,19 +120,24 @@ public class Skyrimcraft
     }
 
     public static void commonSetup(final FMLCommonSetupEvent event) {
-        Networking.registerMessages();
-        CapabilityManager.INSTANCE.register(ISkyrimPlayerData.class, new SkyrimPlayerDataStorage(), SkyrimPlayerData::new);
+        event.enqueueWork(() -> {
+            Networking.registerMessages();
+            CapabilityManager.INSTANCE.register(ISkyrimPlayerData.class, new SkyrimPlayerDataStorage(), SkyrimPlayerData::new);
 
-        // Add triggers
-        for(RegistryObject<ISpell> spell : SpellRegistry.SPELLS.getEntries()) {
-            BaseTrigger spellTrigger = new BaseTrigger("learned_spell_" + spell.get().getName().toLowerCase().replace(" ", "_"));
-            TriggerManager.TRIGGERS.put(spell.get(), spellTrigger);
-        }
-        // TODO: add skill triggers?
-        TriggerManager.init();
+            // Add triggers
+            for(RegistryObject<ISpell> spell : SpellRegistry.SPELLS.getEntries()) {
+                BaseTrigger spellTrigger = new BaseTrigger("learned_spell_" + spell.get().getName().toLowerCase().replace(" ", "_"));
+                TriggerManager.TRIGGERS.put(spell.get(), spellTrigger);
+            }
+            // TODO: add skill triggers?
+            TriggerManager.init();
 
-        ModStructures.setupStructures();
-        ModConfiguredStructures.registerConfiguredStructures();
+            ModStructures.setupStructures();
+            ModConfiguredStructures.registerConfiguredStructures();
+        });
+    }
+
+    public static void registerNewRegistry(RegistryEvent.NewRegistry event) {
     }
 
     public static void addEntityAttributes(EntityAttributeModificationEvent event) {

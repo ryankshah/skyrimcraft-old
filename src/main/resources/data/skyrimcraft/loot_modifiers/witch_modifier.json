@@ -13,14 +13,14 @@
       "item": "skyrimcraft:fireball_spellbook",
       "minItem": 0.0,
       "maxItem": 1.0,
-      "change": 0.245,
+      "change": 0.1,
       "useLooting": false
     },
     {
       "item": "skyrimcraft:turn_undead_spellbook",
       "minItem": 0.0,
       "maxItem": 1.0,
-      "change": 0.245,
+      "change": 0.1,
       "useLooting": false
     },
     {

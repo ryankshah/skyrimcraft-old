@@ -7,8 +7,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
+import com.ryankshah.skyrimcraft.event.ForgeClientEvents;
+import com.ryankshah.skyrimcraft.util.ClientUtil;
 import com.ryankshah.skyrimcraft.util.CompassFeature;
 import com.ryankshah.skyrimcraft.util.LevelUpdate;
+import com.ryankshah.skyrimcraft.util.ModEntityType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
@@ -25,6 +28,8 @@ import net.minecraft.util.text.IFormattableTextComponent;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.lwjgl.glfw.GLFW.glfwGetKeyName;
+
 // Inspiration and credits for utility methods used in the compass rendering go to Gigaherz <3
 
 /**
@@ -33,7 +38,6 @@ import java.util.List;
 public class SkyrimIngameGui extends AbstractGui
 {
     protected static final ResourceLocation OVERLAY_ICONS = new ResourceLocation(Skyrimcraft.MODID, "textures/gui/overlay_icons.png");
-
     public static final int PLAYER_BAR_MAX_WIDTH = 80;
 
     private static Minecraft mc = Minecraft.getInstance();
@@ -44,6 +48,7 @@ public class SkyrimIngameGui extends AbstractGui
     public static void render(MatrixStack matrixStack, int width, int height, float partialTicks) {
         mc.getTextureManager().bind(OVERLAY_ICONS);
 
+        renderCrosshair(matrixStack, width, height);
         renderHealth(matrixStack, width, height);
         renderStamina(matrixStack, width, height);
         renderMagicka(matrixStack, width, height);
@@ -84,6 +89,8 @@ public class SkyrimIngameGui extends AbstractGui
 
         if(!mc.player.isCreative() && !mc.player.isSpectator())
             renderAir(matrixStack, width, height);
+
+        renderLookVectorRayTrace(matrixStack, width, height);
     }
 
     private static void renderCompass(MatrixStack matrixStack, int width, int height) {
@@ -279,8 +286,7 @@ public class SkyrimIngameGui extends AbstractGui
 
     private static void renderCharacterLevelUpdate(MatrixStack matrixStack, int width, int height, float elapsed, int level, int levelUpRenderTime) {
         //matrixStack.pushPose();
-        ISkyrimPlayerData cap = mc.player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalStateException("skyrim ingame gui renderLevelUpdate"));
-        String characterLevel = ""+cap.getCharacterLevel();
+        String characterLevel = ""+(level+1);
         String levelProgressString = "Progress";
 
         float hue = (float)levelUpRenderTime - elapsed;
@@ -347,6 +353,31 @@ public class SkyrimIngameGui extends AbstractGui
         RenderSystem.disableBlend();
         RenderSystem.disableAlphaTest();
         matrixStack.popPose();
+    }
+
+    private static void renderCrosshair(MatrixStack matrixStack, int width, int height) {
+        int texX = 166;
+        int texY = 88;
+        if(mc.player.getMainHandItem().getItem() instanceof ShootableItem && !mc.player.isSpectator()) {
+            if (mc.player.isCrouching()) {
+                texX += 15;
+
+                if(!ClientUtil.canPlayerBeSeen()) {
+                    texX += 15;
+                }
+            }
+        }
+        TextureDrawer.drawGuiTexture(matrixStack, (width - 16) / 2, (height - 16) / 2, texX, texY, 15, 15);
+    }
+
+    private static void renderLookVectorRayTrace(MatrixStack matrixStack, int width, int height) {
+        // Check if player is looking at entity
+        if(mc.crosshairPickEntity instanceof LivingEntity && mc.player.isCrouching()) {
+            LivingEntity entity = (LivingEntity) mc.crosshairPickEntity;
+            if(entity.getTags().contains(ModEntityType.PICKPOCKET_TAG)) {
+                drawCenteredString(matrixStack, fontRenderer, "(" + glfwGetKeyName(ForgeClientEvents.pickpocketKey.getKey().getValue(), 0).toUpperCase() + ") Pickpocket", width / 2, height / 2 + 8, 0x00FFFFFF);
+            }
+        }
     }
 
     private static void drawCardinalDirection(MatrixStack matrixStack, float yaw, float angle, int xPos, String text) {

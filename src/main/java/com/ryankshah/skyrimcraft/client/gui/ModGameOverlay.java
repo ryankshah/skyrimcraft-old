@@ -11,11 +11,8 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = Skyrimcraft.MODID, value = Dist.CLIENT)
 public class ModGameOverlay
 {
-    private static boolean needsPop = false;
-
     // TODO: Check for boss health + info and use the render target display similar to other mobs.
     // TODO: Fix subtitle text position (if needed??)
-    // TODO: Move position of item text up
     @SubscribeEvent
     public static void renderOverlay(RenderGameOverlayEvent.Pre event) {
         if (ClientUtil.getMinecraft().player == null) { return; }
@@ -32,19 +29,20 @@ public class ModGameOverlay
 
         if(event.getType() == RenderGameOverlayEvent.ElementType.FOOD || event.getType() == RenderGameOverlayEvent.ElementType.HEALTH
             || event.getType() == RenderGameOverlayEvent.ElementType.AIR || event.getType() == RenderGameOverlayEvent.ElementType.ARMOR
-            || event.getType() == RenderGameOverlayEvent.ElementType.EXPERIENCE) {
+            || event.getType() == RenderGameOverlayEvent.ElementType.EXPERIENCE || event.getType() == RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void renderOverlayPost(RenderGameOverlayEvent.Post event) {
-        if(event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
-            int width = event.getWindow().getGuiScaledWidth();
-            int height = event.getWindow().getGuiScaledHeight();
+        int width = event.getWindow().getGuiScaledWidth();
+        int height = event.getWindow().getGuiScaledHeight();
 
-            RenderSystem.enableTexture();
-            RenderSystem.enableBlend();
+        RenderSystem.enableTexture();
+        RenderSystem.enableBlend();
+
+        if(event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
             SkyrimIngameGui.render(event.getMatrixStack(), width, height, event.getPartialTicks());
         }
     }

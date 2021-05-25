@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:selector",
+  "pools": [
+    {
+      "rolls": {
+        "min": 1.0,
+        "max": 4.0,
+        "type": "minecraft:uniform"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "condition": "skyrimcraft:match_skill",
+              "predicate": {
+                "skill": {
+                  "id": 13,
+                  "level": 15
+                },
+                "successChance": 0.4
+              }
+            }
+          ],
+          "name": "minecraft:gold_nugget"
+        }
+      ]
+    }
+  ]
+}

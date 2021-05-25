@@ -2,6 +2,8 @@ package com.ryankshah.skyrimcraft.network;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.network.character.*;
+import com.ryankshah.skyrimcraft.network.skill.PacketAddXpToSkillOnServer;
+import com.ryankshah.skyrimcraft.network.skill.PacketHandlePickpocketOnServer;
 import com.ryankshah.skyrimcraft.network.spell.*;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
@@ -176,6 +178,12 @@ public class Networking
                 .encoder(PacketCreateCharacterOnServer::toBytes)
                 .decoder(PacketCreateCharacterOnServer::new)
                 .consumer(PacketCreateCharacterOnServer::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketHandlePickpocketOnServer.class, nextID())
+                .encoder(PacketHandlePickpocketOnServer::toBytes)
+                .decoder(PacketHandlePickpocketOnServer::new)
+                .consumer(PacketHandlePickpocketOnServer::handle)
                 .add();
     }
 

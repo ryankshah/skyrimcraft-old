@@ -1,7 +1,8 @@
-package com.ryankshah.skyrimcraft.network.character;
+package com.ryankshah.skyrimcraft.network.skill;
 
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.network.Networking;
+import com.ryankshah.skyrimcraft.network.character.PacketUpdateCharacter;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.LogicalSide;
@@ -53,11 +54,7 @@ public class PacketAddXpToSkillOnServer
 
         context.enqueueWork(() -> {
             sendingPlayer.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((cap) -> {
-//                System.out.println(cap.getSkills());
-//                System.out.println(cap.getCharacterXp());
                 cap.addXpToSkill(id, baseXp, sendingPlayer);
-//                System.out.println(cap.getSkills());
-//                System.out.println(cap.getCharacterXp());
                 Networking.sendToClient(new PacketUpdateCharacter(cap.getCharacterXp(), cap.getSkills(), cap.getRace()), sendingPlayer);
             });
         });

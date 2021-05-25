@@ -1,4 +1,4 @@
-package com.ryankshah.skyrimcraft.data;
+package com.ryankshah.skyrimcraft.data.provider;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;

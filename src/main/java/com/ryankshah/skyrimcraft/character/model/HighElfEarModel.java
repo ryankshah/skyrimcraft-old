@@ -6,9 +6,8 @@ import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.Entity;
 
-public class HighElfEarModel extends EntityModel<Entity>
+public class HighElfEarModel extends EntityModel<AbstractClientPlayerEntity>
 {
     private final ModelRenderer Ears;
     private final ModelRenderer Ear_Left;
@@ -45,7 +44,7 @@ public class HighElfEarModel extends EntityModel<Entity>
     }
 
     @Override
-    public void setupAnim(Entity p_225597_1_, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(AbstractClientPlayerEntity p_225597_1_, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 
     }
 

@@ -15,7 +15,6 @@ public class ISkyrimPlayerDataProvider implements ICapabilitySerializable<Compou
 {
     @CapabilityInject(ISkyrimPlayerData.class)
     public static final Capability<ISkyrimPlayerData> SKYRIM_PLAYER_DATA_CAPABILITY = null;
-    private static PlayerEntity playerEntity;
 
     private LazyOptional<ISkyrimPlayerData> instance;
 
@@ -23,10 +22,6 @@ public class ISkyrimPlayerDataProvider implements ICapabilitySerializable<Compou
         instance = LazyOptional.of(() -> {
             return new SkyrimPlayerData(obj);
         });
-    }
-
-    public static PlayerEntity getPlayerEntity() {
-        return playerEntity;
     }
 
     @Nonnull

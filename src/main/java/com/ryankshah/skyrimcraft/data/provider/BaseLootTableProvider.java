@@ -1,9 +1,11 @@
-package com.ryankshah.skyrimcraft.data;
+package com.ryankshah.skyrimcraft.data.provider;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
+import com.ryankshah.skyrimcraft.data.ModBlockLootTables;
+import com.ryankshah.skyrimcraft.data.PickpocketLootTables;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.LootTableProvider;
 import net.minecraft.loot.*;
@@ -17,16 +19,17 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class ModLootTables extends LootTableProvider
+public class BaseLootTableProvider extends LootTableProvider
 {
-    public ModLootTables(DataGenerator dataGeneratorIn) {
+    public BaseLootTableProvider(DataGenerator dataGeneratorIn) {
         super(dataGeneratorIn);
     }
 
     @Override
     protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootParameterSet>> getTables() {
         return ImmutableList.of(
-                Pair.of(ModBlockLootTables::new, LootParameterSets.BLOCK)
+                Pair.of(ModBlockLootTables::new, LootParameterSets.BLOCK),
+                Pair.of(PickpocketLootTables::new, LootParameterSets.SELECTOR)
         );
     }
 

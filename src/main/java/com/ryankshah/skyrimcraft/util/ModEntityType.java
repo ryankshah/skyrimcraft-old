@@ -13,7 +13,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class ModEntityType
 {
+    public static final String PICKPOCKET_TAG = "pickpocketable";
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, Skyrimcraft.MODID);
+
 
     // Spell entity types
     public static final RegistryObject<EntityType<?>> SPELL_FIREBALL_ENTITY = ENTITY_TYPES.register("spell_fireball",

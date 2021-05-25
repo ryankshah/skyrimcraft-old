@@ -4,16 +4,19 @@ import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.character.skill.SkillRegistry;
+import com.ryankshah.skyrimcraft.data.PickpocketLootTables;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.goal.UndeadFleeGoal;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.network.character.PacketAddToTargetingEntities;
-import com.ryankshah.skyrimcraft.network.character.PacketAddXpToSkillOnServer;
+import com.ryankshah.skyrimcraft.network.skill.PacketAddXpToSkillOnServer;
 import com.ryankshah.skyrimcraft.network.character.PacketUpdatePlayerTargetOnServer;
 import com.ryankshah.skyrimcraft.util.ModBlocks;
+import com.ryankshah.skyrimcraft.util.ModEntityType;
 import com.ryankshah.skyrimcraft.util.ModItems;
 import com.ryankshah.skyrimcraft.util.RandomTradeBuilder;
 import net.minecraft.entity.CreatureAttribute;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.monster.MonsterEntity;
@@ -29,9 +32,15 @@ import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 @Mod.EventBusSubscriber(modid = Skyrimcraft.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EntityEvents
 {
+    private static List<EntityType<?>> pickPocketableEntities = StreamSupport.stream(PickpocketLootTables.getPickpocketableEntities().spliterator(), false).collect(Collectors.toList());
+
     @SubscribeEvent
     public static void onEntityHit(LivingHurtEvent event) {
         if(event.getSource().getEntity() instanceof PlayerEntity) {
@@ -96,6 +105,9 @@ public class EntityEvents
      */
     @SubscribeEvent
     public static void entityJoin(EntityJoinWorldEvent event) {
+        if(pickPocketableEntities.contains(event.getEntity().getType())) {
+            event.getEntity().addTag(ModEntityType.PICKPOCKET_TAG);
+        }
         if(event.getEntity() instanceof MonsterEntity) {
             MonsterEntity monsterEntity = (MonsterEntity) event.getEntity();
             if(monsterEntity.getMobType() == CreatureAttribute.UNDEAD) {

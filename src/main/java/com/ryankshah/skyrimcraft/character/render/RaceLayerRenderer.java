@@ -15,10 +15,6 @@ import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.util.math.MathHelper;
-
-import static net.minecraft.util.math.vector.Vector3f.XP;
-import static net.minecraft.util.math.vector.Vector3f.YP;
 
 public class RaceLayerRenderer extends LayerRenderer<AbstractClientPlayerEntity, PlayerModel<AbstractClientPlayerEntity>>
 {
@@ -31,6 +27,9 @@ public class RaceLayerRenderer extends LayerRenderer<AbstractClientPlayerEntity,
         ModelRenderer head = entityRenderer.getModel().getHead();
         highElfEarModel = new HighElfEarModel(entityRenderer.getModel(), head);
         dunmerEarModel = new DunmerEarModel(entityRenderer.getModel(), head);
+
+//        entityRenderer.getModel().copyPropertiesTo(highElfEarModel);
+//        entityRenderer.getModel().copyPropertiesTo(dunmerEarModel);
     }
 
     @Override
@@ -47,11 +46,9 @@ public class RaceLayerRenderer extends LayerRenderer<AbstractClientPlayerEntity,
         IVertexBuilder ivertexbuilder = renderBuffer.getBuffer(RenderType.entitySolid(playerEntity.getSkinTextureLocation()));
         int overlayCoords = LivingRenderer.getOverlayCoords(playerEntity, 0.0F);
 
-        float f = MathHelper.lerp(partialTicks, playerEntity.yRotO, playerEntity.yRot) - MathHelper.lerp(partialTicks, playerEntity.yBodyRotO, playerEntity.yBodyRot);
-        float f1 = MathHelper.lerp(partialTicks, playerEntity.xRotO, playerEntity.xRot);
         matrixStack.pushPose();
-        matrixStack.mulPose(YP.rotationDegrees(f));
-        matrixStack.mulPose(XP.rotationDegrees(f1));
+        this.getParentModel().getHead().translateAndRotate(matrixStack);
+        //matrixStack.mulPose(YP.rotationDegrees(180F));
         highElfEarModel.renderToBuffer(matrixStack, ivertexbuilder, packedLight, overlayCoords, 1.0F, 1.0F, 1.0F, 1.0F);
         matrixStack.popPose();
     }
@@ -60,11 +57,9 @@ public class RaceLayerRenderer extends LayerRenderer<AbstractClientPlayerEntity,
         IVertexBuilder ivertexbuilder = renderBuffer.getBuffer(RenderType.entitySolid(playerEntity.getSkinTextureLocation()));
         int overlayCoords = LivingRenderer.getOverlayCoords(playerEntity, 0.0F);
 
-        float f = MathHelper.lerp(partialTicks, playerEntity.yRotO, playerEntity.yRot) - MathHelper.lerp(partialTicks, playerEntity.yBodyRotO, playerEntity.yBodyRot);
-        float f1 = MathHelper.lerp(partialTicks, playerEntity.xRotO, playerEntity.xRot);
         matrixStack.pushPose();
-        matrixStack.mulPose(YP.rotationDegrees(f));
-        matrixStack.mulPose(XP.rotationDegrees(f1));
+        this.getParentModel().getHead().translateAndRotate(matrixStack);
+        //matrixStack.mulPose(YP.rotationDegrees(180F));
         dunmerEarModel.renderToBuffer(matrixStack, ivertexbuilder, packedLight, overlayCoords, 1.0F, 1.0F, 1.0F, 1.0F);
         matrixStack.popPose();
     }
