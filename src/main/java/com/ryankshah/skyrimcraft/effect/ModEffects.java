@@ -15,4 +15,5 @@ public class ModEffects
     public static final RegistryObject<Effect> REGEN_MAGICKA = EFFECTS.register("regen_magicka", RegenMagickaEffect::new);
     public static final RegistryObject<Effect> SPECTRAL = EFFECTS.register("spectral", SpectralEffect::new);
     public static final RegistryObject<Effect> ETHEREAL = EFFECTS.register("ethereal", EtherealEffect::new);
+    public static final RegistryObject<Effect> WATER_WALKING = EFFECTS.register("waterwalking", WaterwalkingEffect::new);
 }

@@ -1,12 +1,12 @@
 package com.ryankshah.skyrimcraft.client.gui;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import com.ryankshah.skyrimcraft.item.IPotion;
-import com.ryankshah.skyrimcraft.item.SkyrimPotion;
-import com.ryankshah.skyrimcraft.util.ModItems;
+import com.ryankshah.skyrimcraft.util.AlchemyRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
@@ -19,17 +19,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -37,9 +35,9 @@ public class AlchemyScreen extends Screen
 {
     protected static final ResourceLocation OVERLAY_ICONS = new ResourceLocation(Skyrimcraft.MODID, "textures/gui/overlay_icons.png");
 
-    private Map<IPotion.PotionCategory, List<AlchemyRecipe>> items;
+    private Multimap<String, AlchemyRecipe> items;
     private List<AlchemyRecipe> itemList;
-    private List<Object> categories;
+    private Object[] categories;
     private boolean categoryChosen;
     private int currentCategory;
     private int currentItem;
@@ -48,18 +46,18 @@ public class AlchemyScreen extends Screen
     private AlchemyRecipe currentRecipeObject = null;
     private PlayerEntity player;
 
-    public AlchemyScreen() {
+    public AlchemyScreen(List<AlchemyRecipe> recipes) {
         super(new TranslationTextComponent(Skyrimcraft.MODID + ".alchemygui.title"));
         this.player = Minecraft.getInstance().player;
-        this.items = new HashMap<>();
-        items.put(IPotion.PotionCategory.ALL, new ArrayList<>());
-        this.addCategoriesAndRecipes();
-        items = items.entrySet().stream().sorted((e1,e2) -> Integer.compare(e1.getKey().getTypeID(), (e2.getKey().getTypeID()))).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-        this.categories = Arrays.asList(this.items.keySet().toArray());
+        this.items = ArrayListMultimap.create();
+        recipes.stream().forEach(recipe -> items.put(recipe.getCategory(), recipe));
+        this.categories = this.items.keySet().toArray();
         this.currentCategory = 0;
         this.currentItem = 0;
         this.itemList = new ArrayList<>();
-        this.itemList.addAll(this.items.get((IPotion.PotionCategory) this.categories.get(this.currentCategory)));
+        this.itemList.addAll(this.items.get((String)this.categories[this.currentCategory]));
+        this.itemList.sort((i1, i2) -> i1.getResult().getItem().getRegistryName().compareTo(i2.getResult().getItem().getRegistryName()));
+        this.categoryChosen = false;
     }
 
     @Override
@@ -88,46 +86,49 @@ public class AlchemyScreen extends Screen
             fillGradient(matrixStack, 92, 2, 93, this.height - 2, 0xAAFFFFFF, 0xAAFFFFFF);
         }
 
-        int MIN_Y = 30;
+        int MIN_Y = 20;
         int MAX_Y = height / 2 + 14 * 6 - 10;
 
-        for(int i = 0; i < categories.size(); i++) {
-            int y = height / 2 + 14 * i - this.currentCategory * 7 - 10;
-            if(y <= MIN_Y || y >= MAX_Y)
-                continue;
+        if (!this.items.isEmpty()) {
+            Object[] categories = this.getCategories(this.items);
 
-            String categoryName = categories.get(i).toString();
-            if (categoryName.length() >= 14) {
-                categoryName = categoryName.substring(0, 8) + "..";
-            }
-            drawString(matrixStack, font, categoryName, 18, y, i == this.currentCategory ? 0x00FFFFFF : 0x00C0C0C0);
-        }
+            for(int i = 0; i < categories.length; i++) {
+                String categoryName = ((String)categories[i]).toUpperCase();
 
-        itemList = items.get(categories.get(currentCategory));
+                if (categoryName.length() >= 10)
+                    categoryName = categoryName.substring(0, 8) + "..";
 
-        // TODO: Fix the overflowing issue...
-        for(int j = 0; j < itemList.size(); j++) {
-            AlchemyRecipe recipe = itemList.get(j);
-            ITextComponent itemStackHoverName = recipe.itemStack.getHoverName();
-
-            if (j == this.currentItem && this.categoryChosen) {
-                this.currentRecipeObject = recipe;
-                this.drawItemImage(matrixStack, recipe.getItemStack(), width - 100, height / 2 - 70, this.spin);
-                this.drawItemInformation(matrixStack, recipe);
+                drawString(matrixStack, font, categoryName, 18, height / 2 + (i * 14) - this.currentCategory * font.lineHeight, i == currentCategory ? 16777215 : 12632256);
             }
 
-            int y = height / 2 + 14 * j - this.currentItem * 7 - 10;
-            if(y >= MAX_Y)
-                continue;
+            if (this.itemList != null) {
+                for(int i = 0; i < itemList.size(); i++) {
+                    AlchemyRecipe recipe = this.itemList.get(i);
 
-            drawString(matrixStack, font, font.width(itemStackHoverName) < 16 ? itemStackHoverName.getString() : itemStackHoverName.getString().substring(0, 16) + "..", 98, y, j == this.currentItem ? 0x00FFFFFF : 0x00C0C0C0);
+                    if (i == this.currentItem) {
+                        this.currentRecipeObject = recipe;
+                        this.drawItemImage(matrixStack, recipe.getResult(), width - 100, height / 2 - 70, this.spin);
+                        this.drawItemInformation(matrixStack, recipe);
+                    }
+
+//                    int y = this.height / 2 + 14 * i - this.currentItem * 6;
+//                    if(y <= MIN_Y || y >= MAX_Y)
+//                        continue;
+
+                    String name = recipe.getResult().getHoverName().getString();
+                    if (name.length() >= 16)
+                        name = name.substring(0, 14) + "..";
+
+                    drawString(matrixStack, font, name, 98, height / 2 + (i * 14) - this.currentItem * font.lineHeight, i == currentItem ? 16777215 : 12632256);
+                }
+            }
         }
 
         fillGradient(matrixStack, 0, this.height * 3 / 4 + 20, this.width, this.height, 0x77000000, 0x77000000);
         fillGradient(matrixStack, 0, this.height * 3 / 4 + 22, this.width, this.height * 3 / 4 + 23, 0xAAFFFFFF, 0xAAFFFFFF);
         drawBorderedGradientRect(matrixStack, 17, this.height - 29, 32 + font.width("Enter"), this.height - 14, 0xAA000000, 0xAA000000, 0xAAFFFFFF);
         drawString(matrixStack, font, "Enter", 25, this.height - 25, 0x00FFFFFF);
-        drawString(matrixStack, font, "Create Potion", 32 + font.width("Enter") + 6, this.height - 25, 0x00FFFFFF);
+        drawString(matrixStack, font, "Create", 32 + font.width("Enter") + 6, this.height - 25, 0x00FFFFFF);
 
         renderHealth(matrixStack);
 
@@ -138,35 +139,73 @@ public class AlchemyScreen extends Screen
     @Override
     public void tick() {
         super.tick();
-        if(this.spin > 360.0f)
-            this.spin -= 360.0f;
+        if(this.spin >= 360.0f)
+            this.spin = 0.0f;
         else
-            this.spin += 2;
+            ++this.spin;
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
+        if(scrollDelta > 0) {
+            if (!this.categoryChosen) {
+                if (this.currentCategory < this.categories.length - 1)
+                    ++this.currentCategory;
+
+                this.itemList.clear();
+                this.itemList.addAll(this.items.get((String)this.categories[this.currentCategory]));
+            } else {
+                if (this.currentItem < this.itemList.size() - 1)
+                    ++this.currentItem;
+            }
+        } else if(scrollDelta < 0) {
+            if (!this.categoryChosen) {
+                if(this.currentCategory > 0)
+                    --this.currentCategory;
+
+                this.itemList.clear();
+                this.itemList.addAll(this.items.get((String)this.categories[this.currentCategory]));
+            } else {
+                if (this.currentItem > 0)
+                    --this.currentItem;
+            }
+        }
+        return true;
     }
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if(keyCode == GLFW_KEY_DOWN || keyCode == GLFW_KEY_S) {
-            if(!this.categoryChosen) {
-                if(this.currentCategory < this.categories.size()-1)
+            if (!this.categoryChosen) {
+                if (this.currentCategory < this.categories.length - 1) {
                     ++this.currentCategory;
-                else
-                    this.currentCategory = this.categories.size()-1;
+                } else {
+                    this.currentCategory = this.categories.length - 1;
+                }
+
+                this.itemList.clear();
+                this.itemList.addAll(this.items.get((String)this.categories[this.currentCategory]));
+            } else if (this.currentItem < this.itemList.size() - 1) {
+                ++this.currentItem;
             } else {
-                if(this.currentItem >= 0 && this.currentItem < itemList.size()-1)
-                    this.currentItem++;
+                this.currentItem = this.itemList.size() - 1;
             }
         }
 
         if(keyCode == GLFW_KEY_UP || keyCode == GLFW_KEY_W) {
-            if(!this.categoryChosen) {
-                if(this.currentCategory > 0)
+            if (!this.categoryChosen) {
+                if (this.currentCategory > 0) {
                     --this.currentCategory;
-                else
+                } else {
                     this.currentCategory = 0;
+                }
+
+                this.itemList.clear();
+                this.itemList.addAll(this.items.get((String)this.categories[this.currentCategory]));
+            } else if (this.currentItem > 0) {
+                --this.currentItem;
             } else {
-                if(this.currentItem > 0 && this.currentItem < itemList.size())
-                    this.currentItem--;
+                this.currentItem = 0;
             }
         }
 
@@ -202,9 +241,9 @@ public class AlchemyScreen extends Screen
                 hasAndRemoveItems(player, copy, copy.getCount());
             }
 
-            this.player.addItem(this.currentRecipeObject.getItemStack().copy());
+            this.player.addItem(this.currentRecipeObject.getResult().copy());
             player.playSound(SoundEvents.BREWING_STAND_BREW, 1.0F, 1.0F);
-            this.player.giveExperiencePoints(2);
+            this.player.giveExperiencePoints(currentRecipeObject.getXpGained());
         }
 
         return super.keyPressed(keyCode, scanCode, modifiers);
@@ -253,7 +292,7 @@ public class AlchemyScreen extends Screen
         drawBorderedGradientRect(matrixStack, this.width - 180, this.height / 2 - 20, this.width - 20, this.height / 2 + 20 + (10 * recipe.getRecipeItems().size()), 0xAA000000, 0xAA000000, 0xAAFFFFFF);
         fillGradient(matrixStack, this.width - 160, (this.height) / 2, this.width - 40, (this.height) / 2 + 1, 0xAAFFFFFF, 0xAAFFFFFF); // Line under recipe item name
 
-        drawCenteredString(matrixStack, font, recipe.getItemStack().getHoverName(), width - 100, height / 2 - 10, 0xFFFFFF);
+        drawCenteredString(matrixStack, font, recipe.getResult().getHoverName(), width - 100, height / 2 - 10, 0xFFFFFF);
         //this.func_73730_a(this.field_146294_l - 170, this.field_146294_l - 30, (this.field_146295_m + 50) / 2 + 20, -1);
         //drawCenteredString(matrixStack, font, "Required Items: ", width - 100, height / 2 + 10, 0xFFFFFF);
 
@@ -265,48 +304,13 @@ public class AlchemyScreen extends Screen
         }
     }
 
-    private Object[] getCategories(Map<IPotion.PotionCategory, List<AlchemyRecipe>> items) {
+    private Object[] getCategories(Multimap<String, AlchemyRecipe> items) {
         return items.keySet().toArray();
-    }
-
-    public static class AlchemyRecipe {
-        private ItemStack itemStack;
-        private List<ItemStack> recipeItems;
-
-        public AlchemyRecipe(ItemStack itemStack, List<ItemStack> recipeItems) {
-            this.itemStack = itemStack;
-            this.recipeItems = recipeItems;
-        }
-
-        public ItemStack getItemStack() {
-            return this.itemStack;
-        }
-
-        public List<ItemStack> getRecipeItems() {
-            return this.recipeItems;
-        }
-    }
-
-    private void addCategoriesAndRecipes() {
-        List<SkyrimPotion> potions = ModItems.ITEMS.getEntries().stream().map(RegistryObject::get).filter(item -> item instanceof SkyrimPotion).map(item -> (SkyrimPotion)item).collect(Collectors.toList());
-        for(SkyrimPotion potion : potions) {
-            if(potion.getCategory() == IPotion.PotionCategory.UNIQUE || potion.getIngredients().isEmpty())
-                continue;
-
-            if(items.containsKey(potion.getCategory()))
-                items.get(potion.getCategory()).add(new AlchemyRecipe(new ItemStack(potion, 1), potion.getIngredients()));
-            else {
-                List<AlchemyRecipe> temp = new ArrayList<>();
-                temp.add(new AlchemyRecipe(new ItemStack(potion, 1), potion.getIngredients()));
-                items.put(potion.getCategory(), temp);
-            }
-            items.get(IPotion.PotionCategory.ALL).add(new AlchemyRecipe(new ItemStack(potion, 1), potion.getIngredients()));
-        }
     }
 
     public static boolean hasItem(PlayerEntity player, ItemStack is, int amount) {
         if (is != null) {
-            IItemHandler ih = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new IllegalStateException("skyrim oven gui hasItem"));
+            IItemHandler ih = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new IllegalStateException("skyrim alchemy gui hasItem"));
             int count = 0;
 
             for(int i = 0; i < ih.getSlots(); ++i) {
@@ -324,7 +328,7 @@ public class AlchemyScreen extends Screen
 
     public static void hasAndRemoveItems(PlayerEntity player, ItemStack is, int amount) {
         if (is != null) {
-            IItemHandler ih = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new IllegalStateException("skyrim oven gui hasAndRemoveItems"));
+            IItemHandler ih = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(() -> new IllegalStateException("skyrim alchemy gui hasAndRemoveItems"));
             int count = is.getCount();
 
             for(int i = 0; i < ih.getSlots(); ++i) {

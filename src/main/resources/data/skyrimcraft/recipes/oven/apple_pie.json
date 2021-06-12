@@ -1,0 +1,32 @@
+{
+  "type": "skyrimcraft:oven",
+  "category": "food",
+  "output": {
+    "item": "skyrimcraft:apple_pie",
+    "amount": 1
+  },
+  "recipe": [
+    {
+      "item": "skyrimcraft:flour",
+      "amount": 1
+    },
+    {
+      "item": "skyrimcraft:salt_pile",
+      "amount": 2
+    },
+    {
+      "item": "skyrimcraft:butter",
+      "amount": 1
+    },
+    {
+      "item": "minecraft:egg",
+      "amount": 1
+    },
+    {
+      "item": "minecraft:apple",
+      "amount": 2
+    }
+  ],
+  "levelToCreate": 1,
+  "xp": 5
+}

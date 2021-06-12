@@ -6,7 +6,7 @@ import com.ryankshah.skyrimcraft.client.gui.SkyrimMenuScreen;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.network.skill.PacketHandlePickpocketOnServer;
 import com.ryankshah.skyrimcraft.network.spell.PacketCastSpell;
-import com.ryankshah.skyrimcraft.util.ModEntityType;
+import com.ryankshah.skyrimcraft.client.entity.ModEntityType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;

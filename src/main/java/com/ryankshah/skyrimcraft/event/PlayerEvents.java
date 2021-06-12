@@ -7,6 +7,7 @@ import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.character.render.RaceLayerRenderer;
 import com.ryankshah.skyrimcraft.character.render.SpectralLayerRenderer;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
+import com.ryankshah.skyrimcraft.item.SkyrimTwoHandedWeapon;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.network.character.PacketAddToCompassFeaturesOnClient;
 import com.ryankshah.skyrimcraft.network.character.PacketOpenCharacterCreationScreen;
@@ -15,6 +16,7 @@ import com.ryankshah.skyrimcraft.util.CompassFeature;
 import com.ryankshah.skyrimcraft.util.ModAttributes;
 import com.ryankshah.skyrimcraft.worldgen.structure.ModStructures;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.potion.Effects;
@@ -37,7 +39,7 @@ import java.util.UUID;
 @Mod.EventBusSubscriber(modid = Skyrimcraft.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlayerEvents
 {
-    public static boolean hasLayer = false, flag = false;
+    public static boolean hasLayer = false, flag = false;//, isEquipTwoHanded = false;
 
 //    @SubscribeEvent
 //    public static void playerLevelChangeEvent(PlayerXpEvent.LevelChange event) {
@@ -61,6 +63,10 @@ public class PlayerEvents
         } else {
             player.setInvisible(player.hasEffect(Effects.INVISIBILITY));
         }
+
+        if(player.getMainHandItem().getItem() instanceof SkyrimTwoHandedWeapon) {
+            event.getRenderer().getModel().rightArmPose = BipedModel.ArmPose.CROSSBOW_HOLD;
+        }
     }
 
     @SubscribeEvent
@@ -72,6 +78,11 @@ public class PlayerEvents
         ISkyrimPlayerData cap = playerEntity.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("playerevents playertick"));
         // Check we're only doing the updates at the end of the tick phase
         if(event.phase == TickEvent.Phase.END) {
+//            if(playerEntity.getMainHandItem().getItem() instanceof SkyrimTwoHandedSword)
+//                isEquipTwoHanded = true;
+//            else
+//                isEquipTwoHanded = false;
+
             if(!cap.getShoutsAndCooldowns().isEmpty()) {
                 for (Map.Entry<ISpell, Float> entry : cap.getShoutsAndCooldowns().entrySet()) {
                     if (entry.getValue() <= 0f)
@@ -134,10 +145,18 @@ public class PlayerEvents
     // Open the character creation screen if first login / world created
     @SubscribeEvent
     public static void playerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        ISkyrimPlayerData cap = event.getPlayer().getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("player events logged in event"));
+        PlayerEntity player = event.getPlayer();
+        ISkyrimPlayerData cap = player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("player events logged in event"));
         if(!cap.hasSetup()) {
+            Networking.sendToClient(new PacketOpenCharacterCreationScreen(cap.hasSetup()), (ServerPlayerEntity) player);
             cap.setHasSetup(true);
-            Networking.sendToClient(new PacketOpenCharacterCreationScreen(cap.hasSetup()), (ServerPlayerEntity) event.getPlayer());
         }
     }
+
+//    @SubscribeEvent
+//    public static void renderPlayerHand(RenderHandEvent event) {
+//        if(event.getHand() == Hand.OFF_HAND) {
+//            event.setCanceled(true);
+//        }
+//    }
 }

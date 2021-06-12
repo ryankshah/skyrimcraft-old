@@ -1,6 +1,5 @@
 package com.ryankshah.skyrimcraft.block;
 
-import com.ryankshah.skyrimcraft.util.ModBlocks;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -13,7 +12,6 @@ import net.minecraft.world.server.ServerWorld;
 
 import java.util.Random;
 
-import net.minecraft.block.AbstractBlock.Properties;
 import net.minecraftforge.common.ToolType;
 
 public class SkyrimOreBlock extends SkyrimBlock

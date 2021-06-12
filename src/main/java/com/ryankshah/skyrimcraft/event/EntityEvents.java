@@ -1,19 +1,21 @@
 package com.ryankshah.skyrimcraft.event;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
+import com.ryankshah.skyrimcraft.block.ModBlocks;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.character.skill.SkillRegistry;
+import com.ryankshah.skyrimcraft.client.entity.ModEntityType;
 import com.ryankshah.skyrimcraft.data.PickpocketLootTables;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.goal.UndeadFleeGoal;
+import com.ryankshah.skyrimcraft.item.ModItems;
+import com.ryankshah.skyrimcraft.item.SkyrimArmorItem;
+import com.ryankshah.skyrimcraft.item.SkyrimTwoHandedWeapon;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.network.character.PacketAddToTargetingEntities;
-import com.ryankshah.skyrimcraft.network.skill.PacketAddXpToSkillOnServer;
 import com.ryankshah.skyrimcraft.network.character.PacketUpdatePlayerTargetOnServer;
-import com.ryankshah.skyrimcraft.util.ModBlocks;
-import com.ryankshah.skyrimcraft.util.ModEntityType;
-import com.ryankshah.skyrimcraft.util.ModItems;
+import com.ryankshah.skyrimcraft.network.skill.PacketAddXpToSkillOnServer;
 import com.ryankshah.skyrimcraft.util.RandomTradeBuilder;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.EntityType;
@@ -22,6 +24,7 @@ import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShootableItem;
 import net.minecraft.item.SwordItem;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -32,7 +35,9 @@ import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -51,9 +56,11 @@ public class EntityEvents
                     playerEntity.removeEffect(ModEffects.ETHEREAL.get());
 
                 if (playerEntity.getMainHandItem().getItem() instanceof ShootableItem) {
-                    Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.ARCHERY.getID(), SkillRegistry.BASE_ARCHERY_XP));
+                    Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.ARCHERY.getID(), (int)event.getAmount()));
                 } else if(playerEntity.getMainHandItem().getItem() instanceof SwordItem) {
                     Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.ONE_HANDED.getID(), (int)event.getAmount()));
+                } else if(playerEntity.getMainHandItem().getItem() instanceof SkyrimTwoHandedWeapon) {
+                    Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.TWO_HANDED.getID(), (int)event.getAmount()));
                 }
 
                 playerEntity.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((cap) -> {
@@ -77,7 +84,17 @@ public class EntityEvents
                 //       classed as "light armor" with diamond and netherite as the heavy armors for default mc.
                 //       All other mod armors outside of skyrim will be classed as light armor. Perhaps instead,
                 //       there may be a different way we can define these...
-                Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.LIGHT_ARMOR.getID(), (int)(playerEntity.getArmorValue() * playerEntity.getArmorCoverPercentage())));
+                AtomicInteger heavySlots = new AtomicInteger();
+                for (Iterator<ItemStack> it = playerEntity.getArmorSlots().iterator(); it.hasNext(); ) {
+                    ItemStack itemStack = it.next();
+                    if(itemStack.getItem() instanceof SkyrimArmorItem && ((SkyrimArmorItem)itemStack.getItem()).isHeavy())
+                        heavySlots.set(heavySlots.get() + 1);
+                }
+
+                if(heavySlots.get() >= 3)
+                    Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.HEAVY_ARMOR.getID(), (int)(playerEntity.getArmorValue() * playerEntity.getArmorCoverPercentage())));
+                else
+                    Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.LIGHT_ARMOR.getID(), (int)(playerEntity.getArmorValue() * playerEntity.getArmorCoverPercentage())));
             }
         }
     }

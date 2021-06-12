@@ -1,0 +1,24 @@
+{
+  "type": "skyrimcraft:forge",
+  "category": "steel",
+  "output": {
+    "item": "skyrimcraft:steel_battleaxe",
+    "amount": 1
+  },
+  "recipe": [
+    {
+      "item": "skyrimcraft:leather_strips",
+      "amount": 2
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "amount": 1
+    },
+    {
+      "item": "skyrimcraft:steel_ingot",
+      "amount": 4
+    }
+  ],
+  "levelToCreate": 1,
+  "xp": 5
+}

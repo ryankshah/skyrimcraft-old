@@ -2,8 +2,8 @@ package com.ryankshah.skyrimcraft.data;
 
 import com.ryankshah.skyrimcraft.block.GarlicCrop;
 import com.ryankshah.skyrimcraft.block.TomatoCrop;
-import com.ryankshah.skyrimcraft.util.ModBlocks;
-import com.ryankshah.skyrimcraft.util.ModItems;
+import com.ryankshah.skyrimcraft.block.ModBlocks;
+import com.ryankshah.skyrimcraft.item.ModItems;
 import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.block.Block;
 import net.minecraft.data.loot.BlockLootTables;
@@ -33,8 +33,12 @@ public class ModBlockLootTables extends BlockLootTables
 
         dropSelf(ModBlocks.OVEN.get());
         dropSelf(ModBlocks.ALCHEMY_TABLE.get());
+        dropSelf(ModBlocks.BLACKSMITH_FORGE.get());
 
         dropOther(ModBlocks.RED_MOUNTAIN_FLOWER.get(), ModBlocks.RED_MOUNTAIN_FLOWER_ITEM.get());
+        dropOther(ModBlocks.BLUE_MOUNTAIN_FLOWER.get(), ModBlocks.BLUE_MOUNTAIN_FLOWER_ITEM.get());
+        dropOther(ModBlocks.YELLOW_MOUNTAIN_FLOWER.get(), ModBlocks.YELLOW_MOUNTAIN_FLOWER_ITEM.get());
+        dropOther(ModBlocks.PURPLE_MOUNTAIN_FLOWER.get(), ModBlocks.PURPLE_MOUNTAIN_FLOWER_ITEM.get());
 
         add(ModBlocks.SALT_DEPOSIT.get(), (deposit) -> {
             return createSilkTouchDispatchTable(deposit, applyExplosionDecay(deposit, ItemLootEntry.lootTableItem(ModItems.SALT_PILE.get()).apply(SetCount.setCount(RandomValueRange.between(2.0F, 5.0F))).apply(ApplyBonus.addOreBonusCount(Enchantments.BLOCK_FORTUNE))));

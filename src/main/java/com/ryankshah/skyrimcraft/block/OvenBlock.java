@@ -1,7 +1,8 @@
 package com.ryankshah.skyrimcraft.block;
 
-import com.ryankshah.skyrimcraft.block.tileentity.OvenTileEntity;
 import com.ryankshah.skyrimcraft.client.gui.OvenScreen;
+import com.ryankshah.skyrimcraft.data.ModRecipeType;
+import com.ryankshah.skyrimcraft.util.OvenRecipe;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -14,7 +15,6 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -25,7 +25,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 
-import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Random;
 
 public class OvenBlock extends SkyrimBlock
@@ -44,12 +44,10 @@ public class OvenBlock extends SkyrimBlock
 
     @Override
     public ActionResultType use(BlockState p_225533_1_, World p_225533_2_, BlockPos p_225533_3_, PlayerEntity p_225533_4_, Hand p_225533_5_, BlockRayTraceResult p_225533_6_) {
-        if (p_225533_2_.isClientSide) {
-            Minecraft.getInstance().setScreen(new OvenScreen());
-            return ActionResultType.CONSUME;
-        } else {
-            return ActionResultType.SUCCESS;
-        }
+        List<OvenRecipe> recipes = p_225533_2_.getRecipeManager().getAllRecipesFor(ModRecipeType.OVEN);
+        Minecraft.getInstance().setScreen(new OvenScreen(recipes));
+
+        return ActionResultType.SUCCESS;
     }
 
     @Override
@@ -89,17 +87,6 @@ public class OvenBlock extends SkyrimBlock
 //            super.onRemove(p_196243_1_, p_196243_2_, p_196243_3_, p_196243_4_, p_196243_5_);
 //        }
 //    }
-
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Nullable
-    @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new OvenTileEntity();
-    }
 
     @Override
     public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {

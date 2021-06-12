@@ -113,6 +113,8 @@ public class MagicScreen extends Screen
             if(y <= MIN_Y || y >= MAX_Y)
                 continue;
             String spellTypeName = spellTypes.get(i).toString();
+            if (spellTypeName.length() >= 12)
+                spellTypeName = spellTypeName.substring(0, 10) + "..";
             drawString(matrixStack, font, spellTypeName, this.width - 20 - font.width(spellTypeName), y, i == this.currentSpellType ? 0x00FFFFFF : 0x00C0C0C0);
         }
 
@@ -124,10 +126,6 @@ public class MagicScreen extends Screen
         for(int j = 0; j < spellsListForCurrentSpellType.size(); j++) {
             ISpell spell = spellsListForCurrentSpellType.get(j);
             String displayName = spell.getName();
-
-            if (displayName.length() >= 12) {
-                displayName = displayName.substring(0, 10) + "..";
-            }
 
             AtomicInteger color = new AtomicInteger(0x00C0C0C0);
 
@@ -148,6 +146,9 @@ public class MagicScreen extends Screen
             int y = this.height / 2 + 14 * j - this.currentSpell * 7;
             if(y <= MIN_Y || y >= MAX_Y)
                 continue;
+
+            if (displayName.length() >= 12)
+                displayName = displayName.substring(0, 10) + "..";
 
             drawString(matrixStack, font, displayName, this.width - 183, this.height / 2 + 14 * j - this.currentSpell * 7, color.get());
         }
@@ -198,8 +199,8 @@ public class MagicScreen extends Screen
             float magickaPercentage = cap.getMagicka() / cap.getMaxMagicka();
             float magickaBarWidth = 80.0f * magickaPercentage;
             float magickaBarStartX = (float)(width - 109) + (80.0f - magickaBarWidth);
-            this.blit(matrixStack, this.width - 120, this.height - 25, 0, 51, 102, 10);
-            this.blit(matrixStack, (int)magickaBarStartX, this.height - 23, 11, 64, (int)magickaBarWidth, 6);
+            TextureDrawer.drawGuiTexture(matrixStack, this.width - 120, this.height - 25, 0, 51, 102, 10);
+            TextureDrawer.drawGuiTexture(matrixStack, width - 109, this.height - 23, 11 + ((80 - magickaBarWidth) / 2.0f), 64, 80 * magickaPercentage, 6);
         });
         minecraft.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
     }
@@ -216,6 +217,28 @@ public class MagicScreen extends Screen
         }
 
         super.tick();
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
+        if(scrollDelta > 0) {
+            if (!this.spellTypeChosen) {
+                if (this.currentSpellType < this.spellTypes.size() - 1)
+                    ++this.currentSpellType;
+            } else {
+                if (this.currentSpell < this.spellsListForCurrentSpellType.size() - 1)
+                    ++this.currentSpell;
+            }
+        } else if(scrollDelta < 0) {
+            if (!this.spellTypeChosen) {
+                if(this.currentSpellType > 0)
+                    --this.currentSpellType;
+            } else {
+                if (this.currentSpell > 0)
+                    --this.currentSpell;
+            }
+        }
+        return true;
     }
 
     @Override

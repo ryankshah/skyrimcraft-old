@@ -1,0 +1,24 @@
+{
+  "type": "skyrimcraft:forge",
+  "category": "daedric",
+  "output": {
+    "item": "skyrimcraft:daedric_boots",
+    "amount": 1
+  },
+  "recipe": [
+    {
+      "item": "skyrimcraft:leather_strips",
+      "amount": 2
+    },
+    {
+      "item": "skyrimcraft:ebony_ingot",
+      "amount": 3
+    },
+    {
+      "item": "skyrimcraft:daedra_heart",
+      "amount": 1
+    }
+  ],
+  "levelToCreate": 90,
+  "xp": 16
+}

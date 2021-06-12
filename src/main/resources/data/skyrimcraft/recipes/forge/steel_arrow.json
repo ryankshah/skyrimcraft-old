@@ -1,0 +1,20 @@
+{
+  "type": "skyrimcraft:forge",
+  "category": "steel",
+  "output": {
+    "item": "skyrimcraft:steel_arrow",
+    "amount": 24
+  },
+  "recipe": [
+    {
+      "item": "minecraft:stick",
+      "amount": 1
+    },
+    {
+      "item": "skyrimcraft:steel_ingot",
+      "amount": 1
+    }
+  ],
+  "levelToCreate": 1,
+  "xp": 5
+}

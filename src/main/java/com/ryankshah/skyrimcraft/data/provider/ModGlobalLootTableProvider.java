@@ -6,8 +6,8 @@ import com.google.gson.JsonObject;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.data.loot_table.modifier.ChestLootModifier;
 import com.ryankshah.skyrimcraft.data.loot_table.modifier.PassiveEntityLootModifier;
-import com.ryankshah.skyrimcraft.util.ModBlocks;
-import com.ryankshah.skyrimcraft.util.ModItems;
+import com.ryankshah.skyrimcraft.block.ModBlocks;
+import com.ryankshah.skyrimcraft.item.ModItems;
 import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
@@ -54,12 +54,10 @@ public class ModGlobalLootTableProvider extends GlobalLootModifierProvider
     protected void addBlockLootModifiers() {
         add("grass_pod_from_small_vegetation", BLOCK_LOOT.get(), new AdditionalDropsForBlocks(
                 new ILootCondition[]{Alternative.alternative(
-                        BlockStateProperty.hasBlockStateProperties(Blocks.GRASS),
-                        BlockStateProperty.hasBlockStateProperties(Blocks.FERN),
                         BlockStateProperty.hasBlockStateProperties(Blocks.TALL_GRASS),
                         BlockStateProperty.hasBlockStateProperties(Blocks.LARGE_FERN)
-                ).build(), RandomChanceWithLooting.randomChanceAndLootingBoost(0.25f, 0.35f).build()
-                }, NonNullList.of(ItemStack.EMPTY, new ItemStack(ModItems.GRASS_POD.get()))
+                ).build(), RandomChanceWithLooting.randomChanceAndLootingBoost(0.1f, 0.25f).build()
+                }, NonNullList.of(new ItemStack(ModItems.GRASS_POD.get())) //NonNullList.of(ItemStack.EMPTY, new ItemStack(ModItems.GRASS_POD.get()))
         ));
     }
 

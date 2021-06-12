@@ -48,6 +48,16 @@ public class PickpocketLootTables implements Consumer<BiConsumer<ResourceLocatio
         return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(rolls).add(ItemLootEntry.lootTableItem(itemProvider).when(lootConditionBuilder)));//.otherwise(ItemLootEntry.lootTableItem(itemProvider))));
     }
 
+    protected static LootTable.Builder multiplePools(ILootCondition.IBuilder lootConditionBuilder, LootPool.Builder... lootPools) {
+        LootTable.Builder lootTable = LootTable.lootTable();
+
+        for(LootPool.Builder pool : lootPools) {
+            lootTable.withPool(pool.when(lootConditionBuilder));
+        }
+
+        return lootTable;
+    }
+
     public static LootTable.Builder noLoot() {
         return LootTable.lootTable();
     }
@@ -88,6 +98,11 @@ public class PickpocketLootTables implements Consumer<BiConsumer<ResourceLocatio
     }
 
     public void addTables() {
+//        add(EntityType.VILLAGER, multiplePools(
+//                getSkillLevelConditionWithChance(SkillRegistry.PICKPOCKET.getID(), 15, 0.4f),
+//                LootPool.lootPool().setRolls(RandomValueRange.between(1, 3)).add(ItemLootEntry.lootTableItem(Items.EMERALD)),
+//                LootPool.lootPool().setRolls(RandomValueRange.between(0, 1)).add(ItemLootEntry.lootTableItem(ModItems.DWARVEN_OIL.get()))
+//        ));
         add(EntityType.VILLAGER, createSingleItemTableWithRange(Items.EMERALD, RandomValueRange.between(1F, 3F), getSkillLevelConditionWithChance(SkillRegistry.PICKPOCKET.getID(), 15, 0.4f)));
     }
 }

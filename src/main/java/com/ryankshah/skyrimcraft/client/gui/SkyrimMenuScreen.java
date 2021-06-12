@@ -95,12 +95,14 @@ public class SkyrimMenuScreen extends Screen
         else if(keyCode == GLFW_KEY_ENTER) {
             if(currentDirection == Direction.NORTH) {
                 minecraft.setScreen(null);
-                minecraft.setScreen(new CharacterCreationScreen());
-//                minecraft.setScreen(null);
-//                minecraft.player.displayClientMessage(new TranslationTextComponent("skyrimcraft.menu.option.unavailable"), false);
+                minecraft.setScreen(new SkillsScreen());
+                // minecraft.setScreen(null);
+                // minecraft.player.displayClientMessage(new TranslationTextComponent("skyrimcraft.menu.option.unavailable"), false);
             } else if(currentDirection == Direction.SOUTH) {
                 minecraft.setScreen(null);
-                minecraft.player.displayClientMessage(new TranslationTextComponent("skyrimcraft.menu.option.unavailable"), false);
+                minecraft.setScreen(new MapScreen());
+                // minecraft.setScreen(null);
+                // minecraft.player.displayClientMessage(new TranslationTextComponent("skyrimcraft.menu.option.unavailable"), false);
             } else if(currentDirection == Direction.WEST) {
                 minecraft.setScreen(null);
                 minecraft.setScreen(new InventoryScreen(minecraft.player));

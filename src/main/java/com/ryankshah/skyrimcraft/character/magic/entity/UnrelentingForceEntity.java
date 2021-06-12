@@ -1,7 +1,7 @@
 package com.ryankshah.skyrimcraft.character.magic.entity;
 
 import com.ryankshah.skyrimcraft.util.ClientUtil;
-import com.ryankshah.skyrimcraft.util.ModEntityType;
+import com.ryankshah.skyrimcraft.client.entity.ModEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;

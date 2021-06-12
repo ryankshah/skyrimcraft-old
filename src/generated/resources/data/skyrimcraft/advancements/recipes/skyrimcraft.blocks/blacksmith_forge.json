@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "skyrimcraft:blacksmith_forge"
+    ]
+  },
+  "criteria": {
+    "has_cobble": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:cobblestone"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "skyrimcraft:blacksmith_forge"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cobble",
+      "has_the_recipe"
+    ]
+  ]
+}

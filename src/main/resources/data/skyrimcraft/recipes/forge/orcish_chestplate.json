@@ -1,0 +1,24 @@
+{
+  "type": "skyrimcraft:forge",
+  "category": "orcish",
+  "output": {
+    "item": "skyrimcraft:orcish_chestplate",
+    "amount": 1
+  },
+  "recipe": [
+    {
+      "item": "skyrimcraft:leather_strips",
+      "amount": 3
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "amount": 1
+    },
+    {
+      "item": "skyrimcraft:orichalcum_ingot",
+      "amount": 4
+    }
+  ],
+  "levelToCreate": 50,
+  "xp": 5
+}

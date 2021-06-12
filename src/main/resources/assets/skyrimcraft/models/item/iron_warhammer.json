@@ -1,0 +1,20 @@
+{
+  "parent": "skyrimcraft:item/greatsword",
+  "textures": {
+    "layer0": "skyrimcraft:item/iron_warhammer"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "skyrimcraft:no_use": 1.0
+      },
+      "model": "skyrimcraft:item/iron_warhammer_no_use"
+    },
+    {
+      "predicate": {
+        "skyrimcraft:blocking": 1.0
+      },
+      "model": "skyrimcraft:item/iron_warhammer_blocking"
+    }
+  ]
+}

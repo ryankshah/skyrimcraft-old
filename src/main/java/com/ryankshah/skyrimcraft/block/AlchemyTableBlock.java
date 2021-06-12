@@ -1,8 +1,11 @@
 package com.ryankshah.skyrimcraft.block;
 
 import com.ryankshah.skyrimcraft.client.gui.AlchemyScreen;
+import com.ryankshah.skyrimcraft.data.ModRecipeType;
+import com.ryankshah.skyrimcraft.util.AlchemyRecipe;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -21,6 +24,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 
+import java.util.List;
+
 public class AlchemyTableBlock extends SkyrimBlock
 {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -37,12 +42,10 @@ public class AlchemyTableBlock extends SkyrimBlock
 
     @Override
     public ActionResultType use(BlockState p_225533_1_, World p_225533_2_, BlockPos p_225533_3_, PlayerEntity p_225533_4_, Hand p_225533_5_, BlockRayTraceResult p_225533_6_) {
-        if (p_225533_2_.isClientSide) {
-            Minecraft.getInstance().setScreen(new AlchemyScreen());
-            return ActionResultType.CONSUME;
-        } else {
-            return ActionResultType.SUCCESS;
-        }
+        List<AlchemyRecipe> recipes = p_225533_2_.getRecipeManager().getAllRecipesFor(ModRecipeType.ALCHEMY);
+        Minecraft.getInstance().setScreen(new AlchemyScreen(recipes));
+
+        return ActionResultType.SUCCESS;
     }
 
     @Override
@@ -53,6 +56,11 @@ public class AlchemyTableBlock extends SkyrimBlock
     @Override
     public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
         return shape;
+    }
+
+    @Override
+    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
+        return BlockRenderType.MODEL;
     }
 
     @Override

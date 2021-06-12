@@ -1,12 +1,10 @@
 package com.ryankshah.skyrimcraft.data.lang;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
+import com.ryankshah.skyrimcraft.block.ModBlocks;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
-import com.ryankshah.skyrimcraft.item.SkyrimArmorItem;
-import com.ryankshah.skyrimcraft.item.SkyrimBlockItem;
-import com.ryankshah.skyrimcraft.item.SkyrimItem;
-import com.ryankshah.skyrimcraft.util.ModBlocks;
-import com.ryankshah.skyrimcraft.util.ModItems;
+import com.ryankshah.skyrimcraft.item.*;
+import com.ryankshah.skyrimcraft.item.SkyrimArrow;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Effect;
@@ -25,6 +23,7 @@ public class LangGenerator extends LanguageProvider
         add("itemGroup.skyrimcraft.ingredients", "Skyrimcraft Ingredients");
         add("itemGroup.skyrimcraft.material", "Skyrimcraft Materials");
         add("itemGroup.skyrimcraft.food", "Skyrimcraft Food");
+        add("itemGroup.skyrimcraft.combat", "Skyrimcraft Combat");
         add("itemGroup.skyrimcraft.magic", "Skyrimcraft Magic");
 
         for(RegistryObject<Item> blockItem : ModBlocks.BLOCK_ITEMS.getEntries()) {
@@ -33,11 +32,23 @@ public class LangGenerator extends LanguageProvider
         }
 
         for(RegistryObject<Item> item : ModItems.ITEMS.getEntries()) {
-            if(item.get() instanceof SkyrimItem) {
+            if (item.get() instanceof SkyrimItem) {
                 SkyrimItem i = (SkyrimItem) item.get();
                 add(i, i.getDisplayName());
-            } else if(item.get() instanceof SkyrimArmorItem) {
+            } else if (item.get() instanceof SkyrimArmorItem) {
                 SkyrimArmorItem i = (SkyrimArmorItem) item.get();
+                add(i, i.getDisplayName());
+            } else if (item.get() instanceof SkyrimShield) {
+                SkyrimShield i = (SkyrimShield) item.get();
+                add(i, i.getDisplayName());
+            } else if(item.get() instanceof SkyrimWeapon) {
+                SkyrimWeapon i = (SkyrimWeapon) item.get();
+                add(i, i.getDisplayName());
+            } else if(item.get() instanceof SkyrimBow) {
+                SkyrimBow i = (SkyrimBow) item.get();
+                add(i, i.getDisplayName());
+            } else if(item.get() instanceof SkyrimArrow) {
+                SkyrimArrow i = (SkyrimArrow) item.get();
                 add(i, i.getDisplayName());
             }
         }

@@ -1,0 +1,28 @@
+{
+  "type": "skyrimcraft:forge",
+  "category": "glass",
+  "output": {
+    "item": "skyrimcraft:glass_leggings",
+    "amount": 1
+  },
+  "recipe": [
+    {
+      "item": "skyrimcraft:leather_strips",
+      "amount": 3
+    },
+    {
+      "item": "minecraft:leather",
+      "amount": 1
+    },
+    {
+      "item": "skyrimcraft:moonstone_ingot",
+      "amount": 2
+    },
+    {
+      "item": "skyrimcraft:malachite_ingot",
+      "amount": 4
+    }
+  ],
+  "levelToCreate": 70,
+  "xp": 5
+}

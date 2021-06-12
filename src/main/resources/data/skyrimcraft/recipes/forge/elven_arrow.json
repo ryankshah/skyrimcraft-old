@@ -1,0 +1,20 @@
+{
+  "type": "skyrimcraft:forge",
+  "category": "elven",
+  "output": {
+    "item": "skyrimcraft:elven_arrow",
+    "amount": 24
+  },
+  "recipe": [
+    {
+      "item": "minecraft:stick",
+      "amount": 1
+    },
+    {
+      "item": "skyrimcraft:moonstone_ingot",
+      "amount": 1
+    }
+  ],
+  "levelToCreate": 30,
+  "xp": 5
+}

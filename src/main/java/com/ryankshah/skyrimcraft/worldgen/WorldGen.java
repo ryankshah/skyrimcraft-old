@@ -1,6 +1,6 @@
 package com.ryankshah.skyrimcraft.worldgen;
 
-import com.ryankshah.skyrimcraft.util.ModBlocks;
+import com.ryankshah.skyrimcraft.block.ModBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
@@ -28,14 +28,22 @@ public class WorldGen
                     ModBlocks.MOONSTONE_ORE.get().defaultBlockState(), 4, 34, 60, 12);
             generateOre(event.getGeneration(), OreFeatureConfig.FillerBlockType.NATURAL_STONE,
                     ModBlocks.ORICHALCUM_ORE.get().defaultBlockState(), 3, 30, 50, 12);
+            generateOre(event.getGeneration(), OreFeatureConfig.FillerBlockType.NATURAL_STONE,
+                    ModBlocks.CORUNDUM_ORE.get().defaultBlockState(), 3, 30, 50, 12);
+            generateOre(event.getGeneration(), OreFeatureConfig.FillerBlockType.NATURAL_STONE,
+                    ModBlocks.QUICKSILVER_ORE.get().defaultBlockState(), 3, 30, 50, 12);
+            generateOre(event.getGeneration(), OreFeatureConfig.FillerBlockType.NATURAL_STONE,
+                    ModBlocks.SILVER_ORE.get().defaultBlockState(), 3, 30, 50, 12);
 
             // Salt pile
-            if(event.getCategory().equals(Biome.Category.DESERT) || event.getCategory().equals(Biome.Category.MESA) || event.getCategory().equals(Biome.Category.SAVANNA))
+            if (event.getCategory().equals(Biome.Category.DESERT) || event.getCategory().equals(Biome.Category.MESA) || event.getCategory().equals(Biome.Category.SAVANNA))
                 generateSalt(event.getGeneration());
 
             // Flowers
-            //if(event.getName().equals(Biomes.MOUNTAINS.getRegistryName()) || event.getName().equals(Biomes.MOUNTAIN_EDGE.getRegistryName()))
             event.getGeneration().addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Feature.FLOWER.configured((new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(ModBlocks.RED_MOUNTAIN_FLOWER.get().defaultBlockState()), SimpleBlockPlacer.INSTANCE)).build()).decorated(Features.Placements.ADD_32).decorated(Features.Placements.HEIGHTMAP_SQUARE).count(2));
+            event.getGeneration().addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Feature.FLOWER.configured((new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(ModBlocks.BLUE_MOUNTAIN_FLOWER.get().defaultBlockState()), SimpleBlockPlacer.INSTANCE)).build()).decorated(Features.Placements.ADD_32).decorated(Features.Placements.HEIGHTMAP_SQUARE).count(2));
+            event.getGeneration().addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Feature.FLOWER.configured((new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(ModBlocks.PURPLE_MOUNTAIN_FLOWER.get().defaultBlockState()), SimpleBlockPlacer.INSTANCE)).build()).decorated(Features.Placements.ADD_32).decorated(Features.Placements.HEIGHTMAP_SQUARE).count(2));
+            event.getGeneration().addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Feature.FLOWER.configured((new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(ModBlocks.YELLOW_MOUNTAIN_FLOWER.get().defaultBlockState()), SimpleBlockPlacer.INSTANCE)).build()).decorated(Features.Placements.ADD_32).decorated(Features.Placements.HEIGHTMAP_SQUARE).count(2));
         }
     }
 

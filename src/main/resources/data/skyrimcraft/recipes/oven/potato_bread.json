@@ -1,0 +1,32 @@
+{
+  "type": "skyrimcraft:oven",
+  "category": "food",
+  "output": {
+    "item": "skyrimcraft:potato_bread",
+    "amount": 1
+  },
+  "recipe": [
+    {
+      "item": "skyrimcraft:flour",
+      "amount": 1
+    },
+    {
+      "item": "skyrimcraft:salt_pile",
+      "amount": 2
+    },
+    {
+      "item": "minecraft:milk_bucket",
+      "amount": 1
+    },
+    {
+      "item": "minecraft:egg",
+      "amount": 1
+    },
+    {
+      "item": "minecraft:potato",
+      "amount": 1
+    }
+  ],
+  "levelToCreate": 1,
+  "xp": 5
+}

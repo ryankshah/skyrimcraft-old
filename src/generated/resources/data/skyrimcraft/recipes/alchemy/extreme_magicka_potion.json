@@ -1,0 +1,20 @@
+{
+  "type": "skyrimcraft:alchemy",
+  "category": "RESTORE MAGICKA",
+  "output": {
+    "item": "skyrimcraft:extreme_magicka_potion",
+    "amount": 1
+  },
+  "recipe": [
+    {
+      "item": "skyrimcraft:creep_cluster",
+      "amount": 1
+    },
+    {
+      "item": "skyrimcraft:mora_tapinella",
+      "amount": 1
+    }
+  ],
+  "levelToCreate": 1,
+  "xp": 2
+}

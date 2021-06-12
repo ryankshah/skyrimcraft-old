@@ -1,14 +1,16 @@
 package com.ryankshah.skyrimcraft.event;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import com.ryankshah.skyrimcraft.data.provider.ModAdvancementProvider;
-import com.ryankshah.skyrimcraft.data.provider.ModGlobalLootTableProvider;
-import com.ryankshah.skyrimcraft.data.provider.BaseLootTableProvider;
+import com.ryankshah.skyrimcraft.block.ModBlocks;
+import com.ryankshah.skyrimcraft.client.entity.ModEntityType;
 import com.ryankshah.skyrimcraft.data.ModRecipes;
 import com.ryankshah.skyrimcraft.data.lang.LangGenerator;
-import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
-import com.ryankshah.skyrimcraft.util.*;
+import com.ryankshah.skyrimcraft.data.provider.*;
+import com.ryankshah.skyrimcraft.item.ModItems;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -31,6 +33,12 @@ public class ModClientEvents
             gen.addProvider(new ModGlobalLootTableProvider(gen));
             // Advancements
             gen.addProvider(new ModAdvancementProvider(gen));
+            // Forge Recipes
+            gen.addProvider(new ModForgeRecipeProvider(gen));
+            // Alchemy Recipes
+            gen.addProvider(new ModAlchemyRecipeProvider(gen));
+            // Oven Recipes
+            gen.addProvider(new ModOvenRecipeProvider(gen));
         }
         if(event.includeClient()) {
             // BlockStates
@@ -51,12 +59,36 @@ public class ModClientEvents
 
     @SubscribeEvent
     public static void clientSetup(final FMLClientSetupEvent event) {
-        SpellRegistry.registerRenderers();
+        ModEntityType.registerRenderers();
 
         ClientRegistry.registerKeyBinding(ForgeClientEvents.toggleSkyrimMenu);
         ClientRegistry.registerKeyBinding(ForgeClientEvents.toggleSpellSlot1);
         ClientRegistry.registerKeyBinding(ForgeClientEvents.toggleSpellSlot2);
 
         ModBlocks.blockRenders();
+
+        event.enqueueWork(() -> {
+            ModItems.registerItemModelProperties();
+        });
+    }
+
+    public static float noUse(ItemStack sword, ClientWorld clientWorld, LivingEntity entity) {
+        return entity != null && entity.getMainHandItem() == sword && entity.getOffhandItem() != ItemStack.EMPTY ? 1.0F : 0.0F;
+    }
+
+    public static float blocking(ItemStack itemStack, ClientWorld clientWorld, LivingEntity livingEntity) {
+        return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == itemStack ? 1.0F : 0.0F;
+    }
+
+    public static float pulling(ItemStack bow, ClientWorld clientWorld, LivingEntity livingEntity) {
+        return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == bow ? 1.0F : 0.0F;
+    }
+
+    public static float pull(ItemStack bow, ClientWorld clientWorld, LivingEntity livingEntity) {
+        if (livingEntity == null) {
+            return 0.0F;
+        } else {
+            return livingEntity.getUseItem() != bow ? 0.0F : (float)(bow.getUseDuration() - livingEntity.getUseItemRemainingTicks()) / 20.0F;
+        }
     }
 }

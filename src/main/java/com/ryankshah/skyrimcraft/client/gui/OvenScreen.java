@@ -6,8 +6,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import com.ryankshah.skyrimcraft.util.ModBlocks;
-import com.ryankshah.skyrimcraft.util.ModItems;
+import com.ryankshah.skyrimcraft.util.OvenRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
@@ -17,7 +16,6 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.vector.Vector3f;
@@ -29,7 +27,6 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -48,17 +45,17 @@ public class OvenScreen extends Screen
     private OvenRecipe currentRecipeObject = null;
     private PlayerEntity player;
 
-    public OvenScreen() {
+    public OvenScreen(List<OvenRecipe> recipes) {
         super(new TranslationTextComponent(Skyrimcraft.MODID + ".ovengui.title"));
         this.player = Minecraft.getInstance().player;
         this.items = ArrayListMultimap.create();
-        this.addItems();
+        recipes.stream().forEach(recipe -> items.put(recipe.getCategory(), recipe));
         this.categories = this.items.keySet().toArray();
         this.currentCategory = 0;
         this.currentItem = 0;
         this.itemList = new ArrayList<>();
         this.itemList.addAll(this.items.get((String)this.categories[this.currentCategory]));
-        this.itemList.sort((i1, i2) -> i1.getItemStack().getItem().getRegistryName().compareTo(i2.getItemStack().getItem().getRegistryName()));
+        this.itemList.sort((i1, i2) -> i1.getResult().getItem().getRegistryName().compareTo(i2.getResult().getItem().getRegistryName()));
         categoryChosen = true;
     }
 
@@ -88,45 +85,50 @@ public class OvenScreen extends Screen
             fillGradient(matrixStack, 92, 2, 93, this.height - 2, 0xAAFFFFFF, 0xAAFFFFFF);
         }
 
-        int MIN_Y = 30;
+        int MIN_Y = 20;
         int MAX_Y = height / 2 + 14 * 6 - 10;
 
         if (!this.items.isEmpty()) {
             Object[] categories = this.getCategories(this.items);
 
-            int i;
-            for(i = Math.max(this.currentCategory - 6, 0); i < (Math.min(this.currentCategory + 6, categories.length)); ++i) {
-                int y = this.height / 2 + 14 * i - this.currentCategory * 7;
-                if(y <= MIN_Y || y >= MAX_Y)
-                    continue;
+            for(int i = 0; i < categories.length; i++) {
+                String categoryName = ((String)categories[i]).toUpperCase();
 
-                drawString(matrixStack, font, ((String)categories[i]).toUpperCase(), 18, y, i == currentCategory ? 16777215 : 12632256);
+                if (categoryName.length() >= 10)
+                    categoryName = categoryName.substring(0, 8) + "..";
+
+                drawString(matrixStack, font, categoryName, 18, height / 2 + (i * 14) - this.currentCategory * font.lineHeight, i == currentCategory ? 16777215 : 12632256);
             }
 
             if (this.itemList != null) {
-                for(i = Math.max(this.currentItem - 6, 0); i < (Math.min(this.currentItem + 6, this.itemList.size())); ++i) {
-                    OvenRecipe recipe = (OvenRecipe)this.itemList.get(i);
+                for(int i = 0; i < itemList.size(); i++) {
+                    OvenRecipe recipe = this.itemList.get(i);
 
                     if (i == this.currentItem) {
                         this.currentRecipeObject = recipe;
-                        this.drawItemImage(matrixStack, recipe.getItemStack(), width - 100, height / 2 - 70, this.spin);
+                        this.drawItemImage(matrixStack, recipe.getResult(), width - 100, height / 2 - 70, this.spin);
                         this.drawItemInformation(matrixStack, recipe);
                     }
 
-                    int y = this.height / 2 + 14 * i - this.currentItem * 7;
-                    if(y <= MIN_Y || y >= MAX_Y)
-                        continue;
+//                    int y = this.height / 2 + 14 * i - this.currentItem * 6;
+//                    if(y <= MIN_Y || y >= MAX_Y)
+//                        continue;
 
-                    drawString(matrixStack, font, recipe.getItemStack().getHoverName(), 98, y, i == currentItem ? 16777215 : 12632256);
+                    String name = recipe.getResult().getHoverName().getString();
+                    if (name.length() >= 16)
+                        name = name.substring(0, 14) + "..";
+
+                    drawString(matrixStack, font, name, 98, height / 2 + (i * 14) - this.currentItem * font.lineHeight, i == currentItem ? 16777215 : 12632256);
                 }
             }
         }
 
         fillGradient(matrixStack, 0, this.height * 3 / 4 + 20, this.width, this.height, 0x77000000, 0x77000000);
         fillGradient(matrixStack, 0, this.height * 3 / 4 + 22, this.width, this.height * 3 / 4 + 23, 0xAAFFFFFF, 0xAAFFFFFF);
-//        drawBorderedGradientRect(matrixStack, 17, this.height - 29, 32, this.height - 14, 0xAA000000, 0xAA000000, 0xAAFFFFFF);
-//        drawCenteredString(matrixStack, font, "Enter", 25, this.height - 25, 0x0000FF00);
-//        drawCenteredString(matrixStack, font, "Select", 70, this.height - 25, 0x00FFFFFF);
+        drawBorderedGradientRect(matrixStack, 17, this.height - 29, 32 + font.width("Enter"), this.height - 14, 0xAA000000, 0xAA000000, 0xAAFFFFFF);
+        drawString(matrixStack, font, "Enter", 25, this.height - 25, 0x00FFFFFF);
+        drawString(matrixStack, font, "Cook", 32 + font.width("Enter") + 6, this.height - 25, 0x00FFFFFF);
+
 
         renderHealth(matrixStack);
 
@@ -141,6 +143,34 @@ public class OvenScreen extends Screen
             this.spin -= 360.0f;
         else
             this.spin += 2;
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
+        if(scrollDelta > 0) {
+            if (!this.categoryChosen) {
+                if (this.currentCategory < this.categories.length - 1)
+                    ++this.currentCategory;
+
+                this.itemList.clear();
+                this.itemList.addAll(this.items.get((String)this.categories[this.currentCategory]));
+            } else {
+                if (this.currentItem < this.itemList.size() - 1)
+                    ++this.currentItem;
+            }
+        } else if(scrollDelta < 0) {
+            if (!this.categoryChosen) {
+                if(this.currentCategory > 0)
+                    --this.currentCategory;
+
+                this.itemList.clear();
+                this.itemList.addAll(this.items.get((String)this.categories[this.currentCategory]));
+            } else {
+                if (this.currentItem > 0)
+                    --this.currentItem;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -211,7 +241,7 @@ public class OvenScreen extends Screen
                 hasAndRemoveItems(player, copy, copy.getCount());
             }
 
-            this.player.addItem(this.currentRecipeObject.getItemStack().copy());
+            this.player.addItem(this.currentRecipeObject.getResult().copy());
             player.playSound(SoundEvents.CAMPFIRE_CRACKLE, 1.0F, 1.0F);
             this.player.giveExperiencePoints(2);
         }
@@ -258,13 +288,10 @@ public class OvenScreen extends Screen
     }
 
     private void drawItemInformation(MatrixStack matrixStack, OvenRecipe recipe) {
-        //fillGradient(matrixStack, this.width - 180, (this.height + 50) / 2 - 20, this.width - 20, (this.height + 50) / 2 + 80, 0xAA000000, 0xAA000000);
         drawBorderedGradientRect(matrixStack, this.width - 180, this.height / 2 - 20, this.width - 20, this.height / 2 + 20 + (10 * recipe.getRecipeItems().size()), 0xAA000000, 0xAA000000, 0xAAFFFFFF);
         fillGradient(matrixStack, this.width - 160, (this.height) / 2, this.width - 40, (this.height) / 2 + 1, 0xAAFFFFFF, 0xAAFFFFFF); // Line under recipe item name
 
-        drawCenteredString(matrixStack, font, recipe.getItemStack().getHoverName(), width - 100, height / 2 - 10, 0xFFFFFF);
-        //this.func_73730_a(this.field_146294_l - 170, this.field_146294_l - 30, (this.field_146295_m + 50) / 2 + 20, -1);
-        //drawCenteredString(matrixStack, font, "Required Items: ", width - 100, height / 2 + 10, 0xFFFFFF);
+        drawCenteredString(matrixStack, font, recipe.getResult().getHoverName(), width - 100, height / 2 - 10, 0xFFFFFF);
 
         for(int i = 0; i < recipe.getRecipeItems().size(); i++) {
             ItemStack is = recipe.getRecipeItems().get(i);
@@ -276,50 +303,6 @@ public class OvenScreen extends Screen
 
     private Object[] getCategories(Multimap<String, OvenRecipe> items) {
         return items.keySet().toArray();
-    }
-
-    public static class OvenRecipe {
-        private ItemStack itemStack;
-        private List<ItemStack> recipeItems;
-
-        public OvenRecipe(ItemStack itemStack, List<ItemStack> recipeItems) {
-            this.itemStack = itemStack;
-            this.recipeItems = recipeItems;
-        }
-
-        public ItemStack getItemStack() {
-            return this.itemStack;
-        }
-
-        public List<ItemStack> getRecipeItems() {
-            return this.recipeItems;
-        }
-    }
-
-    public static OvenRecipe createRecipe(ItemStack itemStack, ItemStack... items) {
-        return new OvenRecipe(itemStack, Arrays.asList(items));
-    }
-
-    private void addItems() {
-//        NonNullList<ItemStack> inventory = this.player.inventory.items;
-//
-//        for (ItemStack itemStack : inventory) {
-//            this.items.put("Inventory", new OvenRecipe(itemStack, null));
-//        }
-
-        // Add oven recipes
-        this.items.put("Food", createRecipe(new ItemStack(ModItems.SWEET_ROLL.get(), 1),
-                new ItemStack(ModItems.BUTTER.get(), 1), new ItemStack(Items.EGG, 1), new ItemStack(ModItems.SALT_PILE.get(), 1),
-                new ItemStack(ModItems.FLOUR.get(), 1), new ItemStack(Items.MILK_BUCKET, 1)));
-        this.items.put("Food", createRecipe(new ItemStack(ModItems.GARLIC_BREAD.get(), 1),
-                new ItemStack(ModBlocks.GARLIC.get(), 1), new ItemStack(ModItems.BUTTER.get(), 1), new ItemStack(ModItems.FLOUR.get(), 1)));
-        this.items.put("Food", createRecipe(new ItemStack(ModItems.APPLE_PIE.get(), 1),
-                new ItemStack(ModItems.FLOUR.get(), 1), new ItemStack(ModItems.SALT_PILE.get(), 2), new ItemStack(ModItems.BUTTER.get(), 1),
-                new ItemStack(Items.EGG, 1), new ItemStack(Items.APPLE, 2)));
-        this.items.put("Food", createRecipe(new ItemStack(ModItems.POTATO_BREAD.get(), 1),
-                new ItemStack(ModItems.SALT_PILE.get(), 1), new ItemStack(Items.EGG, 1), new ItemStack(ModItems.FLOUR.get(), 1),
-                new ItemStack(Items.MILK_BUCKET, 1), new ItemStack(Items.POTATO, 1)));
-        //this.items.put("Food", createRecipe(new ItemStack(ModItems.SWEET_ROLL.get(), 1), new ItemStack(ModItems.BUTTER.get(), 1), new ItemStack(Items.EGG, 1), new ItemStack(ModItems.SALT_PILE.get(), 1), new ItemStack(ModItems.FLOUR.get(), 1), new ItemStack(Items.MILK_BUCKET, 1)));
     }
 
     public static boolean hasItem(PlayerEntity player, ItemStack is, int amount) {
@@ -364,9 +347,8 @@ public class OvenScreen extends Screen
         minecraft.getTextureManager().bind(OVERLAY_ICONS);
         float healthPercentage = minecraft.player.getHealth() / minecraft.player.getMaxHealth();
         float healthBarWidth = 80.0f * healthPercentage;
-        float healthBarStartX = (float)(width - 109) + (80.0f - healthBarWidth);
-        this.blit(matrixStack, this.width - 120, this.height - 25, 0, 51, 102, 10);
-        this.blit(matrixStack, (int)healthBarStartX, this.height - 23, 11, 64, (int)healthBarWidth, 6);
+        TextureDrawer.drawGuiTexture(matrixStack, this.width - 120, this.height - 25, 0, 51, 102, 10);
+        TextureDrawer.drawGuiTexture(matrixStack, width - 109, this.height - 23, 11 + ((80 - healthBarWidth) / 2.0f), 72, 80 * healthPercentage, 6);
         minecraft.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
     }
 

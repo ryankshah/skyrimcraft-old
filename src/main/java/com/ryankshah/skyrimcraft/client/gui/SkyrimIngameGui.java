@@ -11,10 +11,11 @@ import com.ryankshah.skyrimcraft.event.ForgeClientEvents;
 import com.ryankshah.skyrimcraft.util.ClientUtil;
 import com.ryankshah.skyrimcraft.util.CompassFeature;
 import com.ryankshah.skyrimcraft.util.LevelUpdate;
-import com.ryankshah.skyrimcraft.util.ModEntityType;
+import com.ryankshah.skyrimcraft.client.entity.ModEntityType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.settings.AttackIndicatorStatus;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShootableItem;
@@ -286,7 +287,7 @@ public class SkyrimIngameGui extends AbstractGui
 
     private static void renderCharacterLevelUpdate(MatrixStack matrixStack, int width, int height, float elapsed, int level, int levelUpRenderTime) {
         //matrixStack.pushPose();
-        String characterLevel = ""+(level+1);
+        String characterLevel = ""+level;
         String levelProgressString = "Progress";
 
         float hue = (float)levelUpRenderTime - elapsed;
@@ -358,7 +359,7 @@ public class SkyrimIngameGui extends AbstractGui
     private static void renderCrosshair(MatrixStack matrixStack, int width, int height) {
         int texX = 166;
         int texY = 88;
-        if(mc.player.getMainHandItem().getItem() instanceof ShootableItem && !mc.player.isSpectator()) {
+        if(!mc.player.isSpectator()) { // mc.player.getMainHandItem().getItem() instanceof ShootableItem && // --> Player does not need bow for this iirc
             if (mc.player.isCrouching()) {
                 texX += 15;
 
@@ -368,6 +369,28 @@ public class SkyrimIngameGui extends AbstractGui
             }
         }
         TextureDrawer.drawGuiTexture(matrixStack, (width - 16) / 2, (height - 16) / 2, texX, texY, 15, 15);
+
+        if (mc.options.attackIndicator == AttackIndicatorStatus.CROSSHAIR) {
+            float f = mc.player.getAttackStrengthScale(0.0F);
+            boolean flag = false;
+            if (mc.crosshairPickEntity != null && mc.crosshairPickEntity instanceof LivingEntity && f >= 1.0F) {
+                flag = mc.player.getCurrentItemAttackStrengthDelay() > 5.0F;
+                flag = flag & mc.crosshairPickEntity.isAlive();
+            }
+
+            int j = height / 2 - 7 + 16;
+            int k = width / 2 - 8;
+            mc.textureManager.bind(AbstractGui.GUI_ICONS_LOCATION);
+            if (flag) {
+                TextureDrawer.drawGuiTexture(matrixStack, k, j, 68, 94, 16, 16);
+            } else if (f < 1.0F) {
+                int l = (int)(f * 17.0F);
+                TextureDrawer.drawGuiTexture(matrixStack, k, j, 36, 94, 16, 4);
+                TextureDrawer.drawGuiTexture(matrixStack, k, j, 52, 94, l, 4);
+            }
+
+            mc.getTextureManager().bind(OVERLAY_ICONS);
+        }
     }
 
     private static void renderLookVectorRayTrace(MatrixStack matrixStack, int width, int height) {

@@ -1,0 +1,20 @@
+{
+  "parent": "skyrimcraft:item/greatsword",
+  "textures": {
+    "layer0": "skyrimcraft:item/elven_greatsword"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "skyrimcraft:no_use": 1.0
+      },
+      "model": "skyrimcraft:item/elven_greatsword_no_use"
+    },
+    {
+      "predicate": {
+        "skyrimcraft:blocking": 1.0
+      },
+      "model": "skyrimcraft:item/elven_greatsword_blocking"
+    }
+  ]
+}

@@ -3,16 +3,22 @@ package com.ryankshah.skyrimcraft;
 import com.mojang.serialization.Codec;
 import com.ryankshah.skyrimcraft.advancement.BaseTrigger;
 import com.ryankshah.skyrimcraft.advancement.TriggerManager;
+import com.ryankshah.skyrimcraft.block.ModBlocks;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.SkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.SkyrimPlayerDataStorage;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
+import com.ryankshah.skyrimcraft.client.entity.ModEntityType;
+import com.ryankshah.skyrimcraft.data.ModRecipeSerializers;
+import com.ryankshah.skyrimcraft.data.ModRecipeType;
 import com.ryankshah.skyrimcraft.data.loot_table.condition.type.ModLootConditionTypes;
 import com.ryankshah.skyrimcraft.data.provider.ModGlobalLootTableProvider;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
+import com.ryankshah.skyrimcraft.item.ModItems;
 import com.ryankshah.skyrimcraft.network.Networking;
-import com.ryankshah.skyrimcraft.util.*;
+import com.ryankshah.skyrimcraft.util.ModAttributes;
+import com.ryankshah.skyrimcraft.util.ModSounds;
 import com.ryankshah.skyrimcraft.worldgen.WorldGen;
 import com.ryankshah.skyrimcraft.worldgen.structure.ModConfiguredStructures;
 import com.ryankshah.skyrimcraft.worldgen.structure.ModStructures;
@@ -30,7 +36,6 @@ import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -42,6 +47,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import software.bernie.geckolib3.GeckoLib;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -93,23 +99,33 @@ public class Skyrimcraft
     public static final String MODID = "skyrimcraft";
     public static final Logger LOGGER = LogManager.getLogger();
 
+//    public static final Codec<ForgeRecipe> FORGE_RECIPE_CODEC = RecordCodecBuilder.create(i -> i.group(
+//            ItemStack.CODEC.fieldOf("output").forGetter(ForgeRecipe::getResult),
+//            ItemStack.CODEC.listOf().fieldOf("recipe").forGetter(ForgeRecipe::getRecipeItems),
+//            Codec.INT.fieldOf("levelToCreate").forGetter(ForgeRecipe::getRequiredLevel),
+//            Codec.INT.fieldOf("xp").forGetter(ForgeRecipe::getXpGained)
+//    ).apply(i, ForgeRecipe::new));
+
     public Skyrimcraft() {
+        GeckoLib.initialize();
+
+        ModLootConditionTypes.register();
+
         ModAttributes.ATTRIBUTES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModBlocks.BLOCK_ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ModBlocks.TILE_ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModSounds.SOUND_EVENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
         SpellRegistry.SPELLS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModEntityType.ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ModRecipeType.register();
+        ModRecipeSerializers.SERIALIZERS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModEffects.EFFECTS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModStructures.STRUCTURES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModGlobalLootTableProvider.LOOT_MODIFIERS.register(FMLJavaModLoadingContext.get().getModEventBus());
 
-        ModLootConditionTypes.register();
-
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(Skyrimcraft::commonSetup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(Skyrimcraft::addEntityAttributes);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::addEntityAttributes);
 
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, WorldGen::generate); // high for additions to worldgen
         MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, this::addDimensionalSpacing);
@@ -119,7 +135,7 @@ public class Skyrimcraft
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    public static void commonSetup(final FMLCommonSetupEvent event) {
+    public void commonSetup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             Networking.registerMessages();
             CapabilityManager.INSTANCE.register(ISkyrimPlayerData.class, new SkyrimPlayerDataStorage(), SkyrimPlayerData::new);
@@ -132,15 +148,15 @@ public class Skyrimcraft
             // TODO: add skill triggers?
             TriggerManager.init();
 
+            //ModDimensions.registerChunkGensAndBiomeSources();
+
             ModStructures.setupStructures();
             ModConfiguredStructures.registerConfiguredStructures();
+            ModEntityType.registerAttributes();
         });
     }
 
-    public static void registerNewRegistry(RegistryEvent.NewRegistry event) {
-    }
-
-    public static void addEntityAttributes(EntityAttributeModificationEvent event) {
+    public void addEntityAttributes(EntityAttributeModificationEvent event) {
         event.add(EntityType.PLAYER, ModAttributes.MAGICKA_REGEN.get());
     }
 
@@ -167,6 +183,12 @@ public class Skyrimcraft
         @Override
         public ItemStack makeIcon() {
             return new ItemStack(ModItems.APPLE_PIE.get());
+        }
+    };
+    public static final ItemGroup TAB_COMBAT = new ItemGroup("skyrimcraft.combat") {
+        @Override
+        public ItemStack makeIcon() {
+            return new ItemStack(ModItems.DAEDRIC_SWORD.get());
         }
     };
     public static final ItemGroup TAB_MAGIC = new ItemGroup("skyrimcraft.magic") {

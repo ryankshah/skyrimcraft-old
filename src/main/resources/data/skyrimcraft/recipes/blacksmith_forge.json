@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "c c",
+    "clc",
+    "sss"
+  ],
+  "key": {
+    "l": {
+      "item": "minecraft:lava_bucket"
+    },
+    "s": {
+      "item": "minecraft:stone"
+    },
+    "c": {
+      "item": "minecraft:cobblestone"
+    }
+  },
+  "result": {
+    "item": "skyrimcraft:blacksmith_forge"
+  }
+}

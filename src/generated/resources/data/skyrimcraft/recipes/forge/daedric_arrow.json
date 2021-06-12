@@ -1,0 +1,24 @@
+{
+  "type": "skyrimcraft:forge",
+  "category": "daedric",
+  "output": {
+    "item": "skyrimcraft:daedric_arrow",
+    "amount": 24
+  },
+  "recipe": [
+    {
+      "item": "minecraft:stick",
+      "amount": 1
+    },
+    {
+      "item": "skyrimcraft:ebony_ingot",
+      "amount": 1
+    },
+    {
+      "item": "skyrimcraft:daedra_heart",
+      "amount": 1
+    }
+  ],
+  "levelToCreate": 90,
+  "xp": 5
+}

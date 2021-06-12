@@ -1,0 +1,20 @@
+{
+  "type": "skyrimcraft:forge",
+  "category": "iron",
+  "output": {
+    "item": "skyrimcraft:iron_warhammer",
+    "amount": 1
+  },
+  "recipe": [
+    {
+      "item": "skyrimcraft:leather_strips",
+      "amount": 3
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "amount": 4
+    }
+  ],
+  "levelToCreate": 1,
+  "xp": 5
+}
