@@ -5,14 +5,6 @@
       "terms": [
         {
           "condition": "minecraft:block_state_property",
-          "block": "minecraft:grass"
-        },
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "minecraft:fern"
-        },
-        {
-          "condition": "minecraft:block_state_property",
           "block": "minecraft:tall_grass"
         },
         {
@@ -23,15 +15,10 @@
     },
     {
       "condition": "minecraft:random_chance_with_looting",
-      "chance": 0.25,
-      "looting_multiplier": 0.35
+      "chance": 0.1,
+      "looting_multiplier": 0.25
     }
   ],
-  "items": [
-    {
-      "item": "skyrimcraft:grass_pod",
-      "count": 1
-    }
-  ],
+  "items": [],
   "type": "skyrimcraft:block_loot"
 }
