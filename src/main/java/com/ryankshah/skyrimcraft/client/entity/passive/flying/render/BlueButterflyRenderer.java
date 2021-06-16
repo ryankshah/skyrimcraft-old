@@ -1,7 +1,7 @@
-package com.ryankshah.skyrimcraft.client.entity.passive.render;
+package com.ryankshah.skyrimcraft.client.entity.passive.flying.render;
 
-import com.ryankshah.skyrimcraft.client.entity.passive.AbstractButterflyEntity;
-import com.ryankshah.skyrimcraft.client.entity.passive.model.BlueButterflyModel;
+import com.ryankshah.skyrimcraft.client.entity.passive.flying.AbstractButterflyEntity;
+import com.ryankshah.skyrimcraft.client.entity.passive.flying.model.BlueButterflyModel;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 

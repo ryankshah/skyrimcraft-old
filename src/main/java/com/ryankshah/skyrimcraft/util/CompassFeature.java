@@ -3,7 +3,7 @@ package com.ryankshah.skyrimcraft.util;
 import com.ryankshah.skyrimcraft.worldgen.structure.ModStructures;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.feature.structure.Structure;
 
 import java.util.AbstractMap;
@@ -12,14 +12,14 @@ import java.util.UUID;
 public class CompassFeature
 {
     private ResourceLocation feature;
-    private ChunkPos chunkPos;
+    private BlockPos blockPos;
     private UUID id;
 
     public static final int ICON_WIDTH = 12, ICON_HEIGHT = 16;
 
-    public CompassFeature(UUID id, ResourceLocation feature, ChunkPos chunkPos) {
+    public CompassFeature(UUID id, ResourceLocation feature, BlockPos blockPos) {
         this.feature = feature;
-        this.chunkPos = chunkPos;
+        this.blockPos = blockPos;
         this.id = id;
     }
 
@@ -27,8 +27,8 @@ public class CompassFeature
         return feature;
     }
 
-    public ChunkPos getChunkPos() {
-        return chunkPos;
+    public BlockPos getBlockPos() {
+        return blockPos;
     }
 
     public UUID getId() {
@@ -55,8 +55,9 @@ public class CompassFeature
 
         nbt.putUUID("uuid", id);
         nbt.putString("resourcelocation", feature.toString());
-        nbt.putInt("xPos", chunkPos.x);
-        nbt.putInt("zPos", chunkPos.z);
+        nbt.putInt("xPos", blockPos.getX());
+        nbt.putInt("yPos", blockPos.getY());
+        nbt.putInt("zPos", blockPos.getZ());
 
         return nbt;
     }
@@ -65,9 +66,10 @@ public class CompassFeature
         UUID id = nbt.getUUID("uuid");
         ResourceLocation feature = new ResourceLocation(nbt.getString("resourcelocation"));
         int x = nbt.getInt("xPos");
+        int y = nbt.getInt("yPos");
         int z = nbt.getInt("zPos");
-        ChunkPos chunkPos = new ChunkPos(x, z);
-        return new CompassFeature(id, feature, chunkPos);
+        BlockPos blockPos = new BlockPos(x, y, z);
+        return new CompassFeature(id, feature, blockPos);
     }
 
     @Override
@@ -76,6 +78,6 @@ public class CompassFeature
             return false;
 
         CompassFeature featureToCompare = (CompassFeature)obj;
-        return this.feature.equals(featureToCompare.feature) && this.chunkPos.x == featureToCompare.getChunkPos().x && this.chunkPos.z == featureToCompare.getChunkPos().z;
+        return this.feature.equals(featureToCompare.feature) && this.blockPos.getX() == featureToCompare.getBlockPos().getX() && this.getBlockPos().getZ() == featureToCompare.getBlockPos().getZ();
     }
 }

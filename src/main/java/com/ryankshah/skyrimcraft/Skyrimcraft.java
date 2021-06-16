@@ -10,6 +10,9 @@ import com.ryankshah.skyrimcraft.character.SkyrimPlayerDataStorage;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
 import com.ryankshah.skyrimcraft.client.entity.ModEntityType;
+import com.ryankshah.skyrimcraft.client.entity.passive.flying.AbstractButterflyEntity;
+import com.ryankshah.skyrimcraft.client.entity.passive.merchant.MerchantEntity;
+import com.ryankshah.skyrimcraft.client.entity.passive.merchant.MerchantHandler;
 import com.ryankshah.skyrimcraft.data.ModRecipeSerializers;
 import com.ryankshah.skyrimcraft.data.ModRecipeType;
 import com.ryankshah.skyrimcraft.data.loot_table.condition.type.ModLootConditionTypes;
@@ -36,6 +39,7 @@ import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -99,13 +103,6 @@ public class Skyrimcraft
     public static final String MODID = "skyrimcraft";
     public static final Logger LOGGER = LogManager.getLogger();
 
-//    public static final Codec<ForgeRecipe> FORGE_RECIPE_CODEC = RecordCodecBuilder.create(i -> i.group(
-//            ItemStack.CODEC.fieldOf("output").forGetter(ForgeRecipe::getResult),
-//            ItemStack.CODEC.listOf().fieldOf("recipe").forGetter(ForgeRecipe::getRecipeItems),
-//            Codec.INT.fieldOf("levelToCreate").forGetter(ForgeRecipe::getRequiredLevel),
-//            Codec.INT.fieldOf("xp").forGetter(ForgeRecipe::getXpGained)
-//    ).apply(i, ForgeRecipe::new));
-
     public Skyrimcraft() {
         GeckoLib.initialize();
 
@@ -123,8 +120,12 @@ public class Skyrimcraft
         ModEffects.EFFECTS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModStructures.STRUCTURES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModGlobalLootTableProvider.LOOT_MODIFIERS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        MerchantHandler.SENSOR_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        MerchantHandler.POINT_OF_INTEREST_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        MerchantHandler.PROFESSIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::createEntityAttributes);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::addEntityAttributes);
 
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, WorldGen::generate); // high for additions to worldgen
@@ -143,7 +144,7 @@ public class Skyrimcraft
             // Add triggers
             for(RegistryObject<ISpell> spell : SpellRegistry.SPELLS.getEntries()) {
                 BaseTrigger spellTrigger = new BaseTrigger("learned_spell_" + spell.get().getName().toLowerCase().replace(" ", "_"));
-                TriggerManager.TRIGGERS.put(spell.get(), spellTrigger);
+                TriggerManager.SPELL_TRIGGERS.put(spell.get(), spellTrigger);
             }
             // TODO: add skill triggers?
             TriggerManager.init();
@@ -152,8 +153,12 @@ public class Skyrimcraft
 
             ModStructures.setupStructures();
             ModConfiguredStructures.registerConfiguredStructures();
-            ModEntityType.registerAttributes();
         });
+    }
+
+    public void createEntityAttributes(EntityAttributeCreationEvent event) {
+        event.put(ModEntityType.BLUE_BUTTERFLY.get(), AbstractButterflyEntity.createAttributes().build());
+        event.put(ModEntityType.MERCHANT.get(), MerchantEntity.createAttributes().build());
     }
 
     public void addEntityAttributes(EntityAttributeModificationEvent event) {

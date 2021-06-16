@@ -125,7 +125,7 @@ public class UnrelentingForceEntity extends Entity
         if (!this.level.isClientSide) {
             if (result.getType() == RayTraceResult.Type.ENTITY) {
                 Entity entity = ((EntityRayTraceResult)result).getEntity();
-                if(!entity.isInWater() || !entity.isInLava())
+                if(!entity.isInWater() || !entity.isInLava() && entity instanceof LivingEntity)
                     ((LivingEntity)entity).knockback(2F, (double)MathHelper.sin(this.yRot * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(this.yRot * ((float)Math.PI / 180F))));
             }
             this.remove();

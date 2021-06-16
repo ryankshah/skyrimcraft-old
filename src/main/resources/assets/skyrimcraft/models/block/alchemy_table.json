@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "minecraft:block/cube_all",
+	"parent": "minecraft:block/cube",
 	"texture_size": [128, 128],
 	"textures": {
 		"0": "skyrimcraft:block/alchemy_table",

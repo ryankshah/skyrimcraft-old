@@ -28,15 +28,15 @@ public class SkyrimPotion extends SkyrimItem implements IPotion
         super(properties, displayName);
     }
 
-    @Override
-    public boolean isFoil(ItemStack p_77636_1_) {
-        return true;
-    }
-
-    @Override
-    public Rarity getRarity(ItemStack p_77613_1_) {
-        return Rarity.EPIC;
-    }
+//    @Override
+//    public boolean isFoil(ItemStack p_77636_1_) {
+//        return true;
+//    }
+//
+//    @Override
+//    public Rarity getRarity(ItemStack p_77613_1_) {
+//        return Rarity.EPIC;
+//    }
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving) {

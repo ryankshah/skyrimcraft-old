@@ -116,16 +116,16 @@ public class SkyrimIngameGui extends AbstractGui
             if(cap.getCompassFeatures().size() > 0) {
                 List<CompassFeature> sortedFeatures = Lists.newArrayList(cap.getCompassFeatures());
                 sortedFeatures.sort((a,b) -> {
-                    Vector3d positionA = new Vector3d(a.getChunkPos().x, 0, a.getChunkPos().z); //mc.player.getY()
-                    Vector3d positionB = new Vector3d(b.getChunkPos().x, 0, b.getChunkPos().z);
+                    Vector3d positionA = new Vector3d(a.getBlockPos().getX(), 0, a.getBlockPos().getZ()); //mc.player.getY()
+                    Vector3d positionB = new Vector3d(b.getBlockPos().getX(), 0, b.getBlockPos().getZ());
                     float angleA = Math.abs(angleDistance(finalYaw, angleFromTarget(positionA, positionB).x));
                     float angleB = Math.abs(angleDistance(finalYaw, angleFromTarget(positionB, positionA).x));
                     return (int)Math.signum(angleB-angleA);
                 });
 
                 for (CompassFeature feature : sortedFeatures) {
-                    if(mc.player.position().distanceToSqr(feature.getChunkPos().x, mc.player.position().y, feature.getChunkPos().z) <= 512 * 16) { // 256 blocks?
-                        Vector3d position = new Vector3d(feature.getChunkPos().x, 0, feature.getChunkPos().z);
+                    if(mc.player.position().distanceToSqr(feature.getBlockPos().getX(), mc.player.position().y, feature.getBlockPos().getZ()) <= 512 * 16) { // 256 blocks?
+                        Vector3d position = new Vector3d(feature.getBlockPos().getX(), 0, feature.getBlockPos().getZ());
                         Vector2f angleYd = angleFromTarget(position, new Vector3d(playerPosX, playerPosY, playerPosZ));
                         drawStructureIndicator(matrixStack, finalYaw, angleYd.x, width / 2, feature);
                     }

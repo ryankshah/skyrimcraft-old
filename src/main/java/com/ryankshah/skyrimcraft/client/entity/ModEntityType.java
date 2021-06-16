@@ -9,11 +9,12 @@ import com.ryankshah.skyrimcraft.character.magic.entity.render.FireballRenderer;
 import com.ryankshah.skyrimcraft.character.magic.entity.render.UnrelentingForceRenderer;
 import com.ryankshah.skyrimcraft.client.entity.arrow.*;
 import com.ryankshah.skyrimcraft.client.entity.arrow.render.*;
-import com.ryankshah.skyrimcraft.client.entity.passive.AbstractButterflyEntity;
-import com.ryankshah.skyrimcraft.client.entity.passive.render.BlueButterflyRenderer;
+import com.ryankshah.skyrimcraft.client.entity.passive.flying.AbstractButterflyEntity;
+import com.ryankshah.skyrimcraft.client.entity.passive.flying.render.BlueButterflyRenderer;
+import com.ryankshah.skyrimcraft.client.entity.passive.merchant.MerchantEntity;
+import com.ryankshah.skyrimcraft.client.entity.passive.merchant.render.MerchantRenderer;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -111,6 +112,10 @@ public class ModEntityType
             () -> EntityType.Builder.of(AbstractButterflyEntity::new, EntityClassification.CREATURE)
                     .sized(1.0f, 1.0f) // Hitbox Size
                     .build(new ResourceLocation(Skyrimcraft.MODID, "blue_butterfly").toString()));
+    public static final RegistryObject<EntityType<MerchantEntity>> MERCHANT = ENTITY_TYPES.register("merchant",
+            () -> EntityType.Builder.<MerchantEntity>of(MerchantEntity::new, EntityClassification.CREATURE)
+                    .sized(1.0f, 2.0f) // Hitbox Size
+                    .build(new ResourceLocation(Skyrimcraft.MODID, "merchant").toString()));
 
     public static void registerRenderers() {
         RenderingRegistry.registerEntityRenderingHandler((EntityType<AncientNordArrowEntity>) ModEntityType.ANCIENT_NORD_ARROW_ENTITY.get(), AncientNordArrowRenderer::new);
@@ -131,10 +136,7 @@ public class ModEntityType
 
         // Mobs
         RenderingRegistry.registerEntityRenderingHandler(BLUE_BUTTERFLY.get(), BlueButterflyRenderer::new);
-    }
-
-    public static void registerAttributes() {
-        GlobalEntityTypeAttributes.put(BLUE_BUTTERFLY.get(), AbstractButterflyEntity.createAttributes().build());
+        RenderingRegistry.registerEntityRenderingHandler(MERCHANT.get(), MerchantRenderer::new);
     }
 
     // Entity Types

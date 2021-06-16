@@ -1,7 +1,7 @@
-package com.ryankshah.skyrimcraft.client.entity.passive.model;
+package com.ryankshah.skyrimcraft.client.entity.passive.flying.model;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import com.ryankshah.skyrimcraft.client.entity.passive.AbstractButterflyEntity;
+import com.ryankshah.skyrimcraft.client.entity.passive.flying.AbstractButterflyEntity;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 

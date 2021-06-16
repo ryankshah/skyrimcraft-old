@@ -21,7 +21,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -39,12 +38,12 @@ import java.util.UUID;
 @Mod.EventBusSubscriber(modid = Skyrimcraft.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlayerEvents
 {
-    public static boolean hasLayer = false, flag = false;//, isEquipTwoHanded = false;
+    public static boolean hasLayer = false, flag = false;
 
+    // TODO: work on resting and waiting mechanic
 //    @SubscribeEvent
-//    public static void playerLevelChangeEvent(PlayerXpEvent.LevelChange event) {
-//        SkyrimIngameGui.newLevel = event.getPlayer().experienceLevel;
-//        SkyrimIngameGui.levelUpRenderTime = 200;
+//    public static void onPlayerSleep(PlayerSleepInBedEvent event) {
+//
 //    }
 
     @SubscribeEvent
@@ -78,11 +77,6 @@ public class PlayerEvents
         ISkyrimPlayerData cap = playerEntity.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("playerevents playertick"));
         // Check we're only doing the updates at the end of the tick phase
         if(event.phase == TickEvent.Phase.END) {
-//            if(playerEntity.getMainHandItem().getItem() instanceof SkyrimTwoHandedSword)
-//                isEquipTwoHanded = true;
-//            else
-//                isEquipTwoHanded = false;
-
             if(!cap.getShoutsAndCooldowns().isEmpty()) {
                 for (Map.Entry<ISpell, Float> entry : cap.getShoutsAndCooldowns().entrySet()) {
                     if (entry.getValue() <= 0f)
@@ -113,7 +107,7 @@ public class PlayerEvents
                     if (structure == Structure.VILLAGE || structure == Structure.NETHER_BRIDGE
                             || structure == ModStructures.SHOUT_WALL.get() || structure == Structure.MINESHAFT
                             || structure == Structure.SHIPWRECK) {
-                        ChunkPos featureStartPos = locateFeatureStartChunkFromPlayerBlockPos(world, player.blockPosition(), structure);
+                        BlockPos featureStartPos = locateFeatureStartChunkFromPlayerBlockPos(world, player.blockPosition(), structure);
                         if (featureStartPos != null) {
                             CompassFeature compassFeature = new CompassFeature(UUID.randomUUID(), structure.getRegistryName(), featureStartPos);
                             if (playerCompassFeatures.stream().noneMatch(feature -> feature.equals(compassFeature))) {
@@ -132,11 +126,11 @@ public class PlayerEvents
         }
     }
 
-    private static ChunkPos locateFeatureStartChunkFromPlayerBlockPos(ServerWorld world, BlockPos pos, Structure<?> feature) {
+    private static BlockPos locateFeatureStartChunkFromPlayerBlockPos(ServerWorld world, BlockPos pos, Structure<?> feature) {
         // use 2 since based on min spacing, or we can use 7 in case user makes village spacing at every chunk..
         BlockPos blockpos1 = world.findNearestMapFeature(feature, pos, 2, true);
         if (blockpos1 != null) {
-            return new ChunkPos(blockpos1.getX(), blockpos1.getZ());
+            return blockpos1;
         } else {
             return null;
         }

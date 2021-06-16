@@ -5,7 +5,7 @@ import com.ryankshah.skyrimcraft.util.CompassFeature;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -26,7 +26,8 @@ public class PacketAddToCompassFeaturesOnClient
         ResourceLocation structure = buf.readResourceLocation();
         int x = buf.readInt();
         int y = buf.readInt();
-        ChunkPos pos = new ChunkPos(x, y);
+        int z = buf.readInt();
+        BlockPos pos = new BlockPos(x, y, z);
         compassFeature = new CompassFeature(id, structure, pos);
         //ResourceLocation rl = buf.readResourceLocation();
         //this.spell = SpellRegistry.SPELLS_REGISTRY.get().getValue(rl);
@@ -39,8 +40,9 @@ public class PacketAddToCompassFeaturesOnClient
     public void toBytes(PacketBuffer buf) {
         buf.writeUUID(compassFeature.getId());
         buf.writeResourceLocation(compassFeature.getFeature());
-        buf.writeInt(compassFeature.getChunkPos().x);
-        buf.writeInt(compassFeature.getChunkPos().z);
+        buf.writeInt(compassFeature.getBlockPos().getX());
+        buf.writeInt(compassFeature.getBlockPos().getY());
+        buf.writeInt(compassFeature.getBlockPos().getZ());
         //buf.writeResourceLocation(SpellRegistry.SPELLS_REGISTRY.get().getKey(spell));
     }
 

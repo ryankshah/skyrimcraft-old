@@ -29,7 +29,7 @@ displayName="Skyrimcraft" #mandatory
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="skyrimcraftlogo.png" #optional
 # A text field displayed in the mod UI
-credits="Mr_Simba for the old textures used in this updated version of the mod." #optional
+credits="Mr_Simba for some old textures used in this updated version of the mod. Thanks to VelociGamerBR for updating textures and G-Forces for new textures!" #optional
 # A text field displayed in the mod UI
 authors="ryankshah" #optional
 # The description text for the mod (multi line!) (#mandatory)

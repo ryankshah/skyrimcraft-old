@@ -46,7 +46,7 @@ public class ModAdvancementProvider implements IDataProvider, IConditionBuilder
     public ModAdvancementProvider(DataGenerator generatorIn) {
         for(RegistryObject<ISpell> spell : SpellRegistry.SPELLS.getEntries()) {
             BaseTrigger spellTrigger = new BaseTrigger("learned_spell_" + spell.get().getName().toLowerCase().replace(" ", "_"));
-            TriggerManager.TRIGGERS.put(spell.get(), spellTrigger);
+            TriggerManager.SPELL_TRIGGERS.put(spell.get(), spellTrigger);
         }
         ADVANCEMENTS = new HashMap<>();
         this.generator = generatorIn;
@@ -91,7 +91,7 @@ public class ModAdvancementProvider implements IDataProvider, IConditionBuilder
             ADVANCEMENTS.put("shouts", shouts);
 
             for(RegistryObject<ISpell> spell : SpellRegistry.SPELLS.getEntries()) {
-                BaseTrigger.Instance trigger = BaseTrigger.Instance.get(TriggerManager.TRIGGERS.get(spell.get()).getId());
+                BaseTrigger.Instance trigger = BaseTrigger.Instance.get(TriggerManager.SPELL_TRIGGERS.get(spell.get()).getId());
 
                 IItemProvider provider = spell.get().getType() == ISpell.SpellType.SHOUT ? ModBlocks.SHOUT_BLOCK.get() : ModItems.FIREBALL_SPELLBOOK.get();
 

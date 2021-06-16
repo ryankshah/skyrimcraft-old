@@ -118,7 +118,7 @@ public class ClientUtil
 
     }
 
-    private static int[] getRGBAArrayFromHexColor(int color)  {
+    public static int[] getRGBAArrayFromHexColor(int color)  {
         int[] ints = new int[4];
         ints[0] = (color >> 24 & 255);
         ints[1] = (color >> 16 & 255);

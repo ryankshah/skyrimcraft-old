@@ -58,7 +58,7 @@ public class PacketAddToKnownSpells
         context.enqueueWork(() -> {
             sendingPlayer.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((cap) -> {
                 cap.addToKnownSpells(spell);
-                TriggerManager.TRIGGERS.get(spell).trigger(sendingPlayer);
+                TriggerManager.SPELL_TRIGGERS.get(spell).trigger(sendingPlayer);
                 sendingPlayer.getCommandSenderWorld().playSound(null, sendingPlayer.getX(), sendingPlayer.getY(), sendingPlayer.getZ(), SoundEvents.END_PORTAL_SPAWN, SoundCategory.BLOCKS, 1f, 1f);
                 Networking.sendToClient(new PacketUpdateKnownSpells(cap.getKnownSpells()), sendingPlayer);
             });

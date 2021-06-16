@@ -79,6 +79,13 @@ public class LangGenerator extends LanguageProvider
         // Skills
         add("skill.pickpocket.fail", "You fail to pick the %s's pockets!");
         add("skill.pickpocket.success", "You successfully pick the %s's pockets and get some loot!");
+
+        // Mobs
+        add("entity.skyrimcraft.merchant", "Merchant");
+        add("entity.skyrimcraft.merchant.none", "Merchant");
+        add("entity.skyrimcraft.merchant.skyrimcraft.alchemist", "Alchemist");
+        add("entity.skyrimcraft.merchant.skyrimcraft.food_merchant", "Food Merchant");
+        add("entity.skyrimcraft.merchant.skyrimcraft.blacksmith", "Blacksmith");
     }
 
     @Override

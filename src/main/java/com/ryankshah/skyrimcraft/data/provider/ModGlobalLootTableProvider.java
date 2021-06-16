@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class ModGlobalLootTableProvider extends GlobalLootModifierProvider
 {
-    public static DeferredRegister<GlobalLootModifierSerializer<?>> LOOT_MODIFIERS = DeferredRegister.create(ForgeRegistries.LOOT_MODIFIER_SERIALIZERS, Skyrimcraft.MODID);
+    public static final DeferredRegister<GlobalLootModifierSerializer<?>> LOOT_MODIFIERS = DeferredRegister.create(ForgeRegistries.LOOT_MODIFIER_SERIALIZERS, Skyrimcraft.MODID);
     public static final RegistryObject<PassiveEntityLootModifier.Serializer> PASSIVE_ENTITY = LOOT_MODIFIERS.register("passive_entity", PassiveEntityLootModifier.Serializer::new);
     public static final RegistryObject<ChestLootModifier.Serializer> CHEST_LOOT = LOOT_MODIFIERS.register("chest_loot", ChestLootModifier.Serializer::new);
     public static final RegistryObject<AdditionalDropsForBlocks.Serializer> BLOCK_LOOT = LOOT_MODIFIERS.register("block_loot", AdditionalDropsForBlocks.Serializer::new);

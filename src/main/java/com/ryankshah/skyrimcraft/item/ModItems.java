@@ -376,31 +376,31 @@ public class ModItems
 
             // Potions
             // magicka potions
-            singleTexture(MINOR_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
+            singleTexture(MINOR_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", modLoc("item/minor_magicka_potion"));
-            singleTexture(MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
+            singleTexture(MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", modLoc("item/magicka_potion"));
-            singleTexture(PLENTIFUL_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
+            singleTexture(PLENTIFUL_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", modLoc("item/plentiful_magicka_potion"));
-            singleTexture(VIGOROUS_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
+            singleTexture(VIGOROUS_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", modLoc("item/vigorous_magicka_potion"));
-            singleTexture(EXTREME_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
+            singleTexture(EXTREME_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", modLoc("item/extreme_magicka_potion"));
-            singleTexture(ULTIMATE_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
+            singleTexture(ULTIMATE_MAGICKA_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", modLoc("item/ultimate_magicka_potion"));
             // magicka regen potions
-            singleTexture(LASTING_POTENCY_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
+            singleTexture(LASTING_POTENCY_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", modLoc("item/lasting_potency_potion"));
-            singleTexture(DRAUGHT_LASTING_POTENCY_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
+            singleTexture(DRAUGHT_LASTING_POTENCY_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", modLoc("item/draught_lasting_potency_potion"));
-            singleTexture(SOLUTION_LASTING_POTENCY_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
+            singleTexture(SOLUTION_LASTING_POTENCY_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", modLoc("item/solution_lasting_potency_potion"));
-            singleTexture(PHILTER_LASTING_POTENCY_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
+            singleTexture(PHILTER_LASTING_POTENCY_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", modLoc("item/philter_lasting_potency_potion"));
-            singleTexture(ELIXIR_LASTING_POTENCY_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
+            singleTexture(ELIXIR_LASTING_POTENCY_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", modLoc("item/elixir_lasting_potency_potion"));
             // unique potions
-            singleTexture(PHILTER_OF_THE_PHANTOM_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/potion"),
+            singleTexture(PHILTER_OF_THE_PHANTOM_POTION.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", modLoc("item/philter_of_the_phantom_potion"));
 
             // Food

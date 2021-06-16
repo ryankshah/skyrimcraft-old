@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:item/potion",
+  "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "skyrimcraft:item/philter_of_the_phantom_potion"
   }

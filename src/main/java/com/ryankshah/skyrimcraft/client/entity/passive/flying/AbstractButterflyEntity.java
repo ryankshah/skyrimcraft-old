@@ -1,4 +1,4 @@
-package com.ryankshah.skyrimcraft.client.entity.passive;
+package com.ryankshah.skyrimcraft.client.entity.passive.flying;
 
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
