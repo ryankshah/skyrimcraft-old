@@ -2,13 +2,13 @@ package com.ryankshah.skyrimcraft.network.character;
 
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.util.CompassFeature;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.LogicalSidedProvider;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,7 +21,7 @@ public class PacketAddToCompassFeaturesOnClient
     private static final Logger LOGGER = LogManager.getLogger();
     private CompassFeature compassFeature;
 
-    public PacketAddToCompassFeaturesOnClient(PacketBuffer buf) {
+    public PacketAddToCompassFeaturesOnClient(FriendlyByteBuf buf) {
         UUID id = buf.readUUID();
         ResourceLocation structure = buf.readResourceLocation();
         int x = buf.readInt();
@@ -37,7 +37,7 @@ public class PacketAddToCompassFeaturesOnClient
         this.compassFeature = compassFeature;
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeUUID(compassFeature.getId());
         buf.writeResourceLocation(compassFeature.getFeature());
         buf.writeInt(compassFeature.getBlockPos().getX());
@@ -55,7 +55,7 @@ public class PacketAddToCompassFeaturesOnClient
             LOGGER.warn("PacketUpdateMapFeatures received on wrong side:" + context.getDirection().getReceptionSide());
             return false;
         }
-        Optional<ClientWorld> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
+        Optional<Level> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
         if (!clientWorld.isPresent()) {
             LOGGER.warn("PacketUpdateMapFeatures context could not provide a ClientWorld.");
             return false;

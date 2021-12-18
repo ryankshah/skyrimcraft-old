@@ -2,12 +2,14 @@ package com.ryankshah.skyrimcraft.character.magic;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.magic.shout.*;
+import com.ryankshah.skyrimcraft.character.magic.spell.SpellConjureFamiliar;
 import com.ryankshah.skyrimcraft.character.magic.spell.SpellFireball;
+import com.ryankshah.skyrimcraft.character.magic.spell.SpellHealing;
 import com.ryankshah.skyrimcraft.character.magic.spell.SpellTurnUndead;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 
@@ -28,4 +30,6 @@ public class SpellRegistry
     // Spells
     public static RegistryObject<ISpell> FIREBALL = SPELLS.register("fireball", () -> new SpellFireball(20));
     public static RegistryObject<ISpell> TURN_UNDEAD = SPELLS.register("turn_undead", () -> new SpellTurnUndead(21));
+    public static RegistryObject<ISpell> CONJURE_FAMILIAR = SPELLS.register("conjure_familiar", () -> new SpellConjureFamiliar(22));
+    public static RegistryObject<ISpell> HEALING = SPELLS.register("healing", () -> new SpellHealing(23));
 }

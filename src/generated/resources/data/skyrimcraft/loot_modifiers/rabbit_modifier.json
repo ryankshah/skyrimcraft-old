@@ -11,16 +11,16 @@
   "additional": [
     {
       "item": "skyrimcraft:garlic",
-      "minItem": 1.0,
-      "maxItem": 2.0,
-      "change": 0.45,
+      "minItem": 1,
+      "maxItem": 2,
+      "chance": 0.45,
       "useLooting": true
     },
     {
       "item": "skyrimcraft:tomato_seeds",
-      "minItem": 1.0,
-      "maxItem": 2.0,
-      "change": 0.45,
+      "minItem": 1,
+      "maxItem": 2,
+      "chance": 0.45,
       "useLooting": true
     }
   ],

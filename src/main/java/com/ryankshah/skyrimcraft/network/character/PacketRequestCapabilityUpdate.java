@@ -6,11 +6,11 @@ import com.ryankshah.skyrimcraft.network.spell.PacketUpdateKnownSpells;
 import com.ryankshah.skyrimcraft.network.spell.PacketUpdateMagicka;
 import com.ryankshah.skyrimcraft.network.spell.PacketUpdateSelectedSpells;
 import com.ryankshah.skyrimcraft.network.spell.PacketUpdateShoutCooldowns;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,7 +26,7 @@ public class PacketRequestCapabilityUpdate
 //    private LivingEntity playerTarget;
 //    private float shoutCooldown;
 
-    public PacketRequestCapabilityUpdate(PacketBuffer buf) {
+    public PacketRequestCapabilityUpdate(FriendlyByteBuf buf) {
 //        // Known spells
 //        int size = buf.readInt();
 //        for(int i = 0; i < size; i++) {
@@ -63,7 +63,7 @@ public class PacketRequestCapabilityUpdate
 
     public PacketRequestCapabilityUpdate() {}
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
 //        // Known spells
 //        buf.writeInt(knownSpells.size());
 //        for(ISpell spell : knownSpells) {
@@ -90,7 +90,7 @@ public class PacketRequestCapabilityUpdate
         context.setPacketHandled(true);
 
         if (sideReceived != LogicalSide.SERVER) {
-            LOGGER.warn("PacketAddToKnownSpells received on wrong side:" + sideReceived);
+            LOGGER.warn("PacketRequestCapabilityUpdate received on wrong side:" + sideReceived);
             return false;
         }
 
@@ -98,9 +98,9 @@ public class PacketRequestCapabilityUpdate
         //  that the ctx handler is a serverhandler, and that ServerPlayerEntity exists
         // Packets received on the client side must be handled differently!  See MessageHandlerOnClient
 
-        final ServerPlayerEntity sendingPlayer = context.getSender();
+        final ServerPlayer sendingPlayer = context.getSender();
         if (sendingPlayer == null) {
-            LOGGER.warn("PacketAddToKnownSpells was null when AddSpellToServer was received");
+            LOGGER.warn("sendingPlayer was null when PacketRequestCapabilityUpdate was received");
             return false;
         }
 

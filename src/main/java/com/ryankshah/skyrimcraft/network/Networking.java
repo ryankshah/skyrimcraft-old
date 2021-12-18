@@ -5,13 +5,13 @@ import com.ryankshah.skyrimcraft.network.character.*;
 import com.ryankshah.skyrimcraft.network.skill.PacketAddXpToSkillOnServer;
 import com.ryankshah.skyrimcraft.network.skill.PacketHandlePickpocketOnServer;
 import com.ryankshah.skyrimcraft.network.spell.*;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.util.function.Supplier;
 
@@ -185,13 +185,25 @@ public class Networking
                 .decoder(PacketHandlePickpocketOnServer::new)
                 .consumer(PacketHandlePickpocketOnServer::handle)
                 .add();
+
+        INSTANCE.messageBuilder(PacketUpdateExtraStatOnServer.class, nextID())
+                .encoder(PacketUpdateExtraStatOnServer::toBytes)
+                .decoder(PacketUpdateExtraStatOnServer::new)
+                .consumer(PacketUpdateExtraStatOnServer::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketUpdateExtraStats.class, nextID())
+                .encoder(PacketUpdateExtraStats::toBytes)
+                .decoder(PacketUpdateExtraStats::new)
+                .consumer(PacketUpdateExtraStats::handle)
+                .add();
     }
 
-    public static void sendToClient(Object packet, ServerPlayerEntity player) {
+    public static void sendToClient(Object packet, ServerPlayer player) {
         INSTANCE.sendTo(packet, player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
     }
 
-    public static void sendToAllClients(Supplier<Chunk> chunk, Object packet) {
+    public static void sendToAllClients(Supplier<LevelChunk> chunk, Object packet) {
         INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(chunk), packet);
     }
 

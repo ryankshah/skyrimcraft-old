@@ -8,80 +8,80 @@
   "chestItems": [
     {
       "item": "skyrimcraft:garlic",
-      "minItem": 1.0,
-      "maxItem": 3.0,
+      "minItem": 1,
+      "maxItem": 3,
       "chance": 0.685
     },
     {
       "item": "skyrimcraft:tomato_seeds",
-      "minItem": 1.0,
-      "maxItem": 3.0,
+      "minItem": 1,
+      "maxItem": 3,
       "chance": 0.685
     },
     {
       "item": "skyrimcraft:minor_magicka_potion",
-      "minItem": 2.0,
-      "maxItem": 3.0,
+      "minItem": 2,
+      "maxItem": 3,
       "chance": 0.625
     },
     {
       "item": "skyrimcraft:magicka_potion",
-      "minItem": 1.0,
-      "maxItem": 2.0,
+      "minItem": 1,
+      "maxItem": 2,
       "chance": 0.5
     },
     {
       "item": "skyrimcraft:plentiful_magicka_potion",
-      "minItem": 1.0,
-      "maxItem": 2.0,
+      "minItem": 1,
+      "maxItem": 2,
       "chance": 0.425
     },
     {
       "item": "skyrimcraft:salt_pile",
-      "minItem": 1.0,
-      "maxItem": 3.0,
+      "minItem": 1,
+      "maxItem": 3,
       "chance": 0.425
     },
     {
       "item": "skyrimcraft:briar_heart",
-      "minItem": 1.0,
-      "maxItem": 2.0,
+      "minItem": 1,
+      "maxItem": 2,
       "chance": 0.425
     },
     {
       "item": "skyrimcraft:dwarven_oil",
-      "minItem": 1.0,
-      "maxItem": 2.0,
+      "minItem": 1,
+      "maxItem": 2,
       "chance": 0.3825
     },
     {
       "item": "skyrimcraft:fire_salts",
-      "minItem": 1.0,
-      "maxItem": 2.0,
+      "minItem": 1,
+      "maxItem": 2,
       "chance": 0.325
     },
     {
       "item": "skyrimcraft:mora_tapinella",
-      "minItem": 1.0,
-      "maxItem": 2.0,
+      "minItem": 1,
+      "maxItem": 2,
       "chance": 0.375
     },
     {
       "item": "skyrimcraft:giants_toe",
-      "minItem": 1.0,
-      "maxItem": 2.0,
+      "minItem": 1,
+      "maxItem": 2,
       "chance": 0.2
     },
     {
       "item": "skyrimcraft:vampire_dust",
-      "minItem": 1.0,
-      "maxItem": 2.0,
+      "minItem": 1,
+      "maxItem": 2,
       "chance": 0.3
     },
     {
       "item": "skyrimcraft:creep_cluster",
-      "minItem": 1.0,
-      "maxItem": 2.0,
+      "minItem": 1,
+      "maxItem": 2,
       "chance": 0.375
     }
   ],

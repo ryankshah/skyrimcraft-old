@@ -1,19 +1,19 @@
 package com.ryankshah.skyrimcraft.item;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.LazyValue;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.util.LazyLoadedValue;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.function.Supplier;
 
-public enum ModArmorMaterial implements IArmorMaterial
+public enum ModArmorMaterial implements ArmorMaterial
 {
     ANCIENT_NORD("ancient_nord", 15, new int[]{3, 5, 8, 2}, 12, SoundEvents.ARMOR_EQUIP_GENERIC, 2.0F, 0.625F, () -> {
         return Ingredient.of(Items.IRON_INGOT);
@@ -66,7 +66,7 @@ public enum ModArmorMaterial implements IArmorMaterial
     private final SoundEvent sound;
     private final float toughness;
     private final float knockbackResistance;
-    private final LazyValue<Ingredient> repairIngredient;
+    private final LazyLoadedValue<Ingredient> repairIngredient;
 
     private ModArmorMaterial(String p_i231593_3_, int p_i231593_4_, int[] p_i231593_5_, int p_i231593_6_, SoundEvent p_i231593_7_, float p_i231593_8_, float p_i231593_9_, Supplier<Ingredient> p_i231593_10_) {
         this.name = Skyrimcraft.MODID + ":" + p_i231593_3_;
@@ -76,14 +76,14 @@ public enum ModArmorMaterial implements IArmorMaterial
         this.sound = p_i231593_7_;
         this.toughness = p_i231593_8_;
         this.knockbackResistance = p_i231593_9_;
-        this.repairIngredient = new LazyValue<>(p_i231593_10_);
+        this.repairIngredient = new LazyLoadedValue<>(p_i231593_10_);
     }
 
-    public int getDurabilityForSlot(EquipmentSlotType p_200896_1_) {
+    public int getDurabilityForSlot(EquipmentSlot p_200896_1_) {
         return HEALTH_PER_SLOT[p_200896_1_.getIndex()] * this.durabilityMultiplier;
     }
 
-    public int getDefenseForSlot(EquipmentSlotType p_200902_1_) {
+    public int getDefenseForSlot(EquipmentSlot p_200902_1_) {
         return this.slotProtections[p_200902_1_.getIndex()];
     }
 

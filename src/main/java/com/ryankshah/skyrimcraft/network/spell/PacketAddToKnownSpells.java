@@ -2,16 +2,16 @@ package com.ryankshah.skyrimcraft.network.spell;
 
 import com.ryankshah.skyrimcraft.advancement.TriggerManager;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
-import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import com.ryankshah.skyrimcraft.network.Networking;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,7 +22,7 @@ public class PacketAddToKnownSpells
     private static final Logger LOGGER = LogManager.getLogger();
     private ISpell spell;
 
-    public PacketAddToKnownSpells(PacketBuffer buf) {
+    public PacketAddToKnownSpells(FriendlyByteBuf buf) {
         ResourceLocation rl = buf.readResourceLocation();
         this.spell = SpellRegistry.SPELLS_REGISTRY.get().getValue(rl);
     }
@@ -31,7 +31,7 @@ public class PacketAddToKnownSpells
         spell = spellToAdd;
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeResourceLocation(SpellRegistry.SPELLS_REGISTRY.get().getKey(spell));
     }
 
@@ -49,7 +49,7 @@ public class PacketAddToKnownSpells
         //  that the ctx handler is a serverhandler, and that ServerPlayerEntity exists
         // Packets received on the client side must be handled differently!  See MessageHandlerOnClient
 
-        final ServerPlayerEntity sendingPlayer = context.getSender();
+        final ServerPlayer sendingPlayer = context.getSender();
         if (sendingPlayer == null) {
             LOGGER.warn("PacketAddToKnownSpells was null when AddSpellToServer was received");
             return false;
@@ -59,7 +59,7 @@ public class PacketAddToKnownSpells
             sendingPlayer.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((cap) -> {
                 cap.addToKnownSpells(spell);
                 TriggerManager.SPELL_TRIGGERS.get(spell).trigger(sendingPlayer);
-                sendingPlayer.getCommandSenderWorld().playSound(null, sendingPlayer.getX(), sendingPlayer.getY(), sendingPlayer.getZ(), SoundEvents.END_PORTAL_SPAWN, SoundCategory.BLOCKS, 1f, 1f);
+                sendingPlayer.getCommandSenderWorld().playSound(null, sendingPlayer.getX(), sendingPlayer.getY(), sendingPlayer.getZ(), SoundEvents.END_PORTAL_SPAWN, SoundSource.BLOCKS, 1f, 1f);
                 Networking.sendToClient(new PacketUpdateKnownSpells(cap.getKnownSpells()), sendingPlayer);
             });
         });

@@ -4,13 +4,13 @@ import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.LogicalSidedProvider;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,7 +24,7 @@ public class PacketUpdateKnownSpells
     private List<ISpell> knownSpells = new ArrayList<>();
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public PacketUpdateKnownSpells(PacketBuffer buf) {
+    public PacketUpdateKnownSpells(FriendlyByteBuf buf) {
         int size = buf.readInt();
         for(int i = 0; i < size; i++) {
             ResourceLocation rl = buf.readResourceLocation();
@@ -36,7 +36,7 @@ public class PacketUpdateKnownSpells
         this.knownSpells = knownSpells;
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeInt(knownSpells.size());
         for(ISpell spell : knownSpells) {
             buf.writeResourceLocation(SpellRegistry.SPELLS_REGISTRY.get().getKey(spell));
@@ -52,14 +52,14 @@ public class PacketUpdateKnownSpells
             LOGGER.warn("PacketUpdateKnownSpells received on wrong side:" + context.getDirection().getReceptionSide());
             return false;
         }
-        Optional<ClientWorld> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
+        Optional<Level> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
         if (!clientWorld.isPresent()) {
             LOGGER.warn("PacketUpdateKnownSpells context could not provide a ClientWorld.");
             return false;
         }
 
         ctx.get().enqueueWork(() -> {
-            PlayerEntity player = Minecraft.getInstance().player;
+            Player player = Minecraft.getInstance().player;
             player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((cap) -> {
                 cap.setKnownSpells(this.knownSpells);
             });

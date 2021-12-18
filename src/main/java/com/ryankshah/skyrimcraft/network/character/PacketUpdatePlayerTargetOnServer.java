@@ -3,12 +3,12 @@ package com.ryankshah.skyrimcraft.network.character;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.util.ClientUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,7 +19,7 @@ public class PacketUpdatePlayerTargetOnServer
     private static final Logger LOGGER = LogManager.getLogger();
     private LivingEntity targetEntity;
 
-    public PacketUpdatePlayerTargetOnServer(PacketBuffer buf) {
+    public PacketUpdatePlayerTargetOnServer(FriendlyByteBuf buf) {
         int id = buf.readVarInt();
         if(id != -1) {
             Entity ent = ClientUtil.getClientWorld().getEntity(id);
@@ -31,7 +31,7 @@ public class PacketUpdatePlayerTargetOnServer
         this.targetEntity = targetEntity;
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         int id = targetEntity != null ? targetEntity.getId() : -1;
         buf.writeVarInt(id);
     }
@@ -50,7 +50,7 @@ public class PacketUpdatePlayerTargetOnServer
         //  that the ctx handler is a serverhandler, and that ServerPlayerEntity exists
         // Packets received on the client side must be handled differently!  See MessageHandlerOnClient
 
-        final ServerPlayerEntity sendingPlayer = context.getSender();
+        final ServerPlayer sendingPlayer = context.getSender();
         if (sendingPlayer == null) {
             LOGGER.warn("ServerPlayerEntity was null when PacketUpdatePlayerTargetOnServer was received");
             return false;

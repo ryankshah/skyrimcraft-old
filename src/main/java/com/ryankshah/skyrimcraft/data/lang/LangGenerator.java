@@ -4,12 +4,11 @@ import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.block.ModBlocks;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.item.*;
-import com.ryankshah.skyrimcraft.item.SkyrimArrow;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.item.Item;
-import net.minecraft.potion.Effect;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.common.data.LanguageProvider;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.RegistryObject;
 
 public class LangGenerator extends LanguageProvider
 {
@@ -53,7 +52,7 @@ public class LangGenerator extends LanguageProvider
             }
         }
 
-        for(RegistryObject<Effect> effect : ModEffects.EFFECTS.getEntries()) {
+        for(RegistryObject<MobEffect> effect : ModEffects.EFFECTS.getEntries()) {
             addEffect(effect, effect.get().getDisplayName().getString());
         }
 
@@ -70,7 +69,7 @@ public class LangGenerator extends LanguageProvider
         add("spell.noselect", "No spell/shout selected");
         add("skyrimcraft.menu.skills", "Skills");
         add("skyrimcraft.menu.map", "Map");
-        add("skyrimcraft.menu.items", "Items");
+        add("skyrimcraft.menu.quests", "Quests");
         add("skyrimcraft.menu.magic", "Magic");
         add("skyrimcraft.menu.option.unavailable", "This option is currently unavailable!");
         add("skyrimcraft.menu.option.invalid", "Invalid Option!");
@@ -81,11 +80,17 @@ public class LangGenerator extends LanguageProvider
         add("skill.pickpocket.success", "You successfully pick the %s's pockets and get some loot!");
 
         // Mobs
-        add("entity.skyrimcraft.merchant", "Merchant");
-        add("entity.skyrimcraft.merchant.none", "Merchant");
-        add("entity.skyrimcraft.merchant.skyrimcraft.alchemist", "Alchemist");
-        add("entity.skyrimcraft.merchant.skyrimcraft.food_merchant", "Food Merchant");
-        add("entity.skyrimcraft.merchant.skyrimcraft.blacksmith", "Blacksmith");
+        add("entity.minecraft.villager.skyrimcraft.alchemist", "Alchemist");
+        add("entity.minecraft.villager.skyrimcraft.food_merchant", "Food Merchant");
+        add("entity.minecraft.villager.skyrimcraft.blacksmith", "Blacksmith");
+        add("entity.skyrimcraft.sabre_cat", "Sabre Cat");
+        add("entity.skyrimcraft.snowy_sabre_cat", "Snowy Sabre Cat");
+        add("entity.skyrimcraft.giant", "Giant");
+
+        // Damage Source
+        add("death.attack.death.skyrimcraft.conjuredfamiliar", "Your conjured %1$s familiar has vanished!");
+
+        add("skyrimcraft.conjuredfamiliar.exists", "You have already conjured a familiar!");
     }
 
     @Override

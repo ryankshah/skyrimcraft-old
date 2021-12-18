@@ -4,14 +4,14 @@ import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.FloatNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.FloatTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.LogicalSidedProvider;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,8 +25,8 @@ public class PacketUpdateShoutCooldowns
     private Map<ISpell, Float> shoutsAndCooldowns = new HashMap<>();
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public PacketUpdateShoutCooldowns(PacketBuffer buf) {
-        CompoundNBT shoutsAndCooldownsNBT = buf.readNbt();
+    public PacketUpdateShoutCooldowns(FriendlyByteBuf buf) {
+        CompoundTag shoutsAndCooldownsNBT = buf.readNbt();
         for(String s : shoutsAndCooldownsNBT.getAllKeys()) {
             shoutsAndCooldowns.put(SpellRegistry.SPELLS_REGISTRY.get().getValue(new ResourceLocation(s)), shoutsAndCooldownsNBT.getFloat(s));
         }
@@ -36,10 +36,10 @@ public class PacketUpdateShoutCooldowns
         this.shoutsAndCooldowns = shoutsAndCooldowns;
     }
 
-    public void toBytes(PacketBuffer buf) {
-        CompoundNBT nbt = new CompoundNBT();
+    public void toBytes(FriendlyByteBuf buf) {
+        CompoundTag nbt = new CompoundTag();
         for (Map.Entry<ISpell, Float> entry : shoutsAndCooldowns.entrySet()) {
-            nbt.put(entry.getKey().getRegistryName().toString(), FloatNBT.valueOf(entry.getValue()));
+            nbt.put(entry.getKey().getRegistryName().toString(), FloatTag.valueOf(entry.getValue()));
         }
         buf.writeNbt(nbt);
     }
@@ -53,7 +53,7 @@ public class PacketUpdateShoutCooldowns
             LOGGER.warn("PacketUpdateShoutCooldowns received on wrong side:" + context.getDirection().getReceptionSide());
             return false;
         }
-        Optional<ClientWorld> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
+        Optional<Level> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
         if (!clientWorld.isPresent()) {
             LOGGER.warn("PacketUpdateShoutCooldowns context could not provide a ClientWorld.");
             return false;

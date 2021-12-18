@@ -1,20 +1,20 @@
 package com.ryankshah.skyrimcraft.effect;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public class UndeadFleeEffect extends Effect implements IForgeRegistryEntry<Effect>
+public class UndeadFleeEffect extends MobEffect implements IForgeRegistryEntry<MobEffect>
 {
     public UndeadFleeEffect() {
-        super(EffectType.BENEFICIAL, 0xAA222222);
+        super(MobEffectCategory.BENEFICIAL, 0xAA222222);
     }
 
-    public ITextComponent getDisplayName() {
-        return new StringTextComponent("Turn Undead");
+    public Component getDisplayName() {
+        return new TextComponent("Turn Undead");
     }
 
     @Override

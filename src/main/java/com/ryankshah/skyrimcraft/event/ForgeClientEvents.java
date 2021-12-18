@@ -2,16 +2,16 @@ package com.ryankshah.skyrimcraft.event;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
-import com.ryankshah.skyrimcraft.client.gui.SkyrimMenuScreen;
+import com.ryankshah.skyrimcraft.client.gui.screen.SkyrimMenuScreen;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.network.skill.PacketHandlePickpocketOnServer;
 import com.ryankshah.skyrimcraft.network.spell.PacketCastSpell;
 import com.ryankshah.skyrimcraft.client.entity.ModEntityType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.KeyMapping;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -24,10 +24,10 @@ public class ForgeClientEvents
 {
     public static final String CATEGORY = "key.categories." + Skyrimcraft.MODID;
 
-    public static final KeyBinding toggleSkyrimMenu = new KeyBinding("key.togglemenu", KeyConflictContext.UNIVERSAL, InputMappings.Type.KEYSYM, GLFW_KEY_M, CATEGORY);
-    public static final KeyBinding toggleSpellSlot1 = new KeyBinding("key.togglespellslot1", KeyConflictContext.UNIVERSAL, InputMappings.Type.KEYSYM, GLFW_KEY_V, CATEGORY);
-    public static final KeyBinding toggleSpellSlot2 = new KeyBinding("key.togglespellslot2", KeyConflictContext.UNIVERSAL, InputMappings.Type.KEYSYM, GLFW_KEY_B, CATEGORY);
-    public static final KeyBinding pickpocketKey = new KeyBinding("key.pickpocket", KeyConflictContext.UNIVERSAL, InputMappings.Type.KEYSYM, GLFW_KEY_G, CATEGORY);
+    public static final KeyMapping toggleSkyrimMenu = new KeyMapping("key.togglemenu", KeyConflictContext.UNIVERSAL, InputConstants.Type.KEYSYM, GLFW_KEY_M, CATEGORY);
+    public static final KeyMapping toggleSpellSlot1 = new KeyMapping("key.togglespellslot1", KeyConflictContext.UNIVERSAL, InputConstants.Type.KEYSYM, GLFW_KEY_V, CATEGORY);
+    public static final KeyMapping toggleSpellSlot2 = new KeyMapping("key.togglespellslot2", KeyConflictContext.UNIVERSAL, InputConstants.Type.KEYSYM, GLFW_KEY_B, CATEGORY);
+    public static final KeyMapping pickpocketKey = new KeyMapping("key.pickpocket", KeyConflictContext.UNIVERSAL, InputConstants.Type.KEYSYM, GLFW_KEY_G, CATEGORY);
 
     // public static final Map<BlockPos, Float> positions = Collections.synchronizedMap(new HashMap<>());
 
@@ -65,7 +65,7 @@ public class ForgeClientEvents
                 if(cap.getSelectedSpells().size() > 0 && cap.getSelectedSpells().get(0) != null)
                     Networking.sendToServer(new PacketCastSpell(cap.getSelectedSpells().get(0)));
                 else
-                    mc.player.displayClientMessage(new TranslationTextComponent("spell.noselect"), false);
+                    mc.player.displayClientMessage(new TranslatableComponent("spell.noselect"), false);
             });
             return;
         }
@@ -75,7 +75,7 @@ public class ForgeClientEvents
                 if(cap.getSelectedSpells().size() > 1 && cap.getSelectedSpells().get(1) != null)
                     Networking.sendToServer(new PacketCastSpell(cap.getSelectedSpells().get(1)));
                 else
-                    mc.player.displayClientMessage(new TranslationTextComponent("spell.noselect"), false);
+                    mc.player.displayClientMessage(new TranslatableComponent("spell.noselect"), false);
             });
         }
 

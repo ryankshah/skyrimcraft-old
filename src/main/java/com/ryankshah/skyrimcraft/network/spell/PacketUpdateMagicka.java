@@ -2,11 +2,11 @@ package com.ryankshah.skyrimcraft.network.spell;
 
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.LogicalSidedProvider;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,7 +18,7 @@ public class PacketUpdateMagicka
     private float magicka;
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public PacketUpdateMagicka(PacketBuffer buf) {
+    public PacketUpdateMagicka(FriendlyByteBuf buf) {
         this.magicka = buf.readFloat();
     }
 
@@ -26,7 +26,7 @@ public class PacketUpdateMagicka
         this.magicka = magicka;
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeFloat(magicka);
     }
 
@@ -39,7 +39,7 @@ public class PacketUpdateMagicka
             LOGGER.warn("TargetEffectMessageToClient received on wrong side:" + context.getDirection().getReceptionSide());
             return false;
         }
-        Optional<ClientWorld> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
+        Optional<Level> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
         if (!clientWorld.isPresent()) {
             LOGGER.warn("TargetEffectMessageToClient context could not provide a ClientWorld.");
             return false;

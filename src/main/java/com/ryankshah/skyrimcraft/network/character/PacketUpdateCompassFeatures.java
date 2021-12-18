@@ -3,13 +3,13 @@ package com.ryankshah.skyrimcraft.network.character;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.util.CompassFeature;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.LogicalSidedProvider;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,7 +24,7 @@ public class PacketUpdateCompassFeatures
     private List<CompassFeature> compassFeatures = new ArrayList<>();
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public PacketUpdateCompassFeatures(PacketBuffer buf) {
+    public PacketUpdateCompassFeatures(FriendlyByteBuf buf) {
         int size = buf.readInt();
         for(int i = 0; i < size; i++) {
             UUID id = buf.readUUID();
@@ -41,7 +41,7 @@ public class PacketUpdateCompassFeatures
         this.compassFeatures = compassFeatures;
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeInt(compassFeatures.size());
         for(CompassFeature feature : compassFeatures) {
             buf.writeUUID(feature.getId());
@@ -58,12 +58,12 @@ public class PacketUpdateCompassFeatures
         context.setPacketHandled(true);
 
         if (sideReceived != LogicalSide.CLIENT) {
-            LOGGER.warn("PacketUpdateMapFeatures received on wrong side:" + context.getDirection().getReceptionSide());
+            LOGGER.warn("PacketUpdateCompassFeatures received on wrong side:" + context.getDirection().getReceptionSide());
             return false;
         }
-        Optional<ClientWorld> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
+        Optional<Level> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
         if (!clientWorld.isPresent()) {
-            LOGGER.warn("PacketUpdateMapFeatures context could not provide a ClientWorld.");
+            LOGGER.warn("PacketUpdateCompassFeatures context could not provide a ClientWorld.");
             return false;
         }
 

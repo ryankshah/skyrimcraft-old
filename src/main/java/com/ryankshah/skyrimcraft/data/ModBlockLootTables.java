@@ -1,25 +1,25 @@
 package com.ryankshah.skyrimcraft.data;
 
 import com.ryankshah.skyrimcraft.block.GarlicCrop;
-import com.ryankshah.skyrimcraft.block.TomatoCrop;
 import com.ryankshah.skyrimcraft.block.ModBlocks;
+import com.ryankshah.skyrimcraft.block.TomatoCrop;
 import com.ryankshah.skyrimcraft.item.ModItems;
-import net.minecraft.advancements.criterion.StatePropertiesPredicate;
-import net.minecraft.block.Block;
-import net.minecraft.data.loot.BlockLootTables;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.item.Item;
-import net.minecraft.loot.ItemLootEntry;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.RandomValueRange;
-import net.minecraft.loot.conditions.BlockStateProperty;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.loot.functions.ApplyBonus;
-import net.minecraft.loot.functions.SetCount;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.data.loot.BlockLoot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.minecraftforge.registries.RegistryObject;
 
-public class ModBlockLootTables extends BlockLootTables
+public class ModBlockLootTables extends BlockLoot
 {
     @Override
     protected void addTables() {
@@ -41,17 +41,17 @@ public class ModBlockLootTables extends BlockLootTables
         dropOther(ModBlocks.PURPLE_MOUNTAIN_FLOWER.get(), ModBlocks.PURPLE_MOUNTAIN_FLOWER_ITEM.get());
 
         add(ModBlocks.SALT_DEPOSIT.get(), (deposit) -> {
-            return createSilkTouchDispatchTable(deposit, applyExplosionDecay(deposit, ItemLootEntry.lootTableItem(ModItems.SALT_PILE.get()).apply(SetCount.setCount(RandomValueRange.between(2.0F, 5.0F))).apply(ApplyBonus.addOreBonusCount(Enchantments.BLOCK_FORTUNE))));
+            return createSilkTouchDispatchTable(deposit, applyExplosionDecay(deposit, LootItem.lootTableItem(ModItems.SALT_PILE.get()).apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0F, 5.0F))).apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))));
         });
 
-        ILootCondition.IBuilder ilootcondition$tomatocrop = BlockStateProperty.hasBlockStateProperties(ModBlocks.TOMATO_CROP.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(TomatoCrop.AGE, 7));
+        LootItemCondition.Builder ilootcondition$tomatocrop = LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.TOMATO_CROP.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(TomatoCrop.AGE, 7));
         add(ModBlocks.TOMATO_CROP.get(), createCropDrops(ModBlocks.TOMATO_CROP.get(), ModItems.TOMATO.get(), ModBlocks.TOMATO_SEEDS.get(), ilootcondition$tomatocrop));
-        ILootCondition.IBuilder ilootcondition$garliccrop = BlockStateProperty.hasBlockStateProperties(ModBlocks.GARLIC_CROP.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(GarlicCrop.AGE, 7));
+        LootItemCondition.Builder ilootcondition$garliccrop = LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.GARLIC_CROP.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(GarlicCrop.AGE, 7));
         add(ModBlocks.GARLIC_CROP.get(), createCropDrops(ModBlocks.GARLIC_CROP.get(), ModBlocks.GARLIC.get(), ModBlocks.GARLIC.get(), ilootcondition$garliccrop));
     }
 
-    protected static LootTable.Builder createCropDrops(Block p_218541_0_, Item p_218541_1_, Item p_218541_2_, ILootCondition.IBuilder p_218541_3_) {
-        return applyExplosionDecay(p_218541_0_, LootTable.lootTable().withPool(LootPool.lootPool().add(ItemLootEntry.lootTableItem(p_218541_1_).when(p_218541_3_).otherwise(ItemLootEntry.lootTableItem(p_218541_2_)))).withPool(LootPool.lootPool().when(p_218541_3_).add(ItemLootEntry.lootTableItem(p_218541_2_).apply(ApplyBonus.addBonusBinomialDistributionCount(Enchantments.BLOCK_FORTUNE, 0.5714286F, 3)))));
+    protected static LootTable.Builder createCropDrops(Block p_218541_0_, Item p_218541_1_, Item p_218541_2_, LootItemCondition.Builder p_218541_3_) {
+        return applyExplosionDecay(p_218541_0_, LootTable.lootTable().withPool(LootPool.lootPool().add(LootItem.lootTableItem(p_218541_1_).when(p_218541_3_).otherwise(LootItem.lootTableItem(p_218541_2_)))).withPool(LootPool.lootPool().when(p_218541_3_).add(LootItem.lootTableItem(p_218541_2_).apply(ApplyBonusCount.addBonusBinomialDistributionCount(Enchantments.BLOCK_FORTUNE, 0.5714286F, 3)))));
     }
 
     @Override

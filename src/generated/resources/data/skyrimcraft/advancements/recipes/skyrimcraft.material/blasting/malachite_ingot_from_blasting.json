@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "skyrimcraft:malachite_ore"
+            "items": [
+              "skyrimcraft:malachite_ore"
+            ]
           }
         ]
       }

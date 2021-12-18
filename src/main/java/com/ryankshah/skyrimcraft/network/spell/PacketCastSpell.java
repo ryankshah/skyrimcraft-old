@@ -3,11 +3,11 @@ package com.ryankshah.skyrimcraft.network.spell;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,7 +19,7 @@ public class PacketCastSpell
     private static final Logger LOGGER = LogManager.getLogger();
     private ISpell spell;
 
-    public PacketCastSpell(PacketBuffer buf) {
+    public PacketCastSpell(FriendlyByteBuf buf) {
         ResourceLocation rl = buf.readResourceLocation();
         this.spell = SpellRegistry.SPELLS_REGISTRY.get().getValue(rl);
     }
@@ -28,7 +28,7 @@ public class PacketCastSpell
         this.spell = spell;
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeResourceLocation(SpellRegistry.SPELLS_REGISTRY.get().getKey(spell));
     }
 
@@ -46,7 +46,7 @@ public class PacketCastSpell
         //  that the ctx handler is a serverhandler, and that ServerPlayerEntity exists
         // Packets received on the client side must be handled differently!  See MessageHandlerOnClient
 
-        final ServerPlayerEntity sendingPlayer = context.getSender();
+        final ServerPlayer sendingPlayer = context.getSender();
         if (sendingPlayer == null) {
             LOGGER.warn("ServerPlayerEntity was null when AddSpellToServer was received");
             return false;

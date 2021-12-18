@@ -1,16 +1,16 @@
 package com.ryankshah.skyrimcraft.item;
 
+import com.ryankshah.skyrimcraft.block.ModBlocks;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.network.spell.PacketReplenishMagicka;
-import com.ryankshah.skyrimcraft.block.ModBlocks;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -26,8 +26,8 @@ public class MagickaPotion extends SkyrimPotion
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving) {
-        PlayerEntity playerEntity = entityLiving instanceof PlayerEntity ? (PlayerEntity) entityLiving : null;
+    public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
+        Player playerEntity = entityLiving instanceof Player ? (Player) entityLiving : null;
 
         if(!worldIn.isClientSide) {
             playerEntity.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((cap) -> {
@@ -70,8 +70,8 @@ public class MagickaPotion extends SkyrimPotion
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new StringTextComponent((int)replenishValue == 20 ? "Completely replenishes your magicka" : "Replenishes " + (int)replenishValue + " magicka"));
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+        tooltip.add(new TextComponent((int)replenishValue == 20 ? "Completely replenishes your magicka" : "Replenishes " + (int)replenishValue + " magicka"));
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 }

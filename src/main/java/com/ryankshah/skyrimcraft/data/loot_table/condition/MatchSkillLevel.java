@@ -8,15 +8,15 @@ import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.character.skill.SkillRegistry;
 import com.ryankshah.skyrimcraft.data.loot_table.condition.type.ModLootConditionTypes;
 import com.ryankshah.skyrimcraft.data.loot_table.predicate.SkillPredicate;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.loot.ILootSerializer;
-import net.minecraft.loot.LootConditionType;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.loot.conditions.ILootCondition;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.storage.loot.Serializer;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
-public class MatchSkillLevel implements ILootCondition
+public class MatchSkillLevel implements LootItemCondition
 {
     private final SkillPredicate skillPredicate;
 
@@ -30,13 +30,13 @@ public class MatchSkillLevel implements ILootCondition
 //    }
 
     @Override
-    public LootConditionType getType() {
+    public LootItemConditionType getType() {
         return ModLootConditionTypes.MATCH_SKILL;
     }
 
     @Override
     public boolean test(LootContext lootContext) {
-        Entity entity = lootContext.getParamOrNull(LootParameters.THIS_ENTITY);
+        Entity entity = lootContext.getParamOrNull(LootContextParams.THIS_ENTITY);
         if(entity instanceof LivingEntity) {
             float successChance = ((LivingEntity) entity).getRandom().nextFloat();
             ISkyrimPlayerData cap = entity.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("MatchSkillLevel test"));
@@ -45,13 +45,13 @@ public class MatchSkillLevel implements ILootCondition
         return false;
     }
 
-    public static ILootCondition.IBuilder skillMatches(SkillPredicate.Builder builder) {
+    public static LootItemCondition.Builder skillMatches(SkillPredicate.Builder builder) {
         return () -> {
             return new MatchSkillLevel(builder.build());
         };
     }
 
-    public static class Serializer implements ILootSerializer<MatchSkillLevel> {
+    public static class MatchSkillLevelSerializer implements Serializer<MatchSkillLevel> {
         public void serialize(JsonObject obj, MatchSkillLevel condition, JsonSerializationContext context) {
             obj.add("predicate", condition.skillPredicate.serializeToJson());
         }

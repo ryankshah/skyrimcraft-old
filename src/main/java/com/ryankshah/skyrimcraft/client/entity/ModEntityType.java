@@ -9,17 +9,23 @@ import com.ryankshah.skyrimcraft.character.magic.entity.render.FireballRenderer;
 import com.ryankshah.skyrimcraft.character.magic.entity.render.UnrelentingForceRenderer;
 import com.ryankshah.skyrimcraft.client.entity.arrow.*;
 import com.ryankshah.skyrimcraft.client.entity.arrow.render.*;
-import com.ryankshah.skyrimcraft.client.entity.passive.flying.AbstractButterflyEntity;
+import com.ryankshah.skyrimcraft.client.entity.boss.dragon.SkyrimDragon;
+import com.ryankshah.skyrimcraft.client.entity.boss.dragon.render.SkyrimDragonRenderer;
+import com.ryankshah.skyrimcraft.client.entity.creature.GiantEntity;
+import com.ryankshah.skyrimcraft.client.entity.creature.SabreCatEntity;
+import com.ryankshah.skyrimcraft.client.entity.creature.render.GiantRenderer;
+import com.ryankshah.skyrimcraft.client.entity.creature.render.SabreCatRenderer;
+import com.ryankshah.skyrimcraft.client.entity.passive.flying.BlueButterfly;
+import com.ryankshah.skyrimcraft.client.entity.passive.flying.TorchBug;
 import com.ryankshah.skyrimcraft.client.entity.passive.flying.render.BlueButterflyRenderer;
-import com.ryankshah.skyrimcraft.client.entity.passive.merchant.MerchantEntity;
-import com.ryankshah.skyrimcraft.client.entity.passive.merchant.render.MerchantRenderer;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import com.ryankshah.skyrimcraft.client.entity.passive.flying.render.TorchBugRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ModEntityType
 {
@@ -28,63 +34,63 @@ public class ModEntityType
 
     // Arrow entity types
     public static final RegistryObject<EntityType<? extends AncientNordArrowEntity>> ANCIENT_NORD_ARROW_ENTITY = ENTITY_TYPES.register("ancient_nord_arrow",
-            () -> EntityType.Builder.<AncientNordArrowEntity>of(AncientNordArrowEntity::new, EntityClassification.MISC)
+            () -> EntityType.Builder.<AncientNordArrowEntity>of(AncientNordArrowEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F).setTrackingRange(4).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true)
                     .build(new ResourceLocation(Skyrimcraft.MODID, "ancient_nord_arrow").toString()));
 
     public static final RegistryObject<EntityType<? extends GlassArrowEntity>> GLASS_ARROW_ENTITY = ENTITY_TYPES.register("glass_arrow",
-            () -> EntityType.Builder.<GlassArrowEntity>of(GlassArrowEntity::new, EntityClassification.MISC)
+            () -> EntityType.Builder.<GlassArrowEntity>of(GlassArrowEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F).setTrackingRange(4).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true)
                     .build(new ResourceLocation(Skyrimcraft.MODID, "glass_arrow").toString()));
 
     public static final RegistryObject<EntityType<? extends DaedricArrowEntity>> DAEDRIC_ARROW_ENTITY = ENTITY_TYPES.register("daedric_arrow",
-            () -> EntityType.Builder.<DaedricArrowEntity>of(DaedricArrowEntity::new, EntityClassification.MISC)
+            () -> EntityType.Builder.<DaedricArrowEntity>of(DaedricArrowEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F).setTrackingRange(4).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true)
                     .build(new ResourceLocation(Skyrimcraft.MODID, "daedric_arrow").toString()));
 
     public static final RegistryObject<EntityType<? extends SteelArrowEntity>> STEEL_ARROW_ENTITY = ENTITY_TYPES.register("steel_arrow",
-            () -> EntityType.Builder.<SteelArrowEntity>of(SteelArrowEntity::new, EntityClassification.MISC)
+            () -> EntityType.Builder.<SteelArrowEntity>of(SteelArrowEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F).setTrackingRange(4).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true)
                     .build(new ResourceLocation(Skyrimcraft.MODID, "steel_arrow").toString()));
 
     public static final RegistryObject<EntityType<? extends OrcishArrowEntity>> ORCISH_ARROW_ENTITY = ENTITY_TYPES.register("orcish_arrow",
-            () -> EntityType.Builder.<OrcishArrowEntity>of(OrcishArrowEntity::new, EntityClassification.MISC)
+            () -> EntityType.Builder.<OrcishArrowEntity>of(OrcishArrowEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F).setTrackingRange(4).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true)
                     .build(new ResourceLocation(Skyrimcraft.MODID, "orcish_arrow").toString()));
 
     public static final RegistryObject<EntityType<? extends IronArrowEntity>> IRON_ARROW_ENTITY = ENTITY_TYPES.register("iron_arrow",
-            () -> EntityType.Builder.<IronArrowEntity>of(IronArrowEntity::new, EntityClassification.MISC)
+            () -> EntityType.Builder.<IronArrowEntity>of(IronArrowEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F).setTrackingRange(4).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true)
                     .build(new ResourceLocation(Skyrimcraft.MODID, "iron_arrow").toString()));
 
     public static final RegistryObject<EntityType<? extends FalmerArrowEntity>> FALMER_ARROW_ENTITY = ENTITY_TYPES.register("falmer_arrow",
-            () -> EntityType.Builder.<FalmerArrowEntity>of(FalmerArrowEntity::new, EntityClassification.MISC)
+            () -> EntityType.Builder.<FalmerArrowEntity>of(FalmerArrowEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F).setTrackingRange(4).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true)
                     .build(new ResourceLocation(Skyrimcraft.MODID, "falmer_arrow").toString()));
 
     public static final RegistryObject<EntityType<? extends ElvenArrowEntity>> ELVEN_ARROW_ENTITY = ENTITY_TYPES.register("elven_arrow",
-            () -> EntityType.Builder.<ElvenArrowEntity>of(ElvenArrowEntity::new, EntityClassification.MISC)
+            () -> EntityType.Builder.<ElvenArrowEntity>of(ElvenArrowEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F).setTrackingRange(4).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true)
                     .build(new ResourceLocation(Skyrimcraft.MODID, "elven_arrow").toString()));
 
     public static final RegistryObject<EntityType<? extends EbonyArrowEntity>> EBONY_ARROW_ENTITY = ENTITY_TYPES.register("ebony_arrow",
-            () -> EntityType.Builder.<EbonyArrowEntity>of(EbonyArrowEntity::new, EntityClassification.MISC)
+            () -> EntityType.Builder.<EbonyArrowEntity>of(EbonyArrowEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F).setTrackingRange(4).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true)
                     .build(new ResourceLocation(Skyrimcraft.MODID, "ebony_arrow").toString()));
 
     public static final RegistryObject<EntityType<? extends DwarvenArrowEntity>> DWARVEN_ARROW_ENTITY = ENTITY_TYPES.register("dwarven_arrow",
-            () -> EntityType.Builder.<DwarvenArrowEntity>of(DwarvenArrowEntity::new, EntityClassification.MISC)
+            () -> EntityType.Builder.<DwarvenArrowEntity>of(DwarvenArrowEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F).setTrackingRange(4).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true)
                     .build(new ResourceLocation(Skyrimcraft.MODID, "dwarven_arrow").toString()));
 
     public static final RegistryObject<EntityType<? extends DragonboneArrowEntity>> DRAGONBONE_ARROW_ENTITY = ENTITY_TYPES.register("dragonbone_arrow",
-            () -> EntityType.Builder.<DragonboneArrowEntity>of(DragonboneArrowEntity::new, EntityClassification.MISC)
+            () -> EntityType.Builder.<DragonboneArrowEntity>of(DragonboneArrowEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F).setTrackingRange(4).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true)
                     .build(new ResourceLocation(Skyrimcraft.MODID, "dragonbone_arrow").toString()));
 
     // Spell entity types
-    public static final RegistryObject<EntityType<?>> SPELL_FIREBALL_ENTITY = ENTITY_TYPES.register("spell_fireball",
-            () -> EntityType.Builder.of(FireballEntity::new, EntityClassification.MISC)
+    public static final RegistryObject<EntityType<FireballEntity>> SPELL_FIREBALL_ENTITY = ENTITY_TYPES.register("spell_fireball",
+            () -> EntityType.Builder.<FireballEntity>of(FireballEntity::new, MobCategory.MISC)
                     .sized(1.25f, 1.0f) // Hitbox Size
                     .setTrackingRange(64)
                     .setShouldReceiveVelocityUpdates(true)
@@ -92,15 +98,15 @@ public class ModEntityType
                     .build(new ResourceLocation(Skyrimcraft.MODID, "spell_fireball").toString()));
 
     // Shout entity types
-    public static final RegistryObject<EntityType<?>> SHOUT_UNRELENTING_FORCE_ENTITY = ENTITY_TYPES.register("shout_unrelenting_force",
-            () -> EntityType.Builder.of(UnrelentingForceEntity::new, EntityClassification.MISC)
+    public static final RegistryObject<EntityType<UnrelentingForceEntity>> SHOUT_UNRELENTING_FORCE_ENTITY = ENTITY_TYPES.register("shout_unrelenting_force",
+            () -> EntityType.Builder.<UnrelentingForceEntity>of(UnrelentingForceEntity::new, MobCategory.MISC)
                     .sized(2f, 2f) // Hitbox Size
                     .setTrackingRange(64)
                     .setShouldReceiveVelocityUpdates(true)
                     .setUpdateInterval(2)
                     .build(new ResourceLocation(Skyrimcraft.MODID, "shout_unrelenting_force").toString()));
-    public static final RegistryObject<EntityType<?>> SHOUT_DISARM_ENTITY = ENTITY_TYPES.register("shout_disarm",
-            () -> EntityType.Builder.of(DisarmEntity::new, EntityClassification.MISC)
+    public static final RegistryObject<EntityType<DisarmEntity>> SHOUT_DISARM_ENTITY = ENTITY_TYPES.register("shout_disarm",
+            () -> EntityType.Builder.<DisarmEntity>of(DisarmEntity::new, MobCategory.MISC)
                     .sized(2f, 2f) // Hitbox Size
                     .setTrackingRange(64)
                     .setShouldReceiveVelocityUpdates(true)
@@ -108,45 +114,49 @@ public class ModEntityType
                     .build(new ResourceLocation(Skyrimcraft.MODID, "shout_disarm").toString()));
 
     // Mobs
-    public static final RegistryObject<EntityType<AbstractButterflyEntity>> BLUE_BUTTERFLY = ENTITY_TYPES.register("blue_butterfly",
-            () -> EntityType.Builder.of(AbstractButterflyEntity::new, EntityClassification.CREATURE)
+    public static final RegistryObject<EntityType<BlueButterfly>> BLUE_BUTTERFLY = ENTITY_TYPES.register("blue_butterfly",
+            () -> EntityType.Builder.of(BlueButterfly::new, MobCategory.CREATURE)
                     .sized(1.0f, 1.0f) // Hitbox Size
                     .build(new ResourceLocation(Skyrimcraft.MODID, "blue_butterfly").toString()));
-    public static final RegistryObject<EntityType<MerchantEntity>> MERCHANT = ENTITY_TYPES.register("merchant",
-            () -> EntityType.Builder.<MerchantEntity>of(MerchantEntity::new, EntityClassification.CREATURE)
-                    .sized(1.0f, 2.0f) // Hitbox Size
-                    .build(new ResourceLocation(Skyrimcraft.MODID, "merchant").toString()));
+    public static final RegistryObject<EntityType<TorchBug>> TORCHBUG = ENTITY_TYPES.register("torchbug",
+            () -> EntityType.Builder.of(TorchBug::new, MobCategory.CREATURE)
+                    .sized(1.0f, 1.0f) // Hitbox Size
+                    .build(new ResourceLocation(Skyrimcraft.MODID, "torchbug").toString()));
+    public static final RegistryObject<EntityType<SabreCatEntity>> SABRE_CAT = ENTITY_TYPES.register("sabre_cat",
+            () -> EntityType.Builder.of(SabreCatEntity::new, MobCategory.MONSTER)
+                    .sized(1.0f, 1.0f) // Hitbox Size
+                    .build(new ResourceLocation(Skyrimcraft.MODID, "sabre_cat").toString()));
+    public static final RegistryObject<EntityType<GiantEntity>> GIANT = ENTITY_TYPES.register("giant",
+            () -> EntityType.Builder.of(GiantEntity::new, MobCategory.MONSTER)
+                    .sized(1.0f, 1.0f) // Hitbox Size
+                    .build(new ResourceLocation(Skyrimcraft.MODID, "giant").toString()));
+    public static final RegistryObject<EntityType<SkyrimDragon>> DRAGON = ENTITY_TYPES.register("dragon",
+            () -> EntityType.Builder.of(SkyrimDragon::new, MobCategory.CREATURE)
+                    .sized(1.0f, 1.0f) // Hitbox Size
+                    .build(new ResourceLocation(Skyrimcraft.MODID, "dragon").toString()));
 
-    public static void registerRenderers() {
-        RenderingRegistry.registerEntityRenderingHandler((EntityType<AncientNordArrowEntity>) ModEntityType.ANCIENT_NORD_ARROW_ENTITY.get(), AncientNordArrowRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler((EntityType<GlassArrowEntity>) ModEntityType.GLASS_ARROW_ENTITY.get(), GlassArrowRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler((EntityType<DaedricArrowEntity>) ModEntityType.DAEDRIC_ARROW_ENTITY.get(), DaedricArrowRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler((EntityType<SteelArrowEntity>) ModEntityType.STEEL_ARROW_ENTITY.get(), SteelArrowRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler((EntityType<OrcishArrowEntity>) ModEntityType.ORCISH_ARROW_ENTITY.get(), OrcishArrowRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler((EntityType<IronArrowEntity>) ModEntityType.IRON_ARROW_ENTITY.get(), IronArrowRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler((EntityType<FalmerArrowEntity>) ModEntityType.FALMER_ARROW_ENTITY.get(), FalmerArrowRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler((EntityType<ElvenArrowEntity>) ModEntityType.ELVEN_ARROW_ENTITY.get(), ElvenArrowRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler((EntityType<EbonyArrowEntity>) ModEntityType.EBONY_ARROW_ENTITY.get(), EbonyArrowRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler((EntityType<DwarvenArrowEntity>) ModEntityType.DWARVEN_ARROW_ENTITY.get(), DwarvenArrowRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler((EntityType<DragonboneArrowEntity>) ModEntityType.DRAGONBONE_ARROW_ENTITY.get(), DragonboneArrowRenderer::new);
+    public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer((EntityType<AncientNordArrowEntity>) ModEntityType.ANCIENT_NORD_ARROW_ENTITY.get(), AncientNordArrowRenderer::new);
+        event.registerEntityRenderer((EntityType<GlassArrowEntity>) ModEntityType.GLASS_ARROW_ENTITY.get(), GlassArrowRenderer::new);
+        event.registerEntityRenderer((EntityType<DaedricArrowEntity>) ModEntityType.DAEDRIC_ARROW_ENTITY.get(), DaedricArrowRenderer::new);
+        event.registerEntityRenderer((EntityType<SteelArrowEntity>) ModEntityType.STEEL_ARROW_ENTITY.get(), SteelArrowRenderer::new);
+        event.registerEntityRenderer((EntityType<OrcishArrowEntity>) ModEntityType.ORCISH_ARROW_ENTITY.get(), OrcishArrowRenderer::new);
+        event.registerEntityRenderer((EntityType<IronArrowEntity>) ModEntityType.IRON_ARROW_ENTITY.get(), IronArrowRenderer::new);
+        event.registerEntityRenderer((EntityType<FalmerArrowEntity>) ModEntityType.FALMER_ARROW_ENTITY.get(), FalmerArrowRenderer::new);
+        event.registerEntityRenderer((EntityType<ElvenArrowEntity>) ModEntityType.ELVEN_ARROW_ENTITY.get(), ElvenArrowRenderer::new);
+        event.registerEntityRenderer((EntityType<EbonyArrowEntity>) ModEntityType.EBONY_ARROW_ENTITY.get(), EbonyArrowRenderer::new);
+        event.registerEntityRenderer((EntityType<DwarvenArrowEntity>) ModEntityType.DWARVEN_ARROW_ENTITY.get(), DwarvenArrowRenderer::new);
+        event.registerEntityRenderer((EntityType<DragonboneArrowEntity>) ModEntityType.DRAGONBONE_ARROW_ENTITY.get(), DragonboneArrowRenderer::new);
 
-        RenderingRegistry.registerEntityRenderingHandler((EntityType<FireballEntity>) ModEntityType.SPELL_FIREBALL_ENTITY.get(), FireballRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler((EntityType<UnrelentingForceEntity>) ModEntityType.SHOUT_UNRELENTING_FORCE_ENTITY.get(), UnrelentingForceRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler((EntityType<DisarmEntity>) ModEntityType.SHOUT_DISARM_ENTITY.get(), DisarmRenderer::new);
+        event.registerEntityRenderer((EntityType<FireballEntity>) ModEntityType.SPELL_FIREBALL_ENTITY.get(), FireballRenderer::new);
+        event.registerEntityRenderer((EntityType<UnrelentingForceEntity>) ModEntityType.SHOUT_UNRELENTING_FORCE_ENTITY.get(), UnrelentingForceRenderer::new);
+        event.registerEntityRenderer((EntityType<DisarmEntity>) ModEntityType.SHOUT_DISARM_ENTITY.get(), DisarmRenderer::new);
 
         // Mobs
-        RenderingRegistry.registerEntityRenderingHandler(BLUE_BUTTERFLY.get(), BlueButterflyRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(MERCHANT.get(), MerchantRenderer::new);
+        event.registerEntityRenderer(BLUE_BUTTERFLY.get(), BlueButterflyRenderer::new);
+        event.registerEntityRenderer(TORCHBUG.get(), TorchBugRenderer::new);
+        event.registerEntityRenderer(SABRE_CAT.get(), SabreCatRenderer::new);
+        event.registerEntityRenderer(GIANT.get(), GiantRenderer::new);
+        event.registerEntityRenderer(DRAGON.get(), SkyrimDragonRenderer::new);
     }
-
-    // Entity Types
-//    public static final RegistryObject<EntityType<OrcaEntity>> ORCA = ENTITY_TYPES.register("orca",
-//            () -> EntityType.Builder.create(OrcaEntity::new, EntityClassification.WATER_CREATURE)
-//                    .size(1.25f, 1.0f) // Hitbox Size
-//                    .build(new ResourceLocation(DeepSeaMod.MODID, "orca").toString()));
-//
-//    public static final RegistryObject<EntityType<SeaSnakeEntity>> SEA_SNAKE = ENTITY_TYPES.register("sea_snake",
-//            () -> EntityType.Builder.create(SeaSnakeEntity::new, EntityClassification.WATER_CREATURE)
-//                    .size(1f, 1f)
-//                    .build(new ResourceLocation(DeepSeaMod.MODID, "sea_snake").toString()));
 }

@@ -1,12 +1,12 @@
 package com.ryankshah.skyrimcraft.item;
 
 import com.ryankshah.skyrimcraft.util.IngredientEffect;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -21,10 +21,10 @@ public class SkyrimIngredient extends SkyrimItem
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new StringTextComponent("Effects: ").withStyle(TextFormatting.DARK_PURPLE));
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+        tooltip.add(new TextComponent("Effects: ").withStyle(ChatFormatting.DARK_PURPLE));
         for(int i = 0; i < ingredientEffects.length; i++)
-            tooltip.add(new StringTextComponent(ingredientEffects[i].toString()));
+            tooltip.add(new TextComponent(ingredientEffects[i].toString()));
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 }

@@ -1,32 +1,32 @@
 package com.ryankshah.skyrimcraft.character.magic.entity.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix4f;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.magic.entity.FireballEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.resources.ResourceLocation;
 
 public class FireballRenderer extends EntityRenderer<FireballEntity>
 {
     private static final ResourceLocation SPELL_FIREBALL_TEXTURE = new ResourceLocation(Skyrimcraft.MODID, "textures/effect/fireball2.png");
 
-    public FireballRenderer(EntityRendererManager renderManager) {
-        super(renderManager);
+    public FireballRenderer(EntityRendererProvider.Context ctx) {
+        super(ctx);
     }
 
     @Override
-    public void render(FireballEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLightIn) {
+    public void render(FireballEntity entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLightIn) {
         matrixStack.pushPose();
         matrixStack.scale(1.0F, 1.0F, 1.0F);
 
-        IVertexBuilder ivertexbuilder = buffer.getBuffer(RenderType.entityTranslucent(this.getTextureLocation(entity)));
-        MatrixStack.Entry matrixstack$entry = matrixStack.last();
+        VertexConsumer ivertexbuilder = buffer.getBuffer(RenderType.entityTranslucent(this.getTextureLocation(entity)));
+        PoseStack.Pose matrixstack$entry = matrixStack.last();
         Matrix4f matrix4f = matrixstack$entry.pose();
 
         long t = System.currentTimeMillis() % 6;

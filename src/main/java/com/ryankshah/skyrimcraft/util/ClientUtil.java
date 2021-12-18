@@ -1,20 +1,21 @@
 package com.ryankshah.skyrimcraft.util;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.event.RenderLevelLastEvent;
 
 import java.util.HashSet;
 import java.util.List;
@@ -23,11 +24,11 @@ import java.util.stream.Collectors;
 
 public class ClientUtil
 {
-    public static World getClientWorld() {
+    public static Level getClientWorld() {
         return Minecraft.getInstance().level;
     }
 
-    public static AbstractClientPlayerEntity getClientPlayer() {
+    public static AbstractClientPlayer getClientPlayer() {
         return Minecraft.getInstance().player;
     }
 
@@ -35,38 +36,38 @@ public class ClientUtil
         return Minecraft.getInstance();
     }
 
-    public static Set<Vector3d> circle(Vector3d origin, Vector3d normal, double radius, double amount){
+    public static Set<Vec3> circle(Vec3 origin, Vec3 normal, double radius, double amount){
         normal.normalize();
         //First tangent vector is derived from positive y, giving "up" from the player's view.
         //Subtracting off the normal vector removes the part of the vector that is not in the plane
         //It's unlikely the player will be looking straight up, but if they are this will fail
         ///since it will give the zero vector. You should add some additional logic to detect
         //if the player is "looking up" and use x or z instead.
-        Vector3d tangent1 = new Vector3d(0, 1, 0).subtract(normal).normalize();
+        Vec3 tangent1 = new Vec3(0, 1, 0).subtract(normal).normalize();
         //Second tangent is simply orthogonal to both normal and tangent vectors.
         //This is obtained by a cross product. There is no need to normalize again
         //since the cross product of orthonormal vectors produces a unit vector
-        Vector3d tangent2 = normal.cross(tangent1);
+        Vec3 tangent2 = normal.cross(tangent1);
 
-        Set<Vector3d> circlePoints = new HashSet<>();
+        Set<Vec3> circlePoints = new HashSet<>();
         for(double angle = 0.0D; angle < 2 * Math.PI; angle += amount / 180D * (2 * Math.PI)) {
             //Iterate over angles and use the tangent vectors as your coordinates
             //Think of these vectors as hands on a clock rotating around to produce the circle.
-            Vector3d x = tangent1.scale(Math.cos(angle) * radius); //Think of this as x, but projected in the plane
-            Vector3d y = tangent2.scale(Math.sin(angle) * radius); //Think of this as y, but projected in the plane
+            Vec3 x = tangent1.scale(Math.cos(angle) * radius); //Think of this as x, but projected in the plane
+            Vec3 y = tangent2.scale(Math.sin(angle) * radius); //Think of this as y, but projected in the plane
             //Add these contributions to the origin, making a circle around the point defined by origin
             circlePoints.add(origin.add(x).add(y));
         }
         return circlePoints;
     }
 
-    public static void drawCubeAtPos(RenderWorldLastEvent event, BlockPos pos, Vector3d size, int color)  {
-        IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-        IVertexBuilder builder = buffer.getBuffer(RenderType.lightning());
+    public static void drawCubeAtPos(RenderLevelLastEvent event, BlockPos pos, Vec3 size, int color)  {
+        MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
+        VertexConsumer builder = buffer.getBuffer(RenderType.lightning());
 
         //move where the line is in the world. otherwise it is drawn around origin 0,0,0 I think?
-        Vector3d view = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-        MatrixStack matrixStack = event.getMatrixStack();
+        Vec3 view = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+        PoseStack matrixStack = event.getPoseStack();
         float minX = pos.getX() - (float)(size.x / 2), minY = pos.getY() - (float)(size.y / 2), minZ = pos.getZ() - (float)(size.z / 2),
                 maxX = pos.getX() + (float)(size.x / 2), maxY = pos.getY() + (float)(size.y / 2), maxZ = pos.getZ() + (float)(size.z / 2);
         int[] colors = getRGBAArrayFromHexColor(color);
@@ -128,9 +129,9 @@ public class ClientUtil
     }
 
     public static boolean canPlayerBeSeen() {
-        PlayerEntity clientPlayer = getClientPlayer();
+        Player clientPlayer = getClientPlayer();
         double maxSeenBound = 20D;
-        List<LivingEntity> entityList = clientPlayer.level.getEntities(clientPlayer, new AxisAlignedBB(clientPlayer.getX() - (double)maxSeenBound, clientPlayer.getY() - (double)maxSeenBound, clientPlayer.getZ() - (double)maxSeenBound, clientPlayer.getX() + (double)maxSeenBound, clientPlayer.getY() + (double)maxSeenBound, clientPlayer.getZ() + (double)maxSeenBound)).stream().filter(entity -> entity instanceof LivingEntity).map(LivingEntity.class::cast).collect(Collectors.toList());
+        List<LivingEntity> entityList = clientPlayer.level.getEntities(clientPlayer, new AABB(clientPlayer.getX() - (double)maxSeenBound, clientPlayer.getY() - (double)maxSeenBound, clientPlayer.getZ() - (double)maxSeenBound, clientPlayer.getX() + (double)maxSeenBound, clientPlayer.getY() + (double)maxSeenBound, clientPlayer.getZ() + (double)maxSeenBound)).stream().filter(entity -> entity instanceof LivingEntity).map(LivingEntity.class::cast).collect(Collectors.toList());
 
         return entityList.stream().anyMatch(e -> canEntitySee(e, clientPlayer));
     }
@@ -141,13 +142,13 @@ public class ClientUtil
         for (dz = beingViewed.getX() - viewer.getZ(); dx * dx + dz * dz < 1.0E-4D; dz = (Math.random() - Math.random()) * 0.01D) {
             dx = (Math.random() - Math.random()) * 0.01D;
         }
-        while (viewer.yRot > 360) {
-            viewer.yRot -= 360;
+        while (viewer.getYRot() > 360) {
+            viewer.setYRot(viewer.getYRot() - 360);
         }
-        while (viewer.yRot < -360) {
-            viewer.yRot += 360;
+        while (viewer.getYRot() < -360) {
+            viewer.setYRot(viewer.getYRot() + 360);
         }
-        float yaw = (float) (Math.atan2(dz, dx) * 180.0D / Math.PI) - viewer.yRot;
+        float yaw = (float) (Math.atan2(dz, dx) * 180.0D / Math.PI) - viewer.getYRot();
         yaw = yaw - 90;
         while (yaw < -180) {
             yaw += 360;
@@ -156,6 +157,6 @@ public class ClientUtil
             yaw -= 360;
         }
 
-        return yaw < 60 && yaw > -60 && viewer.canSee(beingViewed);
+        return yaw < 60 && yaw > -60 && BehaviorUtils.canSee(viewer, beingViewed);
     }
 }

@@ -2,10 +2,10 @@ package com.ryankshah.skyrimcraft.network.character;
 
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.network.Networking;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,7 +16,7 @@ public class PacketRemoveTargetingEntity
     private static final Logger LOGGER = LogManager.getLogger();
     private int targetEntity;
 
-    public PacketRemoveTargetingEntity(PacketBuffer buf) {
+    public PacketRemoveTargetingEntity(FriendlyByteBuf buf) {
         targetEntity = buf.readVarInt();
     }
 
@@ -24,7 +24,7 @@ public class PacketRemoveTargetingEntity
         this.targetEntity = targetEntity;
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeVarInt(targetEntity);
     }
 
@@ -42,7 +42,7 @@ public class PacketRemoveTargetingEntity
         //  that the ctx handler is a serverhandler, and that ServerPlayerEntity exists
         // Packets received on the client side must be handled differently!  See MessageHandlerOnClient
 
-        final ServerPlayerEntity sendingPlayer = context.getSender();
+        final ServerPlayer sendingPlayer = context.getSender();
         if (sendingPlayer == null) {
             LOGGER.warn("ServerPlayerEntity was null when PacketRemoveTargetingEntity was received");
             return false;

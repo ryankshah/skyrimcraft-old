@@ -1,12 +1,12 @@
 package com.ryankshah.skyrimcraft.character.magic.shout;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import com.ryankshah.skyrimcraft.effect.ModEffects;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ public class ShoutBecomeEthereal extends ISpell implements IForgeRegistryEntry<I
     @Override
     public void onCast() {
         // 360 = 18s (18 * 20 ticks/s)
-        getCaster().addEffect(new EffectInstance(ModEffects.ETHEREAL.get(), 360, 0, false, true, true));
+        getCaster().addEffect(new MobEffectInstance(ModEffects.ETHEREAL.get(), 360, 0, false, true, true));
         super.onCast();
     }
 }

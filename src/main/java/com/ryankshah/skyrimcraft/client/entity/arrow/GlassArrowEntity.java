@@ -2,30 +2,30 @@ package com.ryankshah.skyrimcraft.client.entity.arrow;
 
 import com.ryankshah.skyrimcraft.client.entity.ModEntityType;
 import com.ryankshah.skyrimcraft.item.ModItems;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.IPacket;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.network.NetworkHooks;
 
-public class GlassArrowEntity extends AbstractArrowEntity
+public class GlassArrowEntity extends AbstractArrow
 {
-    public GlassArrowEntity(EntityType<? extends GlassArrowEntity> entityType, World world) {
+    public GlassArrowEntity(EntityType<? extends GlassArrowEntity> entityType, Level world) {
         super(entityType, world);
     }
 
-    public GlassArrowEntity(World world, double p_i46757_2_, double p_i46757_4_, double p_i46757_6_) {
+    public GlassArrowEntity(Level world, double p_i46757_2_, double p_i46757_4_, double p_i46757_6_) {
         super(ModEntityType.GLASS_ARROW_ENTITY.get(), p_i46757_2_, p_i46757_4_, p_i46757_6_, world);
     }
 
-    public GlassArrowEntity(World world, LivingEntity livingEntity) {
+    public GlassArrowEntity(Level world, LivingEntity livingEntity) {
         super(ModEntityType.GLASS_ARROW_ENTITY.get(), livingEntity, world);
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

@@ -6,8 +6,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.ryankshah.skyrimcraft.character.skill.ISkill;
 import com.ryankshah.skyrimcraft.character.skill.SkillRegistry;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -57,9 +57,9 @@ public class SkillPredicate
 
     public static SkillPredicate fromJson(@Nullable JsonElement p_192492_0_) {
         if (p_192492_0_ != null && !p_192492_0_.isJsonNull()) {
-            JsonObject jsonobject = JSONUtils.convertToJsonObject(p_192492_0_, "item");
+            JsonObject jsonobject = GsonHelper.convertToJsonObject(p_192492_0_, "item");
             if (jsonobject.has("type")) {
-                final ResourceLocation rl = new ResourceLocation(JSONUtils.getAsString(jsonobject, "type"));
+                final ResourceLocation rl = new ResourceLocation(GsonHelper.getAsString(jsonobject, "type"));
                 if (custom_predicates.containsKey(rl)) return custom_predicates.get(rl).apply(jsonobject);
                 else throw new JsonSyntaxException("There is no SkillPredicate of type "+rl);
             }
@@ -68,16 +68,16 @@ public class SkillPredicate
             if(!jsonobject.has("skill"))
                 throw new JsonSyntaxException("There is no skill specified!");
             else {
-                JsonObject skillObj = JSONUtils.getAsJsonObject(jsonobject, "skill");
-                int id = JSONUtils.getAsInt(skillObj, "id");
+                JsonObject skillObj = GsonHelper.getAsJsonObject(jsonobject, "skill");
+                int id = GsonHelper.getAsInt(skillObj, "id");
                 if(!SkillRegistry.getKnownSkillIds().contains(id))
                     throw new JsonSyntaxException("There is no skill that exists with id: " + id);
-                int level = JSONUtils.getAsInt(skillObj, "level");
+                int level = GsonHelper.getAsInt(skillObj, "level");
 
                 skill = new ISkill(id, level);
             }
 
-            float successChance = JSONUtils.getAsFloat(jsonobject, "successChance");
+            float successChance = GsonHelper.getAsFloat(jsonobject, "successChance");
 
             return new SkillPredicate(skill, successChance);
         } else {

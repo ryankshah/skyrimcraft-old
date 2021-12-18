@@ -7,12 +7,18 @@ import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.skill.SkillRegistry;
 import com.ryankshah.skyrimcraft.data.loot_table.condition.MatchSkillLevel;
 import com.ryankshah.skyrimcraft.data.loot_table.predicate.SkillPredicate;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.Items;
-import net.minecraft.loot.*;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 import java.util.Map;
 import java.util.Set;
@@ -24,31 +30,31 @@ public class PickpocketLootTables implements Consumer<BiConsumer<ResourceLocatio
 {
     private final Map<ResourceLocation, LootTable.Builder> map = Maps.newHashMap();
 
-    protected static ILootCondition.IBuilder getSkillLevelCondition(int skillID, int level) {
+    protected static LootItemCondition.Builder getSkillLevelCondition(int skillID, int level) {
         return MatchSkillLevel.skillMatches(SkillPredicate.Builder.skill().of(skillID, level, 1F));
     }
 
-    protected static ILootCondition.IBuilder getSkillLevelConditionWithChance(int skillID, int level, float successChance) {
+    protected static LootItemCondition.Builder getSkillLevelConditionWithChance(int skillID, int level, float successChance) {
         return MatchSkillLevel.skillMatches(SkillPredicate.Builder.skill().of(skillID, level, successChance));
     }
 
-    protected static LootTable.Builder createSingleItemTable(IItemProvider itemProvider) {
-        return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantRange.exactly(1)).add(ItemLootEntry.lootTableItem(itemProvider)));
+    protected static LootTable.Builder createSingleItemTable(ItemLike itemProvider) {
+        return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(itemProvider)));
     }
 
-    protected static LootTable.Builder createSingleItemTable(IItemProvider itemProvider, ILootCondition.IBuilder lootConditionBuilder, LootEntry.Builder<?> lootEntryBuilder) {
-        return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantRange.exactly(1)).add(ItemLootEntry.lootTableItem(itemProvider).when(lootConditionBuilder).otherwise(lootEntryBuilder)));
+    protected static LootTable.Builder createSingleItemTable(ItemLike itemProvider, LootItemCondition.Builder lootConditionBuilder, LootPoolEntryContainer.Builder<?> lootEntryBuilder) {
+        return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(itemProvider).when(lootConditionBuilder).otherwise(lootEntryBuilder)));
     }
 
-    protected static LootTable.Builder createSingleItemTableWithRange(IItemProvider itemProvider, IRandomRange rolls) {
-        return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(rolls).add(ItemLootEntry.lootTableItem(itemProvider)));
+    protected static LootTable.Builder createSingleItemTableWithRange(ItemLike itemProvider, UniformGenerator rolls) {
+        return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(rolls).add(LootItem.lootTableItem(itemProvider)));
     }
 
-    protected static LootTable.Builder createSingleItemTableWithRange(IItemProvider itemProvider, IRandomRange rolls, ILootCondition.IBuilder lootConditionBuilder) {
-        return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(rolls).add(ItemLootEntry.lootTableItem(itemProvider).when(lootConditionBuilder)));//.otherwise(ItemLootEntry.lootTableItem(itemProvider))));
+    protected static LootTable.Builder createSingleItemTableWithRange(ItemLike itemProvider, UniformGenerator rolls, LootItemCondition.Builder lootConditionBuilder) {
+        return LootTable.lootTable().withPool(LootPool.lootPool().setRolls(rolls).add(LootItem.lootTableItem(itemProvider).when(lootConditionBuilder)));//.otherwise(ItemLootEntry.lootTableItem(itemProvider))));
     }
 
-    protected static LootTable.Builder multiplePools(ILootCondition.IBuilder lootConditionBuilder, LootPool.Builder... lootPools) {
+    protected static LootTable.Builder multiplePools(LootItemCondition.Builder lootConditionBuilder, LootPool.Builder... lootPools) {
         LootTable.Builder lootTable = LootTable.lootTable();
 
         for(LootPool.Builder pool : lootPools) {
@@ -70,7 +76,7 @@ public class PickpocketLootTables implements Consumer<BiConsumer<ResourceLocatio
     }
 
     public static Iterable<EntityType<?>> getPickpocketableEntities() {
-        return ImmutableList.of(EntityType.VILLAGER);
+        return ImmutableList.of(EntityType.VILLAGER);//, ModEntityType.MERCHANT.get());
     }
 
     @Override
@@ -81,7 +87,7 @@ public class PickpocketLootTables implements Consumer<BiConsumer<ResourceLocatio
 
         for(EntityType<?> entityType : getPickpocketableEntities()) {
             ResourceLocation resourcelocation = new ResourceLocation(entityType.getDefaultLootTable().toString().replace("minecraft", Skyrimcraft.MODID).replace("entities", "pickpocket"));
-            if (resourcelocation != LootTables.EMPTY && set.add(resourcelocation)) {
+            if (resourcelocation != BuiltInLootTables.EMPTY && set.add(resourcelocation)) {
                 LootTable.Builder loottable$builder = this.map.remove(resourcelocation);
                 if (loottable$builder == null) {
                     continue;
@@ -103,6 +109,7 @@ public class PickpocketLootTables implements Consumer<BiConsumer<ResourceLocatio
 //                LootPool.lootPool().setRolls(RandomValueRange.between(1, 3)).add(ItemLootEntry.lootTableItem(Items.EMERALD)),
 //                LootPool.lootPool().setRolls(RandomValueRange.between(0, 1)).add(ItemLootEntry.lootTableItem(ModItems.DWARVEN_OIL.get()))
 //        ));
-        add(EntityType.VILLAGER, createSingleItemTableWithRange(Items.EMERALD, RandomValueRange.between(1F, 3F), getSkillLevelConditionWithChance(SkillRegistry.PICKPOCKET.getID(), 15, 0.4f)));
+        //add(ModEntityType.MERCHANT.get(), createSingleItemTableWithRange(Items.EMERALD, RandomValueRange.between(1F, 3F), getSkillLevelConditionWithChance(SkillRegistry.PICKPOCKET.getID(), 15, 0.4f)));
+        add(EntityType.VILLAGER, createSingleItemTableWithRange(Items.EMERALD, UniformGenerator.between(1F, 3F), getSkillLevelConditionWithChance(SkillRegistry.PICKPOCKET.getID(), 15, 0.4f)));
     }
 }

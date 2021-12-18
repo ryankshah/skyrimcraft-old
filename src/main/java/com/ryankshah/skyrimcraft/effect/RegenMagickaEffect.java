@@ -1,20 +1,20 @@
 package com.ryankshah.skyrimcraft.effect;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public class RegenMagickaEffect extends Effect implements IForgeRegistryEntry<Effect>
+public class RegenMagickaEffect extends MobEffect implements IForgeRegistryEntry<MobEffect>
 {
     public RegenMagickaEffect() {
-        super(EffectType.BENEFICIAL, 0xAA3792CB);
+        super(MobEffectCategory.BENEFICIAL, 0xAA3792CB);
     }
 
-    public ITextComponent getDisplayName() {
-        return new StringTextComponent("Regen Magicka");
+    public Component getDisplayName() {
+        return new TextComponent("Regen Magicka");
     }
 
     @Override

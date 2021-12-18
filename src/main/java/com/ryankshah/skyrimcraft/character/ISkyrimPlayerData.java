@@ -4,8 +4,8 @@ import com.ryankshah.skyrimcraft.character.feature.Race;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.character.skill.ISkill;
 import com.ryankshah.skyrimcraft.util.CompassFeature;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
 import java.util.Map;
@@ -30,6 +30,7 @@ public interface ISkyrimPlayerData
     public void setMagicka(float amount);
     public float getMagicka();
     public float getMaxMagicka();
+    public void setMaxMagicka(float maxMagicka);
     public float getMagickaRegenModifier();
     public void setMagickaRegenModifier(float modifier);
 
@@ -52,12 +53,31 @@ public interface ISkyrimPlayerData
     public int getCharacterLevel();
     public int getCharacterXp();
     public void setCharacterXp(int xp);
-    public void addCharacterXp(int amount, ServerPlayerEntity playerEntity);
+    public void addCharacterXp(int amount, ServerPlayer playerEntity);
     public double getXpNeededForNextCharacterLevel(int level);
     public void setSkills(Map<Integer, ISkill> skills);
     public Map<Integer, ISkill> getSkills();
     //public void addXpToSkill(ISkill skill);
-    public void addXpToSkill(int id, int baseXp, ServerPlayerEntity playerEntity);
+    public void addXpToSkill(int id, int baseXp, ServerPlayer playerEntity);
+    public void incrementLevelUpdates();
+    public void decrementLevelUpdates();
+    public int getLevelUpdates();
+    public void setLevelUpdates(int levelUpdates);
+
+    /* CHARACTER UPDATE FIELDS */
+
+    /**
+     * Add an extra half heart (0.5f) to player max health
+     */
+    public void addExtraMaxHealth();
+    public void setExtraMaxHealth(float extraHealth);
+    public float getExtraMaxHealth();
+    public void addExtraMaxStamina();
+    public void setExtraMaxStamina(float extraStamina);
+    public float getExtraMaxStamina();
+    public void addExtraMaxMagicka();
+    public void setExtraMaxMagicka(float extraMagicka);
+    public float getExtraMaxMagicka();
 
     /* RACE FIELDS */
     public void setRace(Race race);

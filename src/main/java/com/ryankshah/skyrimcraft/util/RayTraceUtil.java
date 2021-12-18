@@ -1,27 +1,27 @@
 package com.ryankshah.skyrimcraft.util;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 
 import java.util.function.Predicate;
 
 public class RayTraceUtil
 {
-    public static Entity rayTrace(World world, PlayerEntity player, double range) {
-        Vector3d pos = player.getPosition(0f);
-        Vector3d cam1 = player.getLookAngle();
-        Vector3d cam2 = cam1.add(cam1.x * range, cam1.y * range, cam1.z * range);
-        AxisAlignedBB aabb = player.getBoundingBox().expandTowards(cam1.scale(range)).inflate(1.0F, 1.0F, 1.0F);
-        RayTraceResult ray = findEntity(world, player, pos, cam2, aabb, null, range);
+    public static Entity rayTrace(Level world, Player player, double range) {
+        Vec3 pos = player.getPosition(0f);
+        Vec3 cam1 = player.getLookAngle();
+        Vec3 cam2 = cam1.add(cam1.x * range, cam1.y * range, cam1.z * range);
+        AABB aabb = player.getBoundingBox().expandTowards(cam1.scale(range)).inflate(1.0F, 1.0F, 1.0F);
+        HitResult ray = findEntity(world, player, pos, cam2, aabb, null, range);
 
         if(ray != null) {
-            if(ray.getType() == RayTraceResult.Type.ENTITY && ray instanceof EntityRayTraceResult) {
-                EntityRayTraceResult ray2 = (EntityRayTraceResult) ray;
+            if(ray.getType() == HitResult.Type.ENTITY && ray instanceof EntityHitResult) {
+                EntityHitResult ray2 = (EntityHitResult) ray;
                 Entity entity = ray2.getEntity();
                 return entity;
             }
@@ -29,27 +29,27 @@ public class RayTraceUtil
         return null;
     }
 
-    private static EntityRayTraceResult findEntity(World world, PlayerEntity player, Vector3d pos, Vector3d look, AxisAlignedBB aabb, Predicate<Entity> filter, double range) {
+    private static EntityHitResult findEntity(Level world, Player player, Vec3 pos, Vec3 look, AABB aabb, Predicate<Entity> filter, double range) {
         for(Entity entity1 : world.getEntities(player, aabb, filter)) {
-            AxisAlignedBB mob = entity1.getBoundingBox().inflate((double)1.0F);
+            AABB mob = entity1.getBoundingBox().inflate((double)1.0F);
             if(intersect(pos, look, mob, range)) {
-                return new EntityRayTraceResult(entity1);
+                return new EntityHitResult(entity1);
             }
         }
         return null;
     }
 
-    private static boolean intersect(Vector3d pos, Vector3d look, AxisAlignedBB mob, double range) {
-        Vector3d invDir = new Vector3d(1f / look.x, 1f / look.y, 1f / look.z);
+    private static boolean intersect(Vec3 pos, Vec3 look, AABB mob, double range) {
+        Vec3 invDir = new Vec3(1f / look.x, 1f / look.y, 1f / look.z);
 
         boolean signDirX = invDir.x < 0;
         boolean signDirY = invDir.y < 0;
         boolean signDirZ = invDir.z < 0;
 
-        Vector3d max = new Vector3d(mob.maxX, mob.maxY, mob.maxZ);
-        Vector3d min = new Vector3d(mob.minX, mob.minY, mob.minZ);
+        Vec3 max = new Vec3(mob.maxX, mob.maxY, mob.maxZ);
+        Vec3 min = new Vec3(mob.minX, mob.minY, mob.minZ);
 
-        Vector3d bbox = signDirX ? max : min;
+        Vec3 bbox = signDirX ? max : min;
         double tmin = (bbox.x - pos.x) * invDir.x;
         bbox = signDirX ? min : max;
         double tmax = (bbox.x - pos.x) * invDir.x;

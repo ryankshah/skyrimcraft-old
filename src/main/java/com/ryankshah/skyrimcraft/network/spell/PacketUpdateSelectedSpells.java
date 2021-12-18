@@ -4,17 +4,19 @@ import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.LogicalSidedProvider;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class PacketUpdateSelectedSpells
@@ -22,8 +24,8 @@ public class PacketUpdateSelectedSpells
     private Map<Integer, ISpell> selectedSpells = new HashMap<>();
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public PacketUpdateSelectedSpells(PacketBuffer buf) {
-        CompoundNBT nbt = buf.readNbt();
+    public PacketUpdateSelectedSpells(FriendlyByteBuf buf) {
+        CompoundTag nbt = buf.readNbt();
 
         String spell0RL = nbt.getString("selected0");
         String spell1RL = nbt.getString("selected1");
@@ -36,8 +38,8 @@ public class PacketUpdateSelectedSpells
         this.selectedSpells = selectedSpells;
     }
 
-    public void toBytes(PacketBuffer buf) {
-        CompoundNBT nbt = new CompoundNBT();
+    public void toBytes(FriendlyByteBuf buf) {
+        CompoundTag nbt = new CompoundTag();
         for (Map.Entry<Integer, ISpell> entry : selectedSpells.entrySet()) {
             nbt.putString("selected" + entry.getKey(), entry.getValue() == null ? "null" : entry.getValue().getRegistryName().toString());
         }
@@ -53,7 +55,7 @@ public class PacketUpdateSelectedSpells
             LOGGER.warn("PacketUpdateSelectedSpells received on wrong side:" + context.getDirection().getReceptionSide());
             return false;
         }
-        Optional<ClientWorld> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
+        Optional<Level> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
         if (!clientWorld.isPresent()) {
             LOGGER.warn("PacketUpdateSelectedSpells context could not provide a ClientWorld.");
             return false;

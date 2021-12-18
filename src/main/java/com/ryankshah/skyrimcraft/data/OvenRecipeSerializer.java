@@ -4,17 +4,17 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.ryankshah.skyrimcraft.util.OvenRecipe;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class OvenRecipeSerializer<T extends OvenRecipe> extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<OvenRecipe>
+public class OvenRecipeSerializer<T extends OvenRecipe> extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<OvenRecipe>
 {
     private ResourceLocation registryName;
 
@@ -22,7 +22,7 @@ public class OvenRecipeSerializer<T extends OvenRecipe> extends net.minecraftfor
     }
 
     @Override
-    public void toNetwork(PacketBuffer buf, OvenRecipe ovenRecipe) {
+    public void toNetwork(FriendlyByteBuf buf, OvenRecipe ovenRecipe) {
         buf.writeUtf(ovenRecipe.getCategory());
 
         if (ovenRecipe.getResult() != null) {
@@ -50,29 +50,29 @@ public class OvenRecipeSerializer<T extends OvenRecipe> extends net.minecraftfor
         if (!jsonobject.has("output") || !jsonobject.has("recipe")) {
             throw new IllegalStateException("Incorrect json for an Oven Recipe!");
         } else {
-            String type = JSONUtils.getAsString(jsonobject, "type");
+            String type = GsonHelper.getAsString(jsonobject, "type");
 
-            category = JSONUtils.getAsString(jsonobject, "category");
+            category = GsonHelper.getAsString(jsonobject, "category");
 
             JsonObject output = jsonobject.getAsJsonObject("output");
-            stackToCreate = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(JSONUtils.getAsString(output, "item"))), JSONUtils.getAsInt(output, "amount"));
+            stackToCreate = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(GsonHelper.getAsString(output, "item"))), GsonHelper.getAsInt(output, "amount"));
 
-            JsonArray recipe = JSONUtils.getAsJsonArray(jsonobject, "recipe");
+            JsonArray recipe = GsonHelper.getAsJsonArray(jsonobject, "recipe");
             for (JsonElement recipeElement : recipe) {
                 JsonObject recipeObj = recipeElement.getAsJsonObject();
-                ItemStack recipeItem = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(JSONUtils.getAsString(recipeObj, "item"))), JSONUtils.getAsInt(recipeObj, "amount"));
+                ItemStack recipeItem = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(GsonHelper.getAsString(recipeObj, "item"))), GsonHelper.getAsInt(recipeObj, "amount"));
                 recipeItems.add(recipeItem);
             }
 
-            level = JSONUtils.getAsInt(jsonobject, "levelToCreate");
-            xp = JSONUtils.getAsInt(jsonobject, "xp");
+            level = GsonHelper.getAsInt(jsonobject, "levelToCreate");
+            xp = GsonHelper.getAsInt(jsonobject, "xp");
         }
 
         return new OvenRecipe.Builder(category, stackToCreate, level, xp, recipeItems).build(resourceLocation);
     }
 
     @Override
-    public OvenRecipe fromNetwork(ResourceLocation resourceLocation, PacketBuffer buf) {
+    public OvenRecipe fromNetwork(ResourceLocation resourceLocation, FriendlyByteBuf buf) {
         List<ItemStack> recipeItems = new ArrayList<>();
 
         String category = buf.readUtf();

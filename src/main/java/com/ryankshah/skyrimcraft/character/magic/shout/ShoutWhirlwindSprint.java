@@ -3,12 +3,12 @@ package com.ryankshah.skyrimcraft.character.magic.shout;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.util.ClientUtil;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.ArrayList;
@@ -73,17 +73,17 @@ public class ShoutWhirlwindSprint extends ISpell implements IForgeRegistryEntry<
 
     @Override
     public void onCast() {
-        if(getCaster() instanceof ServerPlayerEntity) {
-            ServerPlayerEntity player = (ServerPlayerEntity)getCaster();
+        if(getCaster() instanceof ServerPlayer) {
+            ServerPlayer player = (ServerPlayer)getCaster();
 
-            Vector3d origin = new Vector3d(player.getX(), player.getY(), player.getZ());
-            Vector3d normal = player.getForward();
-            Set<Vector3d> circlePoints = ClientUtil.circle(origin, normal, 2f, 8);
-            for(Vector3d point : circlePoints) {
+            Vec3 origin = new Vec3(player.getX(), player.getY(), player.getZ());
+            Vec3 normal = player.getForward();
+            Set<Vec3> circlePoints = ClientUtil.circle(origin, normal, 2f, 8);
+            for(Vec3 point : circlePoints) {
                 player.getLevel().sendParticles(ParticleTypes.CLOUD, player.getForward().x + point.x, player.getForward().y + player.getEyeHeight() + point.y, player.getForward().z + point.z,  1, 0D, 0D, 0D, 0.0D);
             }
 
-            Vector3d sprintTo = player.position().add(player.getForward().scale(6));
+            Vec3 sprintTo = player.position().add(player.getForward().scale(6));
             player.teleportTo(sprintTo.x, player.position().y, sprintTo.z);
         }
         super.onCast();

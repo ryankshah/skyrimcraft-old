@@ -1,0 +1,38 @@
+{
+  "name": "Kill Spider",
+  "description": "Kill a spider!",
+  "single_use": false,
+  "category": 0,
+  "steps": [
+    {
+      "priority": 2,
+      "description": "Kill a Spider",
+      "criteria": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "predicate": {
+              "type": "minecraft:spider"
+            },
+            "entity": "this"
+          }
+        ]
+      }
+    },
+    {
+      "priority": 1,
+      "description": "Kill a Spider",
+      "criteria": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "predicate": {
+              "type": "minecraft:spider"
+            },
+            "entity": "this"
+          }
+        ]
+      }
+    }
+  ]
+}

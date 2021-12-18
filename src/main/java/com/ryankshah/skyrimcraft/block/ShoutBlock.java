@@ -2,26 +2,26 @@ package com.ryankshah.skyrimcraft.block;
 
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
-import com.ryankshah.skyrimcraft.network.Networking;
-import com.ryankshah.skyrimcraft.network.spell.PacketAddToKnownSpells;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.RegistryObject;
+import com.ryankshah.skyrimcraft.network.Networking;
+import com.ryankshah.skyrimcraft.network.spell.PacketAddToKnownSpells;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
 import java.util.Random;
@@ -34,28 +34,28 @@ public class ShoutBlock extends SkyrimBlock
     public static final BooleanProperty SHOUT_GIVEN;
 
     public ShoutBlock(String displayName) {
-        super(AbstractBlock.Properties.of(Material.STONE).strength(-1.0F, 3600000.0F).randomTicks().noDrops(), displayName);
+        super(BlockBehaviour.Properties.of(Material.STONE).strength(-1.0F, 3600000.0F).randomTicks().noDrops(), displayName);
         this.registerDefaultState(this.getStateDefinition().any().setValue(SHOUT_GIVEN, false));
     }
 
-    public BlockState getStateForPlacement(BlockItemUseContext p_196258_1_) {
+    public BlockState getStateForPlacement(BlockPlaceContext p_196258_1_) {
         return this.defaultBlockState().setValue(SHOUT_GIVEN, false);
     }
 
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> p_206840_1_) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_206840_1_) {
         p_206840_1_.add(SHOUT_GIVEN);
     }
 
     @Override
-    public ActionResultType use(BlockState p_225533_1_, World p_225533_2_, BlockPos p_225533_3_, PlayerEntity playerEntity, Hand p_225533_5_, BlockRayTraceResult p_225533_6_) {
+    public InteractionResult use(BlockState p_225533_1_, Level p_225533_2_, BlockPos p_225533_3_, Player playerEntity, InteractionHand p_225533_5_, BlockHitResult p_225533_6_) {
         if (!p_225533_2_.isClientSide) {
-            List<BlockState> nearbyShoutBlocks = p_225533_2_.getBlockStates(new AxisAlignedBB(p_225533_3_.getX() - 5, p_225533_3_.getY() - 5, p_225533_3_.getZ() - 5,
+            List<BlockState> nearbyShoutBlocks = p_225533_2_.getBlockStates(new AABB(p_225533_3_.getX() - 5, p_225533_3_.getY() - 5, p_225533_3_.getZ() - 5,
                     p_225533_3_.getX() + 5, p_225533_3_.getY() + 5, p_225533_3_.getZ() + 5)).collect(Collectors.toList());
             if(!p_225533_1_.getValue(SHOUT_GIVEN)) {
                 for(BlockState state : nearbyShoutBlocks) {
                     if(state.hasProperty(SHOUT_GIVEN) && state.getValue(SHOUT_GIVEN)) {
-                        playerEntity.displayClientMessage(new TranslationTextComponent("shoutblock.used"), false);
-                        return ActionResultType.FAIL;
+                        playerEntity.displayClientMessage(new TranslatableComponent("shoutblock.used"), false);
+                        return InteractionResult.FAIL;
                     }
                 }
 
@@ -77,19 +77,19 @@ public class ShoutBlock extends SkyrimBlock
                         }
 
                     } else
-                        playerEntity.displayClientMessage(new TranslationTextComponent("shoutblock.allshoutsknown"), false);
+                        playerEntity.displayClientMessage(new TranslatableComponent("shoutblock.allshoutsknown"), false);
                 } else {
                     Networking.sendToServer(new PacketAddToKnownSpells(SpellRegistry.UNRELENTING_FORCE.get()));
                 }
             } else {
-                playerEntity.displayClientMessage(new TranslationTextComponent("shoutblock.used"), false);
+                playerEntity.displayClientMessage(new TranslatableComponent("shoutblock.used"), false);
             }
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public void animateTick(BlockState p_180655_1_, World p_180655_2_, BlockPos p_180655_3_, Random p_180655_4_) {
+    public void animateTick(BlockState p_180655_1_, Level p_180655_2_, BlockPos p_180655_3_, Random p_180655_4_) {
         // TODO: Check if player is near and then spawn particles
         super.animateTick(p_180655_1_, p_180655_2_, p_180655_3_, p_180655_4_);
     }

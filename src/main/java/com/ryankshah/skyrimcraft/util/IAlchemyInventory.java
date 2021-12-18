@@ -1,10 +1,10 @@
 package com.ryankshah.skyrimcraft.util;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 
-public class IAlchemyInventory implements IInventory {
+public class IAlchemyInventory implements Container {
     /**
      * Returns the number of slots in the inventory.
      */
@@ -71,7 +71,7 @@ public class IAlchemyInventory implements IInventory {
      * @param player
      */
     @Override
-    public boolean stillValid(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         return false;
     }
 

@@ -17,18 +17,21 @@ import com.ryankshah.skyrimcraft.network.character.PacketAddToTargetingEntities;
 import com.ryankshah.skyrimcraft.network.character.PacketUpdatePlayerTargetOnServer;
 import com.ryankshah.skyrimcraft.network.skill.PacketAddXpToSkillOnServer;
 import com.ryankshah.skyrimcraft.util.RandomTradeBuilder;
-import net.minecraft.entity.CreatureAttribute;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.merchant.villager.VillagerProfession;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ShootableItem;
-import net.minecraft.item.SwordItem;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ProjectileWeaponItem;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
@@ -48,14 +51,14 @@ public class EntityEvents
 
     @SubscribeEvent
     public static void onEntityHit(LivingHurtEvent event) {
-        if(event.getSource().getEntity() instanceof PlayerEntity) {
-            PlayerEntity playerEntity = (PlayerEntity) event.getSource().getEntity();
+        if(event.getSource().getEntity() instanceof Player) {
+            Player playerEntity = (Player) event.getSource().getEntity();
 
             if (event.getEntityLiving() != null) {
                 if (playerEntity.hasEffect(ModEffects.ETHEREAL.get()))
                     playerEntity.removeEffect(ModEffects.ETHEREAL.get());
 
-                if (playerEntity.getMainHandItem().getItem() instanceof ShootableItem) {
+                if (playerEntity.getMainHandItem().getItem() instanceof ProjectileWeaponItem) {
                     Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.ARCHERY.getID(), (int)event.getAmount()));
                 } else if(playerEntity.getMainHandItem().getItem() instanceof SwordItem) {
                     Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.ONE_HANDED.getID(), (int)event.getAmount()));
@@ -72,8 +75,8 @@ public class EntityEvents
                 });
 
             }
-        } else if(event.getEntityLiving() instanceof PlayerEntity) {
-            PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
+        } else if(event.getEntityLiving() instanceof Player) {
+            Player playerEntity = (Player) event.getEntityLiving();
             if(playerEntity.isDamageSourceBlocked(event.getSource())) {
                 Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.BLOCK.getID(), SkillRegistry.BASE_BLOCK_XP));
             }
@@ -100,9 +103,20 @@ public class EntityEvents
     }
 
     @SubscribeEvent
+    public static void livingUpdateEvent(LivingEvent.LivingUpdateEvent event) {
+        if(event.getEntityLiving() instanceof Wolf) {
+            Wolf entity = (Wolf) event.getEntityLiving();
+            if(!entity.level.isClientSide && entity.getPersistentData().contains(Skyrimcraft.MODID + "_timeToKill")
+                    && entity.level.getGameTime() >= entity.getPersistentData().getLong(Skyrimcraft.MODID+"_timeToKill")) {
+                entity.hurt(new DamageSource("death." + Skyrimcraft.MODID + ".conjuredfamiliar"), Float.MAX_VALUE);
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void entitySetAttackTarget(LivingSetAttackTargetEvent event) {
-        if(event.getTarget() instanceof ServerPlayerEntity) {
-            ServerPlayerEntity player = (ServerPlayerEntity) event.getTarget();
+        if(event.getTarget() instanceof ServerPlayer) {
+            ServerPlayer player = (ServerPlayer) event.getTarget();
             ISkyrimPlayerData cap = player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("set attack target event"));
 
             if(!cap.getTargetingEntities().contains(event.getEntityLiving().getId()) //&& cap.getTargetingEntities().size() <= 10
@@ -125,9 +139,9 @@ public class EntityEvents
         if(pickPocketableEntities.contains(event.getEntity().getType())) {
             event.getEntity().addTag(ModEntityType.PICKPOCKET_TAG);
         }
-        if(event.getEntity() instanceof MonsterEntity) {
-            MonsterEntity monsterEntity = (MonsterEntity) event.getEntity();
-            if(monsterEntity.getMobType() == CreatureAttribute.UNDEAD) {
+        if(event.getEntity() instanceof Monster) {
+            Monster monsterEntity = (Monster) event.getEntity();
+            if(monsterEntity.getMobType() == MobType.UNDEAD) {
                 monsterEntity.goalSelector.addGoal(0, new UndeadFleeGoal(monsterEntity, 16.0F, 0.8D, 1.33D));
             }
         }

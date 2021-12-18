@@ -1,13 +1,13 @@
 package com.ryankshah.skyrimcraft.character.skill;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class ISkill extends ForgeRegistryEntry<ISkill>
 {
-    private PlayerEntity player;
+    private Player player;
     private int identifier;
     private String name;
     private int level;
@@ -87,7 +87,7 @@ public class ISkill extends ForgeRegistryEntry<ISkill>
      *
      * @param playerEntity
      */
-    public void setPlayer(PlayerEntity playerEntity) {
+    public void setPlayer(Player playerEntity) {
         this.player = playerEntity;
     }
 
@@ -95,7 +95,7 @@ public class ISkill extends ForgeRegistryEntry<ISkill>
      * Get the player entity who has the skill
      * @return {@link PlayerEntity}
      */
-    public PlayerEntity getPlayer() {
+    public Player getPlayer() {
         return this.player;
     }
 
@@ -147,7 +147,7 @@ public class ISkill extends ForgeRegistryEntry<ISkill>
         // minecraft progress calc : (float)amount / (float)this.getXpNeededForNextLevel();
         float xpToAdd = skillUseMultiplier * (baseXp) + skillUseOffset;
         this.xpProgress += xpToAdd / (float)this.getXpNeededForNextLevel();
-        this.totalXp = MathHelper.clamp(this.totalXp + (int)xpToAdd, 0, Integer.MAX_VALUE);
+        this.totalXp = Mth.clamp(this.totalXp + (int)xpToAdd, 0, Integer.MAX_VALUE);
 
         if(xpProgress < 0.0F) {
             float f = xpProgress * (float)this.getXpNeededForNextLevel();
@@ -172,8 +172,8 @@ public class ISkill extends ForgeRegistryEntry<ISkill>
         return level == 0 ? 0 : skillImproveMultiplier * Math.pow((level), 1.95) + skillImproveOffset;
     }
 
-    public CompoundNBT serialise() {
-        CompoundNBT nbt = new CompoundNBT();
+    public CompoundTag serialise() {
+        CompoundTag nbt = new CompoundTag();
 
         nbt.putInt("id", identifier);
         nbt.putString("name", name);
@@ -188,12 +188,12 @@ public class ISkill extends ForgeRegistryEntry<ISkill>
         return nbt;
     }
 
-    public static ISkill deserialise(CompoundNBT nbt) {
+    public static ISkill deserialise(CompoundTag nbt) {
         int p1 = nbt.getInt("id");
         String p2 = nbt.getString("name");
         int p3 = nbt.getInt("level");
         int p4 = nbt.getInt("totalXp");
-        float p5 = nbt.getInt("xpProgress");
+        float p5 = nbt.getFloat("xpProgress");
         float p6 = nbt.getFloat("skillUseMultiplier");
         int p7 = nbt.getInt("skillUseOffset");
         float p8 = nbt.getFloat("skillImproveMultiplier");

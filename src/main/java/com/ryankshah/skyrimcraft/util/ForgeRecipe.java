@@ -5,19 +5,19 @@ import com.google.gson.JsonObject;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.data.ModRecipeSerializers;
 import com.ryankshah.skyrimcraft.data.ModRecipeType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ForgeRecipe implements IRecipe<IForgeInventory>
+public class ForgeRecipe implements Recipe<IForgeInventory>
 {
     private ResourceLocation id;
     private String category;
@@ -44,7 +44,7 @@ public class ForgeRecipe implements IRecipe<IForgeInventory>
     }
 
     @Override
-    public boolean matches(IForgeInventory p_77569_1_, World p_77569_2_) {
+    public boolean matches(IForgeInventory p_77569_1_, Level p_77569_2_) {
         return false;
     }
 
@@ -68,12 +68,12 @@ public class ForgeRecipe implements IRecipe<IForgeInventory>
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return ModRecipeSerializers.FORGE_RECIPE_SERIALIZER.get();
     }
 
     @Override
-    public IRecipeType<?> getType() {
+    public RecipeType<?> getType() {
         return ModRecipeType.FORGE;
     }
 

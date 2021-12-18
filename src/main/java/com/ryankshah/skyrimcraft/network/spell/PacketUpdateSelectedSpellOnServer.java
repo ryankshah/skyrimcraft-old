@@ -1,16 +1,17 @@
 package com.ryankshah.skyrimcraft.network.spell;
 
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
-import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import com.ryankshah.skyrimcraft.network.Networking;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.util.function.Supplier;
 
 public class PacketUpdateSelectedSpellOnServer
@@ -19,7 +20,7 @@ public class PacketUpdateSelectedSpellOnServer
     private int pos = 0;
     private ISpell spell;
 
-    public PacketUpdateSelectedSpellOnServer(PacketBuffer buf) {
+    public PacketUpdateSelectedSpellOnServer(FriendlyByteBuf buf) {
         pos = buf.readInt();
         String s = buf.readUtf();
 
@@ -34,7 +35,7 @@ public class PacketUpdateSelectedSpellOnServer
         this.spell = spell;
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeInt(pos);
         if(spell == null) {
             buf.writeUtf("null");
@@ -58,7 +59,7 @@ public class PacketUpdateSelectedSpellOnServer
         //  that the ctx handler is a serverhandler, and that ServerPlayerEntity exists
         // Packets received on the client side must be handled differently!  See MessageHandlerOnClient
 
-        final ServerPlayerEntity sendingPlayer = context.getSender();
+        final ServerPlayer sendingPlayer = context.getSender();
         if (sendingPlayer == null) {
             LOGGER.warn("ServerPlayerEntity was null when AddSpellToServer was received");
             return false;

@@ -10,12 +10,12 @@ import com.ryankshah.skyrimcraft.item.ModItems;
 import com.ryankshah.skyrimcraft.item.SkyrimPotion;
 import com.ryankshah.skyrimcraft.util.AlchemyRecipe;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DirectoryCache;
-import net.minecraft.data.IDataProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.HashCache;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,7 +28,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class ModAlchemyRecipeProvider implements IDataProvider, IConditionBuilder {
+public class ModAlchemyRecipeProvider implements DataProvider, IConditionBuilder {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
     private final List<Consumer<Consumer<AlchemyRecipe>>> tabs = ImmutableList.of(new ModAlchemyRecipeProvider.AlchemyRecipes());
@@ -44,7 +44,7 @@ public class ModAlchemyRecipeProvider implements IDataProvider, IConditionBuilde
     }
 
     @Override
-    public void run(DirectoryCache p_200398_1_) throws IOException {
+    public void run(HashCache p_200398_1_) throws IOException {
         Path path = this.generator.getOutputFolder();
         Set<ResourceLocation> set = Sets.newHashSet();
         Consumer<AlchemyRecipe> consumer = (p_204017_3_) -> {
@@ -54,7 +54,7 @@ public class ModAlchemyRecipeProvider implements IDataProvider, IConditionBuilde
                 Path path1 = createPath(path, p_204017_3_);
 
                 try {
-                    IDataProvider.save(GSON, p_200398_1_, p_204017_3_.deconstruct().serializeToJson(), path1);
+                    DataProvider.save(GSON, p_200398_1_, p_204017_3_.deconstruct().serializeToJson(), path1);
                 } catch (IOException ioexception) {
                     LOGGER.error("Couldn't save alchemy recipe {}", path1, ioexception);
                 }
@@ -80,7 +80,7 @@ public class ModAlchemyRecipeProvider implements IDataProvider, IConditionBuilde
                     continue;
 
                 AlchemyRecipe.Builder builder = AlchemyRecipe.Builder.recipe();
-                builder = AlchemyRecipe.Builder.recipe().output(new ItemStack(potion.getItem(), 1)).xp(2).level(1).category(potion.getCategory().toString());
+                builder = AlchemyRecipe.Builder.recipe().output(new ItemStack(potion.asItem(), 1)).xp(2).level(1).category(potion.getCategory().toString());
 
                 for(ItemStack item : potion.getIngredients())
                     builder = builder.addRecipeItem(item);

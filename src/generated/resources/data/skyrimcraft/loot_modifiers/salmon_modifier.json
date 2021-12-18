@@ -11,9 +11,9 @@
   "additional": [
     {
       "item": "skyrimcraft:salmon_roe",
-      "minItem": 1.0,
-      "maxItem": 2.0,
-      "change": 0.3,
+      "minItem": 1,
+      "maxItem": 2,
+      "chance": 0.3,
       "useLooting": true
     }
   ],

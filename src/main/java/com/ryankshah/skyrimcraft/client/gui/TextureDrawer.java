@@ -1,36 +1,35 @@
 package com.ryankshah.skyrimcraft.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import com.mojang.blaze3d.vertex.*;
+import net.minecraft.client.renderer.GameRenderer;
 
 public class TextureDrawer
 {
     private static BufferBuilder buffer;
 
-    public static void drawTexture(MatrixStack matrix, float x, float y, float w, float h, float minU, float maxU, float minV, float maxV)
+    public static void drawTexture(PoseStack matrix, float x, float y, float w, float h, float minU, float maxU, float minV, float maxV)
     {
         start();
         fillBuffer(matrix, x, y, w, h, minU, maxU, minV, maxV);
         end();
     }
 
-    public static void drawTexture(MatrixStack matrix, float x, float y, float w, float h, float minU, float maxU, float minV, float maxV, int color)
+    public static void drawTexture(PoseStack matrix, float x, float y, float w, float h, float minU, float maxU, float minV, float maxV, int color)
     {
         startColored();
         fillBuffer(matrix, x, y, w, h, minU, maxU, minV, maxV, color);
         end();
     }
 
-    public static void drawGuiTexture(MatrixStack matrix, float x, float y, float texX, float texY, float w, float h)
+    public static void drawGuiTexture(PoseStack matrix, float x, float y, float texX, float texY, float w, float h)
     {
         start();
         fillGuiBuffer(matrix, x, y, texX, texY, w, h);
         end();
     }
 
-    public static void drawGuiTexture(MatrixStack matrix, float x, float y, float texX, float texY, float w, float h, int color)
+    public static void drawGuiTexture(PoseStack matrix, float x, float y, float texX, float texY, float w, float h, int color)
     {
         startColored();
         fillGuiBuffer(matrix, x, y, texX, texY, w, h, color);
@@ -41,19 +40,21 @@ public class TextureDrawer
     {
         if (buffer != null) { throw new IllegalStateException("Last drawing operation not finished!"); }
 
-        buffer = Tessellator.getInstance().getBuilder();
-        buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        buffer = Tesselator.getInstance().getBuilder();
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
     }
 
     public static void startColored()
     {
         if (buffer != null) { throw new IllegalStateException("Last drawing operation not finished!"); }
 
-        buffer = Tessellator.getInstance().getBuilder();
-        buffer.begin(7, DefaultVertexFormats.POSITION_COLOR_TEX);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        buffer = Tesselator.getInstance().getBuilder();
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
     }
 
-    public static void fillBuffer(MatrixStack matrix, float x, float y, float w, float h, float minU, float maxU, float minV, float maxV)
+    public static void fillBuffer(PoseStack matrix, float x, float y, float w, float h, float minU, float maxU, float minV, float maxV)
     {
         if (buffer == null) { throw new IllegalStateException("Drawing operation not started!"); }
 
@@ -63,7 +64,7 @@ public class TextureDrawer
         buffer.vertex(matrix.last().pose(), x, y,-90).uv(minU, minV).endVertex();
     }
 
-    public static void fillBuffer(MatrixStack matrix, float x, float y, float w, float h, float minU, float maxU, float minV, float maxV, int color)
+    public static void fillBuffer(PoseStack matrix, float x, float y, float w, float h, float minU, float maxU, float minV, float maxV, int color)
     {
         if (buffer == null) { throw new IllegalStateException("Drawing operation not started!"); }
 
@@ -74,7 +75,7 @@ public class TextureDrawer
         buffer.vertex(matrix.last().pose(), x,     y,     -90).color(colors[0], colors[1], colors[2], colors[3]).uv(minU, minV).endVertex();
     }
 
-    public static void fillGuiBuffer(MatrixStack matrix, float x, float y, float texX, float texY, float w, float h)
+    public static void fillGuiBuffer(PoseStack matrix, float x, float y, float texX, float texY, float w, float h)
     {
         float minU = texX / 256F;
         float maxU = minU + (w / 256F);
@@ -83,7 +84,7 @@ public class TextureDrawer
         fillBuffer(matrix, x, y, w, h, minU, maxU, minV, maxV);
     }
 
-    public static void fillGuiBuffer(MatrixStack matrix, float x, float y, float texX, float texY, float w, float h, int color)
+    public static void fillGuiBuffer(PoseStack matrix, float x, float y, float texX, float texY, float w, float h, int color)
     {
         float minU = texX / 256F;
         float maxU = minU + (w / 256F);
@@ -98,8 +99,8 @@ public class TextureDrawer
 
         buffer.end();
         //noinspection deprecation
-        RenderSystem.enableAlphaTest();
-        WorldVertexBufferUploader.end(buffer);
+        //RenderSystem.enableAlphaTest();
+        BufferUploader.end(buffer);
 
         buffer = null;
     }

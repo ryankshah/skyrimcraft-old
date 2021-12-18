@@ -7,15 +7,16 @@ import com.ryankshah.skyrimcraft.data.ModRecipes;
 import com.ryankshah.skyrimcraft.data.lang.LangGenerator;
 import com.ryankshah.skyrimcraft.data.provider.*;
 import com.ryankshah.skyrimcraft.item.ModItems;
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
 @Mod.EventBusSubscriber(modid = Skyrimcraft.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModClientEvents
@@ -39,6 +40,8 @@ public class ModClientEvents
             gen.addProvider(new ModAlchemyRecipeProvider(gen));
             // Oven Recipes
             gen.addProvider(new ModOvenRecipeProvider(gen));
+            // Quests
+            gen.addProvider(new ModQuestProvider(gen));
         }
         if(event.includeClient()) {
             // BlockStates
@@ -52,18 +55,18 @@ public class ModClientEvents
         }
     }
 
-//    @SubscribeEvent
-//    public static void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> event) {
-//        // ModSpawnEggItem.initSpawnEggs();
-//    }
+    @SubscribeEvent
+    public static void onRegisterEntities(EntityRenderersEvent.RegisterRenderers event) {
+        ModEntityType.registerRenderers(event);
+    }
 
     @SubscribeEvent
     public static void clientSetup(final FMLClientSetupEvent event) {
-        ModEntityType.registerRenderers();
-
         ClientRegistry.registerKeyBinding(ForgeClientEvents.toggleSkyrimMenu);
         ClientRegistry.registerKeyBinding(ForgeClientEvents.toggleSpellSlot1);
         ClientRegistry.registerKeyBinding(ForgeClientEvents.toggleSpellSlot2);
+
+        //SkyrimIngameGui.register();
 
         ModBlocks.blockRenders();
 
@@ -72,19 +75,19 @@ public class ModClientEvents
         });
     }
 
-    public static float noUse(ItemStack sword, ClientWorld clientWorld, LivingEntity entity) {
+    public static float noUse(ItemStack sword, ClientLevel clientWorld, LivingEntity entity, int i) {
         return entity != null && entity.getMainHandItem() == sword && entity.getOffhandItem() != ItemStack.EMPTY ? 1.0F : 0.0F;
     }
 
-    public static float blocking(ItemStack itemStack, ClientWorld clientWorld, LivingEntity livingEntity) {
+    public static float blocking(ItemStack itemStack, ClientLevel clientWorld, LivingEntity livingEntity, int i) {
         return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == itemStack ? 1.0F : 0.0F;
     }
 
-    public static float pulling(ItemStack bow, ClientWorld clientWorld, LivingEntity livingEntity) {
+    public static float pulling(ItemStack bow, ClientLevel clientWorld, LivingEntity livingEntity, int i) {
         return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == bow ? 1.0F : 0.0F;
     }
 
-    public static float pull(ItemStack bow, ClientWorld clientWorld, LivingEntity livingEntity) {
+    public static float pull(ItemStack bow, ClientLevel clientWorld, LivingEntity livingEntity, int i) {
         if (livingEntity == null) {
             return 0.0F;
         } else {

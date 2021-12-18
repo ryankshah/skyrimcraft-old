@@ -1,17 +1,17 @@
 package com.ryankshah.skyrimcraft.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.text.ITextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 public class GuiUtil extends Screen
 {
-    protected GuiUtil(ITextComponent titleIn) {
+    protected GuiUtil(Component titleIn) {
         super(titleIn);
     }
 
-    public static void drawCenteredSizedText(MatrixStack matrixStack, FontRenderer fr, ITextComponent string, int x, int y, int big_small, int color) {
+    public static void drawCenteredSizedText(PoseStack matrixStack, Font fr, Component string, int x, int y, int big_small, int color) {
         if (big_small == 0) {
             matrixStack.pushPose();
             matrixStack.scale(0.5F, 0.5F, 0.5F);
@@ -26,7 +26,7 @@ public class GuiUtil extends Screen
 
     }
 
-    public static void drawCenteredSizedText(MatrixStack matrixStack, FontRenderer fr, String string, int x, int y, int big_small, int color) {
+    public static void drawCenteredSizedText(PoseStack matrixStack, Font fr, String string, int x, int y, int big_small, int color) {
         if (big_small == 0) {
             matrixStack.pushPose();
             matrixStack.scale(0.5F, 0.5F, 0.5F);
@@ -41,7 +41,7 @@ public class GuiUtil extends Screen
 
     }
 
-    public static void drawSizedText(MatrixStack matrixStack, FontRenderer fr, ITextComponent string, int x, int y, int big_small, int color) {
+    public static void drawSizedText(PoseStack matrixStack, Font fr, Component string, int x, int y, int big_small, int color) {
         matrixStack.pushPose();
         if (big_small == 0) {
             matrixStack.scale(0.5F, 0.5F, 0.5F);
@@ -53,7 +53,7 @@ public class GuiUtil extends Screen
         matrixStack.popPose();
     }
 
-    public static void drawSizedText(MatrixStack matrixStack, FontRenderer fr, String string, int x, int y, int big_small, int color) {
+    public static void drawSizedText(PoseStack matrixStack, Font fr, String string, int x, int y, int big_small, int color) {
         matrixStack.pushPose();
         if (big_small == 0) {
             matrixStack.scale(0.5F, 0.5F, 0.5F);

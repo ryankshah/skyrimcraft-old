@@ -3,10 +3,10 @@ package com.ryankshah.skyrimcraft.character.magic.spell;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ public class SpellTurnUndead extends ISpell implements IForgeRegistryEntry<ISpel
         // 600 = 30s (30 * 20 ticks/s)
         // moved to ISpell#onCast
         //Networking.sendToServer(new PacketAddXpToSkillOnServer(SkillRegistry.RESTORATION.get().getID(), getBaseXp()));
-        getCaster().addEffect(new EffectInstance(ModEffects.UNDEAD_FLEE.get(), 600, 0, false, true, true));
+        getCaster().addEffect(new MobEffectInstance(ModEffects.UNDEAD_FLEE.get(), 600, 0, false, true, true));
         super.onCast();
     }
 }

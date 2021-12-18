@@ -4,15 +4,19 @@ import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
 import com.ryankshah.skyrimcraft.event.ModClientEvents;
 import com.ryankshah.skyrimcraft.util.IngredientEffect;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.*;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.ArmorMaterials;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Tiers;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ModItems
 {
@@ -48,14 +52,14 @@ public class ModItems
     public static final RegistryObject<Item> PHILTER_OF_THE_PHANTOM_POTION = ITEMS.register("philter_of_the_phantom_potion", () -> new SpectralPotion(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC), "Philter of the Phantom", 600));
 
     // Food
-    public static final RegistryObject<Item> SWEET_ROLL = ITEMS.register("sweet_roll", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new Food.Builder().nutrition(4).saturationMod(0.4F).build()), "Sweet Roll"));
-    public static final RegistryObject<Item> GARLIC_BREAD = ITEMS.register("garlic_bread", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new Food.Builder().nutrition(5).saturationMod(0.6F).build()), "Garlic Bread"));
-    public static final RegistryObject<Item> POTATO_BREAD = ITEMS.register("potato_bread", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new Food.Builder().nutrition(4).saturationMod(0.4F).build()), "Potato Bread"));
-    public static final RegistryObject<Item> TOMATO = ITEMS.register("tomato", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new Food.Builder().nutrition(4).saturationMod(0.4F).build()), "Tomato"));
-    public static final RegistryObject<Item> APPLE_PIE = ITEMS.register("apple_pie", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new Food.Builder().nutrition(4).saturationMod(0.4F).build()), "Apple Pie"));
-    public static final RegistryObject<Item> MAMMOTH_SNOUT = ITEMS.register("mammoth_snout", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new Food.Builder().nutrition(4).saturationMod(0.4F).build()), "Mammoth Snout"));
-    public static final RegistryObject<Item> MAMMOTH_STEAK = ITEMS.register("mammoth_steak", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new Food.Builder().nutrition(6).saturationMod(0.6F).build()), "Mammoth Steak"));
-    public static final RegistryObject<Item> VENISON = ITEMS.register("venison", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new Food.Builder().nutrition(4).saturationMod(0.4F).build()), "Venison"));
+    public static final RegistryObject<Item> SWEET_ROLL = ITEMS.register("sweet_roll", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new FoodProperties.Builder().nutrition(4).saturationMod(0.4F).build()), "Sweet Roll"));
+    public static final RegistryObject<Item> GARLIC_BREAD = ITEMS.register("garlic_bread", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new FoodProperties.Builder().nutrition(5).saturationMod(0.6F).build()), "Garlic Bread"));
+    public static final RegistryObject<Item> POTATO_BREAD = ITEMS.register("potato_bread", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new FoodProperties.Builder().nutrition(4).saturationMod(0.4F).build()), "Potato Bread"));
+    public static final RegistryObject<Item> TOMATO = ITEMS.register("tomato", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new FoodProperties.Builder().nutrition(4).saturationMod(0.4F).build()), "Tomato"));
+    public static final RegistryObject<Item> APPLE_PIE = ITEMS.register("apple_pie", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new FoodProperties.Builder().nutrition(4).saturationMod(0.4F).build()), "Apple Pie"));
+    public static final RegistryObject<Item> MAMMOTH_SNOUT = ITEMS.register("mammoth_snout", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new FoodProperties.Builder().nutrition(4).saturationMod(0.4F).build()), "Mammoth Snout"));
+    public static final RegistryObject<Item> MAMMOTH_STEAK = ITEMS.register("mammoth_steak", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new FoodProperties.Builder().nutrition(6).saturationMod(0.6F).build()), "Mammoth Steak"));
+    public static final RegistryObject<Item> VENISON = ITEMS.register("venison", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_FOOD).food(new FoodProperties.Builder().nutrition(4).saturationMod(0.4F).build()), "Venison"));
     public static final RegistryObject<Item> FLOUR = ITEMS.register("flour", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Flour"));
     public static final RegistryObject<Item> BUTTER = ITEMS.register("butter", () -> new SkyrimItem(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Butter"));
 
@@ -92,14 +96,15 @@ public class ModItems
     public static final RegistryObject<Item> ELVES_EAR = ITEMS.register("elves_ear", () -> new SkyrimIngredient(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Elves Ear", IngredientEffect.RESTORE_MAGICKA, IngredientEffect.FORTIFY_MARKSMAN, IngredientEffect.WEAKNESS_TO_FROST, IngredientEffect.RESIST_FIRE));
     public static final RegistryObject<Item> TAPROOT = ITEMS.register("taproot", () -> new SkyrimIngredient(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Taproot", IngredientEffect.WEAKNESS_TO_MAGIC, IngredientEffect.FORTIFY_ILLUSION, IngredientEffect.REGENERATE_MAGICKA, IngredientEffect.RESTORE_MAGICKA));
     public static final RegistryObject<Item> BEE = ITEMS.register("bee", () -> new SkyrimIngredient(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Bee", IngredientEffect.RESTORE_STAMINA, IngredientEffect.RAVAGE_STAMINA, IngredientEffect.REGENERATE_STAMINA, IngredientEffect.WEAKNESS_TO_SHOCK));
+    public static final RegistryObject<Item> EYE_OF_SABRE_CAT = ITEMS.register("eye_of_sabre_cat", () -> new SkyrimIngredient(new Item.Properties().tab(Skyrimcraft.TAB_INGREDIENTS), "Eye of Sabre Cat", IngredientEffect.RESTORE_STAMINA, IngredientEffect.RAVAGE_HEALTH, IngredientEffect.DAMAGE_MAGICKA, IngredientEffect.RESTORE_HEALTH));
 
 
     //// COMBAT ////
     // Ancient Nord
-    public static final RegistryObject<Item> ANCIENT_NORD_HELMET = ITEMS.register("ancient_nord_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.ANCIENT_NORD, EquipmentSlotType.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Ancient Nord Helmet", true));
-    public static final RegistryObject<Item> ANCIENT_NORD_CHESTPLATE = ITEMS.register("ancient_nord_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.ANCIENT_NORD, EquipmentSlotType.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Ancient Nord Chestplate", true));
-    public static final RegistryObject<Item> ANCIENT_NORD_LEGGINGS = ITEMS.register("ancient_nord_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.ANCIENT_NORD, EquipmentSlotType.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Ancient Nord Leggings", true));
-    public static final RegistryObject<Item> ANCIENT_NORD_BOOTS = ITEMS.register("ancient_nord_boots", () -> new SkyrimArmorItem(ModArmorMaterial.ANCIENT_NORD, EquipmentSlotType.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Ancient Nord Boots", true));
+    public static final RegistryObject<Item> ANCIENT_NORD_HELMET = ITEMS.register("ancient_nord_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.ANCIENT_NORD, EquipmentSlot.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Ancient Nord Helmet", true));
+    public static final RegistryObject<Item> ANCIENT_NORD_CHESTPLATE = ITEMS.register("ancient_nord_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.ANCIENT_NORD, EquipmentSlot.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Ancient Nord Chestplate", true));
+    public static final RegistryObject<Item> ANCIENT_NORD_LEGGINGS = ITEMS.register("ancient_nord_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.ANCIENT_NORD, EquipmentSlot.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Ancient Nord Leggings", true));
+    public static final RegistryObject<Item> ANCIENT_NORD_BOOTS = ITEMS.register("ancient_nord_boots", () -> new SkyrimArmorItem(ModArmorMaterial.ANCIENT_NORD, EquipmentSlot.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Ancient Nord Boots", true));
     public static final RegistryObject<Item> ANCIENT_NORD_ARROW = ITEMS.register("ancient_nord_arrow", () -> new SkyrimArrow.AncientNordArrow(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Ancient Nord Arrow"));
     public static final RegistryObject<Item> ANCIENT_NORD_SWORD = ITEMS.register("ancient_nord_sword", () -> new SkyrimWeapon(ModItemTier.ANCIENT_NORD, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT), "Ancient Nord Sword"));
     public static final RegistryObject<Item> ANCIENT_NORD_BATTLEAXE = ITEMS.register("ancient_nord_battleaxe", () -> new SkyrimWeapon(ModItemTier.ANCIENT_NORD, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT), "Ancient Nord Battleaxe"));
@@ -107,10 +112,10 @@ public class ModItems
     public static final RegistryObject<Item> ANCIENT_NORD_GREATSWORD = ITEMS.register("ancient_nord_greatsword", () -> new SkyrimTwoHandedWeapon(ModItemTier.ANCIENT_NORD, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT), "Ancient Nord Greatsword"));
     public static final RegistryObject<Item> ANCIENT_NORD_WAR_AXE = ITEMS.register("ancient_nord_war_axe", () -> new SkyrimWeapon(ModItemTier.ANCIENT_NORD, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT), "Ancient Nord War Axe"));
     // Daedric
-    public static final RegistryObject<Item> DAEDRIC_HELMET = ITEMS.register("daedric_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.DAEDRIC, EquipmentSlotType.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Daedric Helmet", true));
-    public static final RegistryObject<Item> DAEDRIC_CHESTPLATE = ITEMS.register("daedric_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.DAEDRIC, EquipmentSlotType.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Daedric Chestplate", true));
-    public static final RegistryObject<Item> DAEDRIC_LEGGINGS = ITEMS.register("daedric_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.DAEDRIC, EquipmentSlotType.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Daedric Leggings", true));
-    public static final RegistryObject<Item> DAEDRIC_BOOTS = ITEMS.register("daedric_boots", () -> new SkyrimArmorItem(ModArmorMaterial.DAEDRIC, EquipmentSlotType.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Daedric Boots", true));
+    public static final RegistryObject<Item> DAEDRIC_HELMET = ITEMS.register("daedric_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.DAEDRIC, EquipmentSlot.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Daedric Helmet", true));
+    public static final RegistryObject<Item> DAEDRIC_CHESTPLATE = ITEMS.register("daedric_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.DAEDRIC, EquipmentSlot.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Daedric Chestplate", true));
+    public static final RegistryObject<Item> DAEDRIC_LEGGINGS = ITEMS.register("daedric_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.DAEDRIC, EquipmentSlot.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Daedric Leggings", true));
+    public static final RegistryObject<Item> DAEDRIC_BOOTS = ITEMS.register("daedric_boots", () -> new SkyrimArmorItem(ModArmorMaterial.DAEDRIC, EquipmentSlot.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Daedric Boots", true));
     public static final RegistryObject<Item> DAEDRIC_SHIELD = ITEMS.register("daedric_shield", () -> new SkyrimShield(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Daedric Shield"));
     public static final RegistryObject<Item> DAEDRIC_ARROW = ITEMS.register("daedric_arrow", () -> new SkyrimArrow.DaedricArrow(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Daedric Arrow"));
     public static final RegistryObject<Item> DAEDRIC_DAGGER = ITEMS.register("daedric_dagger", () -> new SkyrimWeapon(ModItemTier.DAEDRIC, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Daedric Dagger"));
@@ -132,10 +137,10 @@ public class ModItems
     public static final RegistryObject<Item> DRAGONBONE_WAR_AXE = ITEMS.register("dragonbone_war_axe", () -> new SkyrimWeapon(ModItemTier.DRAGONBONE, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Dragonbone War Axe"));
     public static final RegistryObject<Item> DRAGONBONE_WARHAMMER = ITEMS.register("dragonbone_warhammer", () -> new SkyrimTwoHandedWeapon(ModItemTier.DRAGONBONE, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Dragonbone Warhammer"));
     // Dwarven
-    public static final RegistryObject<Item> DWARVEN_HELMET = ITEMS.register("dwarven_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.DWARVEN, EquipmentSlotType.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Dwarven Helmet", true));
-    public static final RegistryObject<Item> DWARVEN_CHESTPLATE = ITEMS.register("dwarven_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.DWARVEN, EquipmentSlotType.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Dwarven Chestplate", true));
-    public static final RegistryObject<Item> DWARVEN_LEGGINGS = ITEMS.register("dwarven_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.DWARVEN, EquipmentSlotType.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Dwarven Leggings", true));
-    public static final RegistryObject<Item> DWARVEN_BOOTS = ITEMS.register("dwarven_boots", () -> new SkyrimArmorItem(ModArmorMaterial.DWARVEN, EquipmentSlotType.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Dwarven Boots", true));
+    public static final RegistryObject<Item> DWARVEN_HELMET = ITEMS.register("dwarven_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.DWARVEN, EquipmentSlot.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Dwarven Helmet", true));
+    public static final RegistryObject<Item> DWARVEN_CHESTPLATE = ITEMS.register("dwarven_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.DWARVEN, EquipmentSlot.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Dwarven Chestplate", true));
+    public static final RegistryObject<Item> DWARVEN_LEGGINGS = ITEMS.register("dwarven_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.DWARVEN, EquipmentSlot.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Dwarven Leggings", true));
+    public static final RegistryObject<Item> DWARVEN_BOOTS = ITEMS.register("dwarven_boots", () -> new SkyrimArmorItem(ModArmorMaterial.DWARVEN, EquipmentSlot.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Dwarven Boots", true));
     public static final RegistryObject<Item> DWARVEN_SHIELD = ITEMS.register("dwarven_shield", () -> new SkyrimShield(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Dwarven Shield"));
     public static final RegistryObject<Item> DWARVEN_ARROW = ITEMS.register("dwarven_arrow", () -> new SkyrimArrow.DwarvenArrow(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Dwarven Arrow"));
     public static final RegistryObject<Item> DWARVEN_DAGGER = ITEMS.register("dwarven_dagger", () -> new SkyrimWeapon(ModItemTier.DWARVEN, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Dwarven Dagger"));
@@ -147,10 +152,10 @@ public class ModItems
     public static final RegistryObject<Item> DWARVEN_WAR_AXE = ITEMS.register("dwarven_war_axe", () -> new SkyrimWeapon(ModItemTier.DWARVEN, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Dwarven War Axe"));
     public static final RegistryObject<Item> DWARVEN_WARHAMMER = ITEMS.register("dwarven_warhammer", () -> new SkyrimTwoHandedWeapon(ModItemTier.DWARVEN, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Dwarven Warhammer"));
     // Ebony
-    public static final RegistryObject<Item> EBONY_HELMET = ITEMS.register("ebony_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.EBONY, EquipmentSlotType.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Ebony Helmet", true));
-    public static final RegistryObject<Item> EBONY_CHESTPLATE = ITEMS.register("ebony_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.EBONY, EquipmentSlotType.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Ebony Chestplate", true));
-    public static final RegistryObject<Item> EBONY_LEGGINGS = ITEMS.register("ebony_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.EBONY, EquipmentSlotType.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Ebony Leggings", true));
-    public static final RegistryObject<Item> EBONY_BOOTS = ITEMS.register("ebony_boots", () -> new SkyrimArmorItem(ModArmorMaterial.EBONY, EquipmentSlotType.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Ebony Boots", true));
+    public static final RegistryObject<Item> EBONY_HELMET = ITEMS.register("ebony_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.EBONY, EquipmentSlot.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Ebony Helmet", true));
+    public static final RegistryObject<Item> EBONY_CHESTPLATE = ITEMS.register("ebony_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.EBONY, EquipmentSlot.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Ebony Chestplate", true));
+    public static final RegistryObject<Item> EBONY_LEGGINGS = ITEMS.register("ebony_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.EBONY, EquipmentSlot.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Ebony Leggings", true));
+    public static final RegistryObject<Item> EBONY_BOOTS = ITEMS.register("ebony_boots", () -> new SkyrimArmorItem(ModArmorMaterial.EBONY, EquipmentSlot.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Ebony Boots", true));
     public static final RegistryObject<Item> EBONY_SHIELD = ITEMS.register("ebony_shield", () -> new SkyrimShield(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Ebony Shield"));
     public static final RegistryObject<Item> EBONY_ARROW = ITEMS.register("ebony_arrow", () -> new SkyrimArrow.EbonyArrow(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Ebony Arrow"));
     public static final RegistryObject<Item> EBONY_DAGGER = ITEMS.register("ebony_dagger", () -> new SkyrimWeapon(ModItemTier.EBONY, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Ebony Dagger"));
@@ -162,10 +167,10 @@ public class ModItems
     public static final RegistryObject<Item> EBONY_WAR_AXE = ITEMS.register("ebony_war_axe", () -> new SkyrimWeapon(ModItemTier.EBONY, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Ebony War Axe"));
     public static final RegistryObject<Item> EBONY_WARHAMMER = ITEMS.register("ebony_warhammer", () -> new SkyrimTwoHandedWeapon(ModItemTier.EBONY, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Ebony Warhammer"));
     // Elven
-    public static final RegistryObject<Item> ELVEN_HELMET = ITEMS.register("elven_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.ELVEN, EquipmentSlotType.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Elven Helmet", false));
-    public static final RegistryObject<Item> ELVEN_CHESTPLATE = ITEMS.register("elven_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.ELVEN, EquipmentSlotType.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Elven Chestplate", false));
-    public static final RegistryObject<Item> ELVEN_LEGGINGS = ITEMS.register("elven_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.ELVEN, EquipmentSlotType.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Elven Leggings", false));
-    public static final RegistryObject<Item> ELVEN_BOOTS = ITEMS.register("elven_boots", () -> new SkyrimArmorItem(ModArmorMaterial.ELVEN, EquipmentSlotType.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Elven Boots", false));
+    public static final RegistryObject<Item> ELVEN_HELMET = ITEMS.register("elven_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.ELVEN, EquipmentSlot.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Elven Helmet", false));
+    public static final RegistryObject<Item> ELVEN_CHESTPLATE = ITEMS.register("elven_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.ELVEN, EquipmentSlot.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Elven Chestplate", false));
+    public static final RegistryObject<Item> ELVEN_LEGGINGS = ITEMS.register("elven_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.ELVEN, EquipmentSlot.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Elven Leggings", false));
+    public static final RegistryObject<Item> ELVEN_BOOTS = ITEMS.register("elven_boots", () -> new SkyrimArmorItem(ModArmorMaterial.ELVEN, EquipmentSlot.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Elven Boots", false));
     public static final RegistryObject<Item> ELVEN_SHIELD = ITEMS.register("elven_shield", () -> new SkyrimShield(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Elven Shield"));
     public static final RegistryObject<Item> ELVEN_ARROW = ITEMS.register("elven_arrow", () -> new SkyrimArrow.ElvenArrow(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Elven Arrow"));
     public static final RegistryObject<Item> ELVEN_DAGGER = ITEMS.register("elven_dagger", () -> new SkyrimWeapon(ModItemTier.ELVEN, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Elven Dagger"));
@@ -177,19 +182,19 @@ public class ModItems
     public static final RegistryObject<Item> ELVEN_WAR_AXE = ITEMS.register("elven_war_axe", () -> new SkyrimWeapon(ModItemTier.ELVEN, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Elven War Axe"));
     public static final RegistryObject<Item> ELVEN_WARHAMMER = ITEMS.register("elven_warhammer", () -> new SkyrimTwoHandedWeapon(ModItemTier.ELVEN, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Elven Warhammer"));
     // Falmer
-    public static final RegistryObject<Item> FALMER_HELMET = ITEMS.register("falmer_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.FALMER, EquipmentSlotType.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Falmer Helmet", true));
-    public static final RegistryObject<Item> FALMER_CHESTPLATE = ITEMS.register("falmer_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.FALMER, EquipmentSlotType.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Falmer Chestplate", true));
-    public static final RegistryObject<Item> FALMER_LEGGINGS = ITEMS.register("falmer_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.FALMER, EquipmentSlotType.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Falmer Leggings", true));
-    public static final RegistryObject<Item> FALMER_BOOTS = ITEMS.register("falmer_boots", () -> new SkyrimArmorItem(ModArmorMaterial.FALMER, EquipmentSlotType.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Falmer Boots", true));
+    public static final RegistryObject<Item> FALMER_HELMET = ITEMS.register("falmer_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.FALMER, EquipmentSlot.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Falmer Helmet", true));
+    public static final RegistryObject<Item> FALMER_CHESTPLATE = ITEMS.register("falmer_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.FALMER, EquipmentSlot.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Falmer Chestplate", true));
+    public static final RegistryObject<Item> FALMER_LEGGINGS = ITEMS.register("falmer_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.FALMER, EquipmentSlot.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Falmer Leggings", true));
+    public static final RegistryObject<Item> FALMER_BOOTS = ITEMS.register("falmer_boots", () -> new SkyrimArmorItem(ModArmorMaterial.FALMER, EquipmentSlot.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Falmer Boots", true));
     public static final RegistryObject<Item> FALMER_ARROW = ITEMS.register("falmer_arrow", () -> new SkyrimArrow.FalmerArrow(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Falmer Arrow"));
     public static final RegistryObject<Item> FALMER_SWORD = ITEMS.register("falmer_sword", () -> new SkyrimWeapon(ModItemTier.FALMER, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Falmer Sword"));
     public static final RegistryObject<Item> FALMER_BOW = ITEMS.register("falmer_bow", () -> new SkyrimBow(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Falmer Bow", FALMER_ARROW.get()));
     public static final RegistryObject<Item> FALMER_WAR_AXE = ITEMS.register("falmer_war_axe", () -> new SkyrimWeapon(ModItemTier.FALMER, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Falmer War Axe"));
     // Glass
-    public static final RegistryObject<Item> GLASS_HELMET = ITEMS.register("glass_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.GLASS, EquipmentSlotType.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Glass Helmet", false));
-    public static final RegistryObject<Item> GLASS_CHESTPLATE = ITEMS.register("glass_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.GLASS, EquipmentSlotType.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Glass Chestplate", false));
-    public static final RegistryObject<Item> GLASS_LEGGINGS = ITEMS.register("glass_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.GLASS, EquipmentSlotType.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Glass Leggings", false));
-    public static final RegistryObject<Item> GLASS_BOOTS = ITEMS.register("glass_boots", () -> new SkyrimArmorItem(ModArmorMaterial.GLASS, EquipmentSlotType.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Glass Boots", false));
+    public static final RegistryObject<Item> GLASS_HELMET = ITEMS.register("glass_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.GLASS, EquipmentSlot.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Glass Helmet", false));
+    public static final RegistryObject<Item> GLASS_CHESTPLATE = ITEMS.register("glass_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.GLASS, EquipmentSlot.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Glass Chestplate", false));
+    public static final RegistryObject<Item> GLASS_LEGGINGS = ITEMS.register("glass_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.GLASS, EquipmentSlot.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Glass Leggings", false));
+    public static final RegistryObject<Item> GLASS_BOOTS = ITEMS.register("glass_boots", () -> new SkyrimArmorItem(ModArmorMaterial.GLASS, EquipmentSlot.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Glass Boots", false));
     public static final RegistryObject<Item> GLASS_SHIELD = ITEMS.register("glass_shield", () -> new SkyrimShield(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Glass Shield"));
     public static final RegistryObject<Item> GLASS_ARROW = ITEMS.register("glass_arrow", () -> new SkyrimArrow.GlassArrow(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Glass Arrow"));
     public static final RegistryObject<Item> GLASS_DAGGER = ITEMS.register("glass_dagger", () -> new SkyrimWeapon(ModItemTier.GLASS, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT), "Glass Dagger"));
@@ -201,30 +206,30 @@ public class ModItems
     public static final RegistryObject<Item> GLASS_WAR_AXE = ITEMS.register("glass_war_axe", () -> new SkyrimWeapon(ModItemTier.GLASS, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT), "Glass War Axe"));
     public static final RegistryObject<Item> GLASS_WARHAMMER = ITEMS.register("glass_warhammer", () -> new SkyrimTwoHandedWeapon(ModItemTier.GLASS, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT), "Glass Warhammer"));
     // Imperial
-    public static final RegistryObject<Item> IMPERIAL_HELMET = ITEMS.register("imperial_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.IMPERIAL, EquipmentSlotType.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Imperial Helmet", true));
-    public static final RegistryObject<Item> IMPERIAL_CHESTPLATE = ITEMS.register("imperial_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.IMPERIAL, EquipmentSlotType.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Imperial Chestplate", true));
-    public static final RegistryObject<Item> IMPERIAL_LEGGINGS = ITEMS.register("imperial_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.IMPERIAL, EquipmentSlotType.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Imperial Leggings", true));
-    public static final RegistryObject<Item> IMPERIAL_BOOTS = ITEMS.register("imperial_boots", () -> new SkyrimArmorItem(ModArmorMaterial.IMPERIAL, EquipmentSlotType.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Imperial Boots", true));
-    public static final RegistryObject<Item> IMPERIAL_SWORD = ITEMS.register("imperial_sword", () -> new SkyrimWeapon(ItemTier.IRON, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Imperial Sword"));
+    public static final RegistryObject<Item> IMPERIAL_HELMET = ITEMS.register("imperial_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.IMPERIAL, EquipmentSlot.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Imperial Helmet", true));
+    public static final RegistryObject<Item> IMPERIAL_CHESTPLATE = ITEMS.register("imperial_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.IMPERIAL, EquipmentSlot.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Imperial Chestplate", true));
+    public static final RegistryObject<Item> IMPERIAL_LEGGINGS = ITEMS.register("imperial_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.IMPERIAL, EquipmentSlot.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Imperial Leggings", true));
+    public static final RegistryObject<Item> IMPERIAL_BOOTS = ITEMS.register("imperial_boots", () -> new SkyrimArmorItem(ModArmorMaterial.IMPERIAL, EquipmentSlot.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Imperial Boots", true));
+    public static final RegistryObject<Item> IMPERIAL_SWORD = ITEMS.register("imperial_sword", () -> new SkyrimWeapon(Tiers.IRON, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Imperial Sword"));
     // Iron (Skyrim)
-    public static final RegistryObject<Item> IRON_HELMET = ITEMS.register("iron_helmet", () -> new SkyrimArmorItem(ArmorMaterial.IRON, EquipmentSlotType.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Iron Helmet", true));
-    public static final RegistryObject<Item> IRON_CHESTPLATE = ITEMS.register("iron_chestplate", () -> new SkyrimArmorItem(ArmorMaterial.IRON, EquipmentSlotType.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Iron Chestplate", true));
-    public static final RegistryObject<Item> IRON_LEGGINGS = ITEMS.register("iron_leggings", () -> new SkyrimArmorItem(ArmorMaterial.IRON, EquipmentSlotType.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Iron Leggings", true));
-    public static final RegistryObject<Item> IRON_BOOTS = ITEMS.register("iron_boots", () -> new SkyrimArmorItem(ArmorMaterial.IRON, EquipmentSlotType.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Iron Boots", true));
+    public static final RegistryObject<Item> IRON_HELMET = ITEMS.register("iron_helmet", () -> new SkyrimArmorItem(ArmorMaterials.IRON, EquipmentSlot.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Iron Helmet", true));
+    public static final RegistryObject<Item> IRON_CHESTPLATE = ITEMS.register("iron_chestplate", () -> new SkyrimArmorItem(ArmorMaterials.IRON, EquipmentSlot.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Iron Chestplate", true));
+    public static final RegistryObject<Item> IRON_LEGGINGS = ITEMS.register("iron_leggings", () -> new SkyrimArmorItem(ArmorMaterials.IRON, EquipmentSlot.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Iron Leggings", true));
+    public static final RegistryObject<Item> IRON_BOOTS = ITEMS.register("iron_boots", () -> new SkyrimArmorItem(ArmorMaterials.IRON, EquipmentSlot.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Iron Boots", true));
     public static final RegistryObject<Item> IRON_SHIELD = ITEMS.register("iron_shield", () -> new SkyrimShield(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Iron Shield"));
     public static final RegistryObject<Item> IRON_ARROW = ITEMS.register("iron_arrow", () -> new SkyrimArrow.IronArrow(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Iron Arrow"));
-    public static final RegistryObject<Item> IRON_DAGGER = ITEMS.register("iron_dagger", () -> new SkyrimWeapon(ItemTier.IRON, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Iron Dagger"));
-    public static final RegistryObject<Item> IRON_SWORD = ITEMS.register("iron_sword", () -> new SkyrimWeapon(ItemTier.IRON, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Iron Sword"));
-    public static final RegistryObject<Item> IRON_BATTLEAXE = ITEMS.register("iron_battleaxe", () -> new SkyrimWeapon(ItemTier.IRON, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Iron Battleaxe"));
-    public static final RegistryObject<Item> IRON_GREATSWORD = ITEMS.register("iron_greatsword", () -> new SkyrimTwoHandedWeapon(ItemTier.IRON, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Iron Greatsword"));
-    public static final RegistryObject<Item> IRON_MACE = ITEMS.register("iron_mace", () -> new SkyrimWeapon(ItemTier.IRON, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Iron Mace"));
-    public static final RegistryObject<Item> IRON_WAR_AXE = ITEMS.register("iron_war_axe", () -> new SkyrimWeapon(ItemTier.IRON, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Iron War Axe"));
-    public static final RegistryObject<Item> IRON_WARHAMMER = ITEMS.register("iron_warhammer", () -> new SkyrimTwoHandedWeapon(ItemTier.IRON, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Iron Warhammer"));
+    public static final RegistryObject<Item> IRON_DAGGER = ITEMS.register("iron_dagger", () -> new SkyrimWeapon(Tiers.IRON, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Iron Dagger"));
+    public static final RegistryObject<Item> IRON_SWORD = ITEMS.register("iron_sword", () -> new SkyrimWeapon(Tiers.IRON, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Iron Sword"));
+    public static final RegistryObject<Item> IRON_BATTLEAXE = ITEMS.register("iron_battleaxe", () -> new SkyrimWeapon(Tiers.IRON, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Iron Battleaxe"));
+    public static final RegistryObject<Item> IRON_GREATSWORD = ITEMS.register("iron_greatsword", () -> new SkyrimTwoHandedWeapon(Tiers.IRON, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Iron Greatsword"));
+    public static final RegistryObject<Item> IRON_MACE = ITEMS.register("iron_mace", () -> new SkyrimWeapon(Tiers.IRON, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Iron Mace"));
+    public static final RegistryObject<Item> IRON_WAR_AXE = ITEMS.register("iron_war_axe", () -> new SkyrimWeapon(Tiers.IRON, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Iron War Axe"));
+    public static final RegistryObject<Item> IRON_WARHAMMER = ITEMS.register("iron_warhammer", () -> new SkyrimTwoHandedWeapon(Tiers.IRON, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Iron Warhammer"));
     // Orcish
-    public static final RegistryObject<Item> ORCISH_HELMET = ITEMS.register("orcish_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.ORCISH, EquipmentSlotType.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Orcish Helmet", true));
-    public static final RegistryObject<Item> ORCISH_CHESTPLATE = ITEMS.register("orcish_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.ORCISH, EquipmentSlotType.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Orcish Chestplate", true));
-    public static final RegistryObject<Item> ORCISH_LEGGINGS = ITEMS.register("orcish_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.ORCISH, EquipmentSlotType.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Orcish Leggings", true));
-    public static final RegistryObject<Item> ORCISH_BOOTS = ITEMS.register("orcish_boots", () -> new SkyrimArmorItem(ModArmorMaterial.ORCISH, EquipmentSlotType.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Orcish Boots", true));
+    public static final RegistryObject<Item> ORCISH_HELMET = ITEMS.register("orcish_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.ORCISH, EquipmentSlot.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Orcish Helmet", true));
+    public static final RegistryObject<Item> ORCISH_CHESTPLATE = ITEMS.register("orcish_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.ORCISH, EquipmentSlot.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Orcish Chestplate", true));
+    public static final RegistryObject<Item> ORCISH_LEGGINGS = ITEMS.register("orcish_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.ORCISH, EquipmentSlot.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Orcish Leggings", true));
+    public static final RegistryObject<Item> ORCISH_BOOTS = ITEMS.register("orcish_boots", () -> new SkyrimArmorItem(ModArmorMaterial.ORCISH, EquipmentSlot.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Orcish Boots", true));
     public static final RegistryObject<Item> ORCISH_SHIELD = ITEMS.register("orcish_shield", () -> new SkyrimShield(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Orcish Shield"));
     public static final RegistryObject<Item> ORCISH_ARROW = ITEMS.register("orcish_arrow", () -> new SkyrimArrow.OrcishArrow(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Orcish Arrow"));
     public static final RegistryObject<Item> ORCISH_DAGGER = ITEMS.register("orcish_dagger", () -> new SkyrimWeapon(ModItemTier.ORCISH, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Orcish Dagger"));
@@ -250,26 +255,26 @@ public class ModItems
     public static final RegistryObject<Item> STEEL_WAR_AXE = ITEMS.register("steel_war_axe", () -> new SkyrimWeapon(ModItemTier.STEEL, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Steel War Axe"));
     public static final RegistryObject<Item> STEEL_WARHAMMER = ITEMS.register("steel_warhammer", () -> new SkyrimTwoHandedWeapon(ModItemTier.STEEL, 3, -2.4F, (new Item.Properties()).tab(Skyrimcraft.TAB_COMBAT).fireResistant(), "Steel Warhammer"));
     // Stormcloak + Stormcloak Officer Armor
-    public static final RegistryObject<Item> STORMCLOAK_OFFICER_HELMET = ITEMS.register("stormcloak_officer_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.STORMCLOAK, EquipmentSlotType.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Stormcloak Officer Helmet", true));
-    public static final RegistryObject<Item> STORMCLOAK_OFFICER_CHESTPLATE = ITEMS.register("stormcloak_officer_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.STORMCLOAK, EquipmentSlotType.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Stormcloak Officer Chestplate", true));
-    public static final RegistryObject<Item> STORMCLOAK_OFFICER_LEGGINGS = ITEMS.register("stormcloak_officer_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.STORMCLOAK, EquipmentSlotType.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Stormcloak Officer Leggings", true));
-    public static final RegistryObject<Item> STORMCLOAK_OFFICER_BOOTS = ITEMS.register("stormcloak_officer_boots", () -> new SkyrimArmorItem(ModArmorMaterial.STORMCLOAK, EquipmentSlotType.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Stormcloak Officer Boots", true));
+    public static final RegistryObject<Item> STORMCLOAK_OFFICER_HELMET = ITEMS.register("stormcloak_officer_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.STORMCLOAK, EquipmentSlot.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Stormcloak Officer Helmet", true));
+    public static final RegistryObject<Item> STORMCLOAK_OFFICER_CHESTPLATE = ITEMS.register("stormcloak_officer_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.STORMCLOAK, EquipmentSlot.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Stormcloak Officer Chestplate", true));
+    public static final RegistryObject<Item> STORMCLOAK_OFFICER_LEGGINGS = ITEMS.register("stormcloak_officer_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.STORMCLOAK, EquipmentSlot.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Stormcloak Officer Leggings", true));
+    public static final RegistryObject<Item> STORMCLOAK_OFFICER_BOOTS = ITEMS.register("stormcloak_officer_boots", () -> new SkyrimArmorItem(ModArmorMaterial.STORMCLOAK, EquipmentSlot.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Stormcloak Officer Boots", true));
 
     //// MISC ////
     // Hunting bow
-    public static final RegistryObject<Item> HUNTING_BOW = ITEMS.register("hunting_bow", () -> new SkyrimBow(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Hunting Bow", net.minecraft.item.Items.ARROW, IRON_ARROW.get(), STEEL_ARROW.get()));
+    public static final RegistryObject<Item> HUNTING_BOW = ITEMS.register("hunting_bow", () -> new SkyrimBow(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Hunting Bow", net.minecraft.world.item.Items.ARROW, IRON_ARROW.get(), STEEL_ARROW.get()));
     // Longbow
-    public static final RegistryObject<Item> LONGBOW = ITEMS.register("longbow", () -> new SkyrimBow(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Long Bow", net.minecraft.item.Items.ARROW, IRON_ARROW.get(), STEEL_ARROW.get()));
+    public static final RegistryObject<Item> LONGBOW = ITEMS.register("longbow", () -> new SkyrimBow(new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Long Bow", net.minecraft.world.item.Items.ARROW, IRON_ARROW.get(), STEEL_ARROW.get()));
     // Scaled armor
-    public static final RegistryObject<Item> SCALED_HELMET = ITEMS.register("scaled_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.SCALED, EquipmentSlotType.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Scaled Helmet", false));
-    public static final RegistryObject<Item> SCALED_CHESTPLATE = ITEMS.register("scaled_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.SCALED, EquipmentSlotType.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Scaled Chestplate", false));
-    public static final RegistryObject<Item> SCALED_LEGGINGS = ITEMS.register("scaled_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.SCALED, EquipmentSlotType.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Scaled Leggings", false));
-    public static final RegistryObject<Item> SCALED_BOOTS = ITEMS.register("scaled_boots", () -> new SkyrimArmorItem(ModArmorMaterial.SCALED, EquipmentSlotType.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Scaled Boots", false));
+    public static final RegistryObject<Item> SCALED_HELMET = ITEMS.register("scaled_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.SCALED, EquipmentSlot.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Scaled Helmet", false));
+    public static final RegistryObject<Item> SCALED_CHESTPLATE = ITEMS.register("scaled_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.SCALED, EquipmentSlot.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Scaled Chestplate", false));
+    public static final RegistryObject<Item> SCALED_LEGGINGS = ITEMS.register("scaled_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.SCALED, EquipmentSlot.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Scaled Leggings", false));
+    public static final RegistryObject<Item> SCALED_BOOTS = ITEMS.register("scaled_boots", () -> new SkyrimArmorItem(ModArmorMaterial.SCALED, EquipmentSlot.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Scaled Boots", false));
     // Hide armor
-    public static final RegistryObject<Item> HIDE_HELMET = ITEMS.register("hide_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.HIDE, EquipmentSlotType.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Hide Helmet", false));
-    public static final RegistryObject<Item> HIDE_CHESTPLATE = ITEMS.register("hide_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.HIDE, EquipmentSlotType.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Hide Chestplate", false));
-    public static final RegistryObject<Item> HIDE_LEGGINGS = ITEMS.register("hide_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.HIDE, EquipmentSlotType.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Hide Leggings", false));
-    public static final RegistryObject<Item> HIDE_BOOTS = ITEMS.register("hide_boots", () -> new SkyrimArmorItem(ModArmorMaterial.HIDE, EquipmentSlotType.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Hide Boots", false));
+    public static final RegistryObject<Item> HIDE_HELMET = ITEMS.register("hide_helmet", () -> new SkyrimArmorItem(ModArmorMaterial.HIDE, EquipmentSlot.HEAD, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Hide Helmet", false));
+    public static final RegistryObject<Item> HIDE_CHESTPLATE = ITEMS.register("hide_chestplate", () -> new SkyrimArmorItem(ModArmorMaterial.HIDE, EquipmentSlot.CHEST, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Hide Chestplate", false));
+    public static final RegistryObject<Item> HIDE_LEGGINGS = ITEMS.register("hide_leggings", () -> new SkyrimArmorItem(ModArmorMaterial.HIDE, EquipmentSlot.LEGS, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Hide Leggings", false));
+    public static final RegistryObject<Item> HIDE_BOOTS = ITEMS.register("hide_boots", () -> new SkyrimArmorItem(ModArmorMaterial.HIDE, EquipmentSlot.FEET, new Item.Properties().tab(Skyrimcraft.TAB_COMBAT), "Hide Boots", false));
 
     //// MAGIC ////
     // Staff
@@ -277,6 +282,8 @@ public class ModItems
     // Spell books
     public static final RegistryObject<Item> FIREBALL_SPELLBOOK = ITEMS.register("fireball_spellbook", () -> new SpellBook(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC).stacksTo(1), "Spellbook", SpellRegistry.FIREBALL));
     public static final RegistryObject<Item> TURN_UNDEAD_SPELLBOOK = ITEMS.register("turn_undead_spellbook", () -> new SpellBook(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC).stacksTo(1), "Spellbook", SpellRegistry.TURN_UNDEAD));
+    public static final RegistryObject<Item> CONJURE_FAMILIAR_SPELLBOOK = ITEMS.register("conjure_familiar_spellbook", () -> new SpellBook(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC).stacksTo(1), "Spellbook", SpellRegistry.CONJURE_FAMILIAR));
+    public static final RegistryObject<Item> HEALING_SPELLBOOK = ITEMS.register("healing_spellbook", () -> new SpellBook(new Item.Properties().tab(Skyrimcraft.TAB_MAGIC).stacksTo(1), "Spellbook", SpellRegistry.HEALING));
 
     public static void registerItemModelProperties() {
         registerTwoHandedProperties(ANCIENT_NORD_GREATSWORD.get());
@@ -330,17 +337,17 @@ public class ModItems
     }
 
     private static void registerTwoHandedProperties(Item item) {
-        ItemModelsProperties.register(item, new ResourceLocation(Skyrimcraft.MODID, "no_use"), ModClientEvents::noUse);
-        ItemModelsProperties.register(item, new ResourceLocation(Skyrimcraft.MODID, "blocking"), ModClientEvents::blocking);
+        ItemProperties.register(item, new ResourceLocation(Skyrimcraft.MODID, "no_use"), ModClientEvents::noUse);
+        ItemProperties.register(item, new ResourceLocation(Skyrimcraft.MODID, "blocking"), ModClientEvents::blocking);
     }
 
     private static void registerBowProperties(Item item) {
-        ItemModelsProperties.register(item, new ResourceLocation(Skyrimcraft.MODID, "pulling"), ModClientEvents::pulling);
-        ItemModelsProperties.register(item, new ResourceLocation(Skyrimcraft.MODID, "pull"), ModClientEvents::pull);
+        ItemProperties.register(item, new ResourceLocation(Skyrimcraft.MODID, "pulling"), ModClientEvents::pulling);
+        ItemProperties.register(item, new ResourceLocation(Skyrimcraft.MODID, "pull"), ModClientEvents::pull);
     }
 
     private static void registerShield(Item item) {
-        ItemModelsProperties.register(item, new ResourceLocation(Skyrimcraft.MODID, "blocking"), ModClientEvents::blocking);
+        ItemProperties.register(item, new ResourceLocation(Skyrimcraft.MODID, "blocking"), ModClientEvents::blocking);
     }
 
 
@@ -484,6 +491,8 @@ public class ModItems
                     "layer0", modLoc("item/taproot"));
             singleTexture(BEE.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", modLoc("item/bee"));
+            singleTexture(EYE_OF_SABRE_CAT.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", modLoc("item/eye_of_sabre_cat"));
 
             // Weapons
             // Ancient Nord
@@ -778,6 +787,11 @@ public class ModItems
                     "layer0", modLoc("item/spellbook"));
             singleTexture(TURN_UNDEAD_SPELLBOOK.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
                     "layer0", modLoc("item/spellbook"));
+            singleTexture(CONJURE_FAMILIAR_SPELLBOOK.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", modLoc("item/spellbook"));
+            singleTexture(HEALING_SPELLBOOK.get().getRegistryName().getPath(), new ResourceLocation("item/generated"),
+                    "layer0", modLoc("item/spellbook"));
+
         }
 
         protected void twoHanded(String name, String itemName) {

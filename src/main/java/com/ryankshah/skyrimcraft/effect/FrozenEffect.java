@@ -1,23 +1,23 @@
 package com.ryankshah.skyrimcraft.effect;
 
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public class FrozenEffect extends Effect implements IForgeRegistryEntry<Effect>
+public class FrozenEffect extends MobEffect implements IForgeRegistryEntry<MobEffect>
 {
     public FrozenEffect() {
-        super(EffectType.BENEFICIAL, 0xA5F2F3);
+        super(MobEffectCategory.BENEFICIAL, 0xA5F2F3);
     }
 
-    public ITextComponent getDisplayName() {
-        return new StringTextComponent("Frozen");
+    public Component getDisplayName() {
+        return new TextComponent("Frozen");
     }
 
     @Override
@@ -27,10 +27,10 @@ public class FrozenEffect extends Effect implements IForgeRegistryEntry<Effect>
 
     @Override
     public void applyEffectTick(LivingEntity livingEntity, int p_76394_2_) {
-        if(livingEntity instanceof CreatureEntity)
-            ((CreatureEntity) livingEntity).goalSelector.setControlFlag(Goal.Flag.MOVE, false);
-        else if(livingEntity instanceof PlayerEntity)
-            ((PlayerEntity) livingEntity).setDeltaMovement(0, 0 ,0);
+        if(livingEntity instanceof PathfinderMob)
+            ((PathfinderMob) livingEntity).goalSelector.setControlFlag(Goal.Flag.MOVE, false);
+        else if(livingEntity instanceof Player)
+            ((Player) livingEntity).setDeltaMovement(0, 0 ,0);
         super.applyEffectTick(livingEntity, p_76394_2_);
     }
 }

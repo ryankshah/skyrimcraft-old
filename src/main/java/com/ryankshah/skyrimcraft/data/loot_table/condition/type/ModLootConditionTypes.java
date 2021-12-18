@@ -2,21 +2,21 @@ package com.ryankshah.skyrimcraft.data.loot_table.condition.type;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.data.loot_table.condition.MatchSkillLevel;
-import net.minecraft.loot.ILootSerializer;
-import net.minecraft.loot.LootConditionType;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.world.level.storage.loot.Serializer;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
 
 public class ModLootConditionTypes
 {
-    public static LootConditionType MATCH_SKILL;
+    public static LootItemConditionType MATCH_SKILL;
 
     public static void register() {
-        MATCH_SKILL = add("match_skill", new MatchSkillLevel.Serializer());
+        MATCH_SKILL = add("match_skill", new MatchSkillLevel.MatchSkillLevelSerializer());
     }
 
-    public static LootConditionType add(String name, ILootSerializer<? extends ILootCondition> lootSerializer) {
-        return Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(Skyrimcraft.MODID, name), new LootConditionType(lootSerializer));
+    public static LootItemConditionType add(String name, Serializer<? extends LootItemCondition> lootSerializer) {
+        return Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation(Skyrimcraft.MODID, name), new LootItemConditionType(lootSerializer));
     }
 }

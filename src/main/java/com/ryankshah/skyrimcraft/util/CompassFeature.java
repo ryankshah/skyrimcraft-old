@@ -1,10 +1,10 @@
 package com.ryankshah.skyrimcraft.util;
 
 import com.ryankshah.skyrimcraft.worldgen.structure.ModStructures;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
 
 import java.util.AbstractMap;
 import java.util.UUID;
@@ -36,22 +36,22 @@ public class CompassFeature
     }
 
     public AbstractMap.SimpleEntry<Integer, Integer> getIconUV() {
-        if(feature.equals(Structure.VILLAGE.getRegistryName())) {
+        if(feature.equals(StructureFeature.VILLAGE.getRegistryName())) {
             return new AbstractMap.SimpleEntry<>(0, 124);
-        } else if(feature.equals(Structure.NETHER_BRIDGE.getRegistryName())) {
+        } else if(feature.equals(StructureFeature.NETHER_BRIDGE.getRegistryName())) {
             return new AbstractMap.SimpleEntry<>(16, 124);
         } else if(feature.equals(ModStructures.SHOUT_WALL.getId())) {
             return new AbstractMap.SimpleEntry<>(29, 124);
-        } else if(feature.equals(Structure.MINESHAFT.getRegistryName())) {
+        } else if(feature.equals(StructureFeature.MINESHAFT.getRegistryName())) {
             return new AbstractMap.SimpleEntry<>(44, 125);
-        } else if(feature.equals(Structure.SHIPWRECK.getRegistryName())) {
+        } else if(feature.equals(StructureFeature.SHIPWRECK.getRegistryName())) {
             return new AbstractMap.SimpleEntry<>(57, 124);
         }
         return null;
     }
 
-    public CompoundNBT serialise() {
-        CompoundNBT nbt = new CompoundNBT();
+    public CompoundTag serialise() {
+        CompoundTag nbt = new CompoundTag();
 
         nbt.putUUID("uuid", id);
         nbt.putString("resourcelocation", feature.toString());
@@ -62,7 +62,7 @@ public class CompassFeature
         return nbt;
     }
 
-    public static CompassFeature deserialise(CompoundNBT nbt) {
+    public static CompassFeature deserialise(CompoundTag nbt) {
         UUID id = nbt.getUUID("uuid");
         ResourceLocation feature = new ResourceLocation(nbt.getString("resourcelocation"));
         int x = nbt.getInt("xPos");

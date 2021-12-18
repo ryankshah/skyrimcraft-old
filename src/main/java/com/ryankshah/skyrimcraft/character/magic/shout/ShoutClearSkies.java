@@ -2,10 +2,10 @@ package com.ryankshah.skyrimcraft.character.magic.shout;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.ArrayList;
@@ -69,8 +69,8 @@ public class ShoutClearSkies extends ISpell implements IForgeRegistryEntry<ISpel
 
     @Override
     public void onCast() {
-        if(getCaster().level instanceof ServerWorld) {
-            ServerWorld world = (ServerWorld) getCaster().level;
+        if(getCaster().level instanceof ServerLevel) {
+            ServerLevel world = (ServerLevel) getCaster().level;
             world.setWeatherParameters(6000, 0, false, false);
         }
         super.onCast();

@@ -2,15 +2,15 @@ package com.ryankshah.skyrimcraft.data.loot_table.modifier;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.RandomValueRange;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.loot.functions.LootingEnchantBonus;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.functions.LootingEnchantFunction;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -27,7 +27,7 @@ public class ChestLootModifier extends LootModifier
      *
      * @param conditionsIn the ILootConditions that need to be matched before the loot is modified.
      */
-    public ChestLootModifier(ILootCondition[] conditionsIn, NonNullList<ChestItem> chestItems) {
+    public ChestLootModifier(LootItemCondition[] conditionsIn, NonNullList<ChestItem> chestItems) {
         super(conditionsIn);
         this.chestItems = chestItems;
     }
@@ -44,7 +44,7 @@ public class ChestLootModifier extends LootModifier
                 chance = 1f;
             }
             if (rand <= chance) {
-                ItemStack item = getItemStackWithLooting(context, chestItem.range, chestItem.item);
+                ItemStack item = getItemStackWithLooting(context, UniformGenerator.between(chestItem.min, chestItem.max), chestItem.item);
                 generatedLoot.add(item);
             }
         }
@@ -54,20 +54,20 @@ public class ChestLootModifier extends LootModifier
     public static class Serializer extends GlobalLootModifierSerializer<ChestLootModifier>
     {
         @Override
-        public ChestLootModifier read(ResourceLocation location, JsonObject json, ILootCondition[] ailootcondition) {
-            JsonArray stacksJson = JSONUtils.getAsJsonArray(json, "chestItems");
+        public ChestLootModifier read(ResourceLocation location, JsonObject json, LootItemCondition[] ailootcondition) {
+            JsonArray stacksJson = GsonHelper.getAsJsonArray(json, "chestItems");
             NonNullList<ChestItem> chestItems = NonNullList.create();
 
             for (int i = 0; i < stacksJson.size(); i++) {
                 JsonObject itemStack = stacksJson.get(i).getAsJsonObject();
-                RandomValueRange range = new RandomValueRange(JSONUtils.getAsInt(itemStack, "minItem"), JSONUtils.getAsInt(itemStack, "maxItem"));
                 chestItems.add(new ChestItem(
                         ForgeRegistries.ITEMS.getValue(
                                 new ResourceLocation(
-                                        JSONUtils.getAsString(itemStack, "item"))
+                                        GsonHelper.getAsString(itemStack, "item"))
                         ),
-                        range,
-                        JSONUtils.getAsFloat(itemStack, "chance")
+                        GsonHelper.getAsInt(itemStack, "minItem"),
+                        GsonHelper.getAsInt(itemStack, "maxItem"),
+                        GsonHelper.getAsFloat(itemStack, "chance")
                 ));
             }
 
@@ -83,8 +83,8 @@ public class ChestLootModifier extends LootModifier
             for(ChestItem stack : instance.chestItems) {
                 JsonObject obj = new JsonObject();
                 obj.addProperty("item", ForgeRegistries.ITEMS.getKey(stack.item).toString());
-                obj.addProperty("minItem", stack.range.getMin());
-                obj.addProperty("maxItem", stack.range.getMax());
+                obj.addProperty("minItem", stack.min);
+                obj.addProperty("maxItem", stack.max);
                 obj.addProperty("chance", stack.chance);
                 chestItems.add(obj);
             }
@@ -96,20 +96,22 @@ public class ChestLootModifier extends LootModifier
     }
 
     @NotNull
-    protected static ItemStack getItemStackWithLooting(LootContext context, RandomValueRange hideDropRange, Item loot) {
-        LootingEnchantBonus leb = (LootingEnchantBonus) new LootingEnchantBonus.Builder(hideDropRange).setLimit((int) hideDropRange.getMax()).build();
+    protected static ItemStack getItemStackWithLooting(LootContext context, UniformGenerator hideDropRange, Item loot) {
+        LootingEnchantFunction leb = (LootingEnchantFunction) new LootingEnchantFunction.Builder(hideDropRange).build();
         ItemStack item = leb.apply(new ItemStack(loot), context);
         return item;
     }
 
     public static class ChestItem {
-        public RandomValueRange range;
+        //public UniformGenerator range;
+        public int min, max;
         public Item item;
         public float chance;
 
-        public ChestItem(Item itemIn, RandomValueRange rangeIn, float chanceIn) {
+        public ChestItem(Item itemIn, int min, int max, float chanceIn) {
             this.item = itemIn;
-            this.range = rangeIn;
+            this.min = min;
+            this.max = max;
             this.chance = chanceIn;
         }
     }

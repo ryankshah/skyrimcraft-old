@@ -1,12 +1,12 @@
 package com.ryankshah.skyrimcraft.item;
 
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.LazyValue;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.util.LazyLoadedValue;
 
 import java.util.function.Supplier;
 
-public enum ModItemTier implements IItemTier {
+public enum ModItemTier implements Tier {
     ANCIENT_NORD(2, 250, 6.0F, 2.0F, 14, () -> {
         return Ingredient.EMPTY;
     }),
@@ -43,7 +43,7 @@ public enum ModItemTier implements IItemTier {
     private final float speed;
     private final float damage;
     private final int enchantmentValue;
-    private final LazyValue<Ingredient> repairIngredient;
+    private final LazyLoadedValue<Ingredient> repairIngredient;
 
     private ModItemTier(int p_i48458_3_, int p_i48458_4_, float p_i48458_5_, float p_i48458_6_, int p_i48458_7_, Supplier<Ingredient> p_i48458_8_) {
         this.level = p_i48458_3_;
@@ -51,7 +51,7 @@ public enum ModItemTier implements IItemTier {
         this.speed = p_i48458_5_;
         this.damage = p_i48458_6_;
         this.enchantmentValue = p_i48458_7_;
-        this.repairIngredient = new LazyValue<>(p_i48458_8_);
+        this.repairIngredient = new LazyLoadedValue<>(p_i48458_8_);
     }
 
     public int getUses() {

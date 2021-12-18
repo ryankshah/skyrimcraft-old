@@ -1,11 +1,11 @@
 package com.ryankshah.skyrimcraft.item;
 
 import com.ryankshah.skyrimcraft.client.entity.arrow.*;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.item.ArrowItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class SkyrimArrow extends ArrowItem {
     private String displayName;
@@ -20,8 +20,8 @@ public class SkyrimArrow extends ArrowItem {
     }
 
     @Override
-    public boolean isInfinite(ItemStack stack, ItemStack bow, net.minecraft.entity.player.PlayerEntity player) {
-        int enchant = net.minecraft.enchantment.EnchantmentHelper.getItemEnchantmentLevel(net.minecraft.enchantment.Enchantments.INFINITY_ARROWS, bow);
+    public boolean isInfinite(ItemStack stack, ItemStack bow, net.minecraft.world.entity.player.Player player) {
+        int enchant = net.minecraft.world.item.enchantment.EnchantmentHelper.getItemEnchantmentLevel(net.minecraft.world.item.enchantment.Enchantments.INFINITY_ARROWS, bow);
         return enchant > 0 && this.getClass() == this.getClass();
     }
 
@@ -33,7 +33,7 @@ public class SkyrimArrow extends ArrowItem {
         }
 
         @Override
-        public AbstractArrowEntity createArrow(World p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
+        public AbstractArrow createArrow(Level p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
             AncientNordArrowEntity arrowentity = new AncientNordArrowEntity(p_200887_1_, p_200887_3_);
             return arrowentity;
         }
@@ -44,7 +44,7 @@ public class SkyrimArrow extends ArrowItem {
         }
 
         @Override
-        public AbstractArrowEntity createArrow(World p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
+        public AbstractArrow createArrow(Level p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
             GlassArrowEntity arrowentity = new GlassArrowEntity(p_200887_1_, p_200887_3_);
             return arrowentity;
         }
@@ -55,7 +55,7 @@ public class SkyrimArrow extends ArrowItem {
         }
 
         @Override
-        public AbstractArrowEntity createArrow(World p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
+        public AbstractArrow createArrow(Level p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
             DaedricArrowEntity arrowentity = new DaedricArrowEntity(p_200887_1_, p_200887_3_);
             return arrowentity;
         }
@@ -66,7 +66,7 @@ public class SkyrimArrow extends ArrowItem {
         }
 
         @Override
-        public AbstractArrowEntity createArrow(World p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
+        public AbstractArrow createArrow(Level p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
             IronArrowEntity arrowentity = new IronArrowEntity(p_200887_1_, p_200887_3_);
             return arrowentity;
         }
@@ -77,7 +77,7 @@ public class SkyrimArrow extends ArrowItem {
         }
 
         @Override
-        public AbstractArrowEntity createArrow(World p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
+        public AbstractArrow createArrow(Level p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
             SteelArrowEntity arrowentity = new SteelArrowEntity(p_200887_1_, p_200887_3_);
             return arrowentity;
         }
@@ -88,7 +88,7 @@ public class SkyrimArrow extends ArrowItem {
         }
 
         @Override
-        public AbstractArrowEntity createArrow(World p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
+        public AbstractArrow createArrow(Level p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
             DragonboneArrowEntity arrowentity = new DragonboneArrowEntity(p_200887_1_, p_200887_3_);
             return arrowentity;
         }
@@ -99,7 +99,7 @@ public class SkyrimArrow extends ArrowItem {
         }
 
         @Override
-        public AbstractArrowEntity createArrow(World p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
+        public AbstractArrow createArrow(Level p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
             DwarvenArrowEntity arrowentity = new DwarvenArrowEntity(p_200887_1_, p_200887_3_);
             return arrowentity;
         }
@@ -110,7 +110,7 @@ public class SkyrimArrow extends ArrowItem {
         }
 
         @Override
-        public AbstractArrowEntity createArrow(World p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
+        public AbstractArrow createArrow(Level p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
             EbonyArrowEntity arrowentity = new EbonyArrowEntity(p_200887_1_, p_200887_3_);
             return arrowentity;
         }
@@ -121,7 +121,7 @@ public class SkyrimArrow extends ArrowItem {
         }
 
         @Override
-        public AbstractArrowEntity createArrow(World p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
+        public AbstractArrow createArrow(Level p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
             ElvenArrowEntity arrowentity = new ElvenArrowEntity(p_200887_1_, p_200887_3_);
             return arrowentity;
         }
@@ -132,7 +132,7 @@ public class SkyrimArrow extends ArrowItem {
         }
 
         @Override
-        public AbstractArrowEntity createArrow(World p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
+        public AbstractArrow createArrow(Level p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
             OrcishArrowEntity arrowentity = new OrcishArrowEntity(p_200887_1_, p_200887_3_);
             return arrowentity;
         }
@@ -143,7 +143,7 @@ public class SkyrimArrow extends ArrowItem {
         }
 
         @Override
-        public AbstractArrowEntity createArrow(World p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
+        public AbstractArrow createArrow(Level p_200887_1_, ItemStack p_200887_2_, LivingEntity p_200887_3_) {
             FalmerArrowEntity arrowentity = new FalmerArrowEntity(p_200887_1_, p_200887_3_);
             return arrowentity;
         }

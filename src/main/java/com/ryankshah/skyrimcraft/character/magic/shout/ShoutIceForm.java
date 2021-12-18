@@ -1,17 +1,17 @@
 package com.ryankshah.skyrimcraft.character.magic.shout;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
+import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.util.RayTraceUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.ArrayList;
@@ -74,17 +74,17 @@ public class ShoutIceForm extends ISpell implements IForgeRegistryEntry<ISpell>
 
     @Override
     public void onCast() {
-        World world = getCaster().level;
+        Level world = getCaster().level;
         Entity rayTracedEntity = RayTraceUtil.rayTrace(world, getCaster(), 20D);
         if(rayTracedEntity instanceof LivingEntity) {
             double x = rayTracedEntity.getX();
             double y = rayTracedEntity.getY();
             double z = rayTracedEntity.getZ();
             // freeze player for 8s (160 ticks = 8 * 20)
-            ((LivingEntity) rayTracedEntity).addEffect(new EffectInstance(ModEffects.FROZEN.get(), 160, 0, false, true, true));
+            ((LivingEntity) rayTracedEntity).addEffect(new MobEffectInstance(ModEffects.FROZEN.get(), 160, 0, false, true, true));
             super.onCast();
         } else {
-            getCaster().displayClientMessage(new StringTextComponent("There is nothing there to cast this shout on!"), false);
+            getCaster().displayClientMessage(new TextComponent("There is nothing there to cast this shout on!"), false);
         }
     }
 }

@@ -1,30 +1,31 @@
 package com.ryankshah.skyrimcraft.character.magic.entity;
 
-import com.ryankshah.skyrimcraft.util.ClientUtil;
 import com.ryankshah.skyrimcraft.client.entity.ModEntityType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.ProjectileHelper;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import com.ryankshah.skyrimcraft.util.ClientUtil;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.FMLPlayMessages;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PlayMessages;
 
 import java.util.Set;
 
-public class UnrelentingForceEntity extends Entity
+public class UnrelentingForceEntity extends Projectile
 {
     private LivingEntity shootingEntity;
     private int ticksAlive;
@@ -32,34 +33,34 @@ public class UnrelentingForceEntity extends Entity
     private double accelerationX;
     private double accelerationY;
     private double accelerationZ;
-    private Vector3d startingPosition;
+    private Vec3 startingPosition;
 
-    public UnrelentingForceEntity(World worldIn) {
+    public UnrelentingForceEntity(Level worldIn) {
         super(ModEntityType.SHOUT_UNRELENTING_FORCE_ENTITY.get(), worldIn);
     }
 
-    public UnrelentingForceEntity(World worldIn, LivingEntity shooter, double accelX, double accelY, double accelZ) {
+    public UnrelentingForceEntity(Level worldIn, LivingEntity shooter, double accelX, double accelY, double accelZ) {
         super(ModEntityType.SHOUT_UNRELENTING_FORCE_ENTITY.get(), worldIn);
         this.shootingEntity = shooter;
         this.setPos(shooter.getForward().x, shooter.getForward().y, shooter.getForward().z);
-        this.moveTo(shooter.getX(), shooter.getY(), shooter.getZ(), shooter.yRot, shooter.xRot);
+        this.moveTo(shooter.getX(), shooter.getY(), shooter.getZ(), shooter.getYRot(), shooter.getXRot());
         this.setPos(this.getX(), this.getY(), this.getZ());
-        this.setDeltaMovement(Vector3d.ZERO);
+        this.setDeltaMovement(Vec3.ZERO);
 
-        startingPosition = new Vector3d(getX(), getY(), getZ());
+        startingPosition = new Vec3(getX(), getY(), getZ());
 
-        double u = MathHelper.sqrt(accelX * accelX + accelY * accelY + accelZ * accelZ);
+        double u = Mth.sqrt((float)(accelX * accelX + accelY * accelY + accelZ * accelZ));
 
         this.accelerationX = accelX / u * 0.1D;
         this.accelerationY = accelY / u * 0.1D;
         this.accelerationZ = accelZ / u * 0.1D;
     }
 
-    public UnrelentingForceEntity(FMLPlayMessages.SpawnEntity packet, World world) {
+    public UnrelentingForceEntity(PlayMessages.SpawnEntity packet, Level world) {
         super(ModEntityType.SHOUT_UNRELENTING_FORCE_ENTITY.get(), world);
     }
 
-    public UnrelentingForceEntity(EntityType<Entity> entityEntityType, World world) {
+    public UnrelentingForceEntity(EntityType<? extends Projectile> entityEntityType, Level world) {
         super(entityEntityType, world);
     }
 
@@ -83,36 +84,36 @@ public class UnrelentingForceEntity extends Entity
     public void tick() {
         if(!this.level.isClientSide)
             if(startingPosition.distanceToSqr(getX(), getY(), getZ()) >= 64D)
-                this.remove();
+                this.remove(RemovalReason.DISCARDED);
 
-        if (this.level.isClientSide || (this.shootingEntity == null || !this.shootingEntity.removed) && this.level.hasChunkAt(new BlockPos(this.getX(), this.getY(), this.getZ()))) {
+        if (this.level.isClientSide || (this.shootingEntity == null || !this.shootingEntity.isRemoved()) && this.level.hasChunkAt(new BlockPos(this.getX(), this.getY(), this.getZ()))) {
             super.tick();
             ++this.ticksInAir;
 
-            RayTraceResult raytraceresult = ProjectileHelper.getHitResult(this, entity -> entity.isAlive() && entity != this.shootingEntity);
-            if (raytraceresult.getType() != RayTraceResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
+            HitResult raytraceresult = ProjectileUtil.getHitResult(this, entity -> entity.isAlive() && entity != this.shootingEntity);
+            if (raytraceresult.getType() != HitResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
                 this.onImpact(raytraceresult);
             }
 
-            Vector3d vec3d = this.getDeltaMovement();
+            Vec3 vec3d = this.getDeltaMovement();
             this.setPos(getX() + vec3d.x, getY() + vec3d.y, getZ() + vec3d.z);
 
             float f = this.getMotionFactor();
 
             float radius = 2f;
             // Get origins
-            Vector3d origin = new Vector3d(getX(), getY(), getZ());
-            Vector3d normal = getLookAngle();
+            Vec3 origin = new Vec3(getX(), getY(), getZ());
+            Vec3 normal = getLookAngle();
 
-            Set<Vector3d> circlePoints = ClientUtil.circle(origin, normal, radius, 8);
-            for(Vector3d point : circlePoints) {
+            Set<Vec3> circlePoints = ClientUtil.circle(origin, normal, radius, 8);
+            for(Vec3 point : circlePoints) {
                 this.level.addParticle(ParticleTypes.CLOUD, getForward().x + point.x, getForward().y + point.y, getForward().z + point.z, vec3d.x, vec3d.y, vec3d.z);
             }
 
             this.setDeltaMovement(vec3d.add(this.accelerationX, this.accelerationY, this.accelerationZ).scale(f));
             this.setPos(this.getX(), this.getY(), this.getZ());
         } else {
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
     }
 
@@ -121,29 +122,29 @@ public class UnrelentingForceEntity extends Entity
     }
 
 
-    public void onImpact(RayTraceResult result) {
+    public void onImpact(HitResult result) {
         if (!this.level.isClientSide) {
-            if (result.getType() == RayTraceResult.Type.ENTITY) {
-                Entity entity = ((EntityRayTraceResult)result).getEntity();
+            if (result.getType() == HitResult.Type.ENTITY) {
+                Entity entity = ((EntityHitResult)result).getEntity();
                 if(!entity.isInWater() || !entity.isInLava() && entity instanceof LivingEntity)
-                    ((LivingEntity)entity).knockback(2F, (double)MathHelper.sin(this.yRot * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(this.yRot * ((float)Math.PI / 180F))));
+                    ((LivingEntity)entity).knockback(2F, (double)Mth.sin(this.getYRot() * ((float)Math.PI / 180F)), (double)(-Mth.cos(this.getYRot() * ((float)Math.PI / 180F))));
             }
-            this.remove();
+            this.remove(RemovalReason.KILLED);
         }
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundNBT compound) {
-        Vector3d vec3d = this.getDeltaMovement();
+    protected void addAdditionalSaveData(CompoundTag compound) {
+        Vec3 vec3d = this.getDeltaMovement();
         compound.put("direction", this.newDoubleList(vec3d.x, vec3d.y, vec3d.z));
         compound.put("power", this.newDoubleList(this.accelerationX, this.accelerationY, this.accelerationZ));
         compound.putInt("life", this.ticksAlive);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT compound) {
+    public void readAdditionalSaveData(CompoundTag compound) {
         if (compound.contains("power", 9)) {
-            ListNBT listnbt = compound.getList("power", 6);
+            ListTag listnbt = compound.getList("power", 6);
             if (listnbt.size() == 3) {
                 this.accelerationX = listnbt.getDouble(0);
                 this.accelerationY = listnbt.getDouble(1);
@@ -153,10 +154,10 @@ public class UnrelentingForceEntity extends Entity
 
         this.ticksAlive = compound.getInt("life");
         if (compound.contains("direction", 9) && compound.getList("direction", 6).size() == 3) {
-            ListNBT listnbt1 = compound.getList("direction", 6);
+            ListTag listnbt1 = compound.getList("direction", 6);
             this.setDeltaMovement(listnbt1.getDouble(0), listnbt1.getDouble(1), listnbt1.getDouble(2));
         } else {
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
     }
 
@@ -177,7 +178,7 @@ public class UnrelentingForceEntity extends Entity
         } else {
             this.markHurt();
             if (source.getEntity() != null) {
-                Vector3d vec3d = source.getEntity().getLookAngle();
+                Vec3 vec3d = source.getEntity().getLookAngle();
                 this.setDeltaMovement(vec3d);
                 this.accelerationX = vec3d.x * 0.1D;
                 this.accelerationY = vec3d.y * 0.1D;
@@ -199,7 +200,7 @@ public class UnrelentingForceEntity extends Entity
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

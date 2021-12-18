@@ -1,21 +1,19 @@
 package com.ryankshah.skyrimcraft.item;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.UseAction;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.level.Level;
 
 public class SkyrimTwoHandedWeapon extends SkyrimWeapon
 {
-    public SkyrimTwoHandedWeapon(IItemTier p_i48460_1_, int p_i48460_2_, float p_i48460_3_, Properties p_i48460_4_, String displayName) {
+    public SkyrimTwoHandedWeapon(Tier p_i48460_1_, int p_i48460_2_, float p_i48460_3_, Properties p_i48460_4_, String displayName) {
         super(p_i48460_1_, p_i48460_2_, p_i48460_3_, p_i48460_4_, displayName);
     }
 
@@ -25,34 +23,34 @@ public class SkyrimTwoHandedWeapon extends SkyrimWeapon
     }
 
     @Override
-    public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
+    public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         return !player.getOffhandItem().equals(ItemStack.EMPTY);
     }
 
-    public ActionResult<ItemStack> use(World p_77659_1_, PlayerEntity p_77659_2_, Hand p_77659_3_) {
+    public InteractionResultHolder<ItemStack> use(Level p_77659_1_, Player p_77659_2_, InteractionHand p_77659_3_) {
         ItemStack itemstack = p_77659_2_.getItemInHand(p_77659_3_);
         if(p_77659_2_.getOffhandItem().equals(ItemStack.EMPTY)) {
             p_77659_2_.startUsingItem(p_77659_3_);
-            return ActionResult.consume(itemstack);
+            return InteractionResultHolder.consume(itemstack);
         } else {
-            return ActionResult.fail(itemstack);
+            return InteractionResultHolder.fail(itemstack);
         }
     }
 
     @Override
-    public boolean isShield(ItemStack stack, @Nullable LivingEntity entity) {
-        return true;
+    public boolean canPerformAction(ItemStack stack, net.minecraftforge.common.ToolAction toolAction) {
+        return net.minecraftforge.common.ToolActions.DEFAULT_SHIELD_ACTIONS.contains(toolAction);
     }
 
     @Override
-    public boolean canEquip(ItemStack stack, EquipmentSlotType armorType, Entity entity) {
-        if(armorType == EquipmentSlotType.OFFHAND)
+    public boolean canEquip(ItemStack stack, EquipmentSlot armorType, Entity entity) {
+        if(armorType == EquipmentSlot.OFFHAND)
             return false;
         else return super.canEquip(stack, armorType, entity);
     }
 
-    public UseAction getUseAnimation(ItemStack p_77661_1_) {
-        return UseAction.BLOCK;
+    public UseAnim getUseAnimation(ItemStack p_77661_1_) {
+        return UseAnim.BLOCK;
     }
 
     public int getUseDuration(ItemStack p_77626_1_) {

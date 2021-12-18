@@ -3,18 +3,21 @@ package com.ryankshah.skyrimcraft.character.magic.shout;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.util.RayTraceUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.boss.dragon.EnderDragonEntity;
-import net.minecraft.entity.boss.dragon.phase.PhaseType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
+import net.minecraft.world.entity.boss.enderdragon.phases.EnderDragonPhase;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.ryankshah.skyrimcraft.character.magic.ISpell.SpellDifficulty;
+import com.ryankshah.skyrimcraft.character.magic.ISpell.SpellType;
 
 public class ShoutDragonrend extends ISpell implements IForgeRegistryEntry<ISpell>
 {
@@ -74,16 +77,16 @@ public class ShoutDragonrend extends ISpell implements IForgeRegistryEntry<ISpel
 
     @Override
     public void onCast() {
-        World world = getCaster().level;
+        Level world = getCaster().level;
         Entity rayTracedEntity = RayTraceUtil.rayTrace(world, getCaster(), 200D);
-        if(rayTracedEntity instanceof EnderDragonEntity) {
-            EnderDragonEntity dragon = (EnderDragonEntity) rayTracedEntity;
+        if(rayTracedEntity instanceof EnderDragon) {
+            EnderDragon dragon = (EnderDragon) rayTracedEntity;
 
-            dragon.getPhaseManager().setPhase(PhaseType.LANDING);
+            dragon.getPhaseManager().setPhase(EnderDragonPhase.LANDING);
 
             super.onCast();
         } else {
-            getCaster().displayClientMessage(new StringTextComponent("There is nothing there to cast this shout on!"), false);
+            getCaster().displayClientMessage(new TextComponent("There is nothing there to cast this shout on!"), false);
         }
     }
 }

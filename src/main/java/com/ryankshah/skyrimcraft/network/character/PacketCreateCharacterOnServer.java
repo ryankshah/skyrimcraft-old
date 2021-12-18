@@ -4,10 +4,10 @@ import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.character.feature.Race;
 import com.ryankshah.skyrimcraft.character.skill.ISkill;
 import com.ryankshah.skyrimcraft.network.Networking;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,7 +24,7 @@ public class PacketCreateCharacterOnServer
     private String name;
     private Map<Integer, ISkill> startingSkills = new HashMap<>();
 
-    public PacketCreateCharacterOnServer(PacketBuffer buf) {
+    public PacketCreateCharacterOnServer(FriendlyByteBuf buf) {
         int raceID = buf.readInt();
         String raceName = buf.readUtf();
         int size = buf.readInt();
@@ -49,7 +49,7 @@ public class PacketCreateCharacterOnServer
         this.race = race;
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeInt(race.getId());
         buf.writeUtf(race.getName());
         buf.writeInt(race.getStartingSkills().size());
@@ -80,7 +80,7 @@ public class PacketCreateCharacterOnServer
         //  that the ctx handler is a serverhandler, and that ServerPlayerEntity exists
         // Packets received on the client side must be handled differently!  See MessageHandlerOnClient
 
-        final ServerPlayerEntity sendingPlayer = context.getSender();
+        final ServerPlayer sendingPlayer = context.getSender();
         if (sendingPlayer == null) {
             LOGGER.warn("Server Player was null when PacketCreateCharacterOnServer was received");
             return false;

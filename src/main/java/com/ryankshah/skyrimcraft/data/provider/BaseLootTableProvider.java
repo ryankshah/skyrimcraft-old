@@ -5,11 +5,17 @@ import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.data.ModBlockLootTables;
+import com.ryankshah.skyrimcraft.data.ModEntityLootTables;
 import com.ryankshah.skyrimcraft.data.PickpocketLootTables;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.LootTableProvider;
-import net.minecraft.loot.*;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.LootTables;
+import net.minecraft.world.level.storage.loot.ValidationContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
 import java.util.List;
 import java.util.Map;
@@ -26,17 +32,18 @@ public class BaseLootTableProvider extends LootTableProvider
     }
 
     @Override
-    protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootParameterSet>> getTables() {
+    protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootContextParamSet>> getTables() {
         return ImmutableList.of(
-                Pair.of(ModBlockLootTables::new, LootParameterSets.BLOCK),
-                Pair.of(PickpocketLootTables::new, LootParameterSets.SELECTOR)
+                Pair.of(ModBlockLootTables::new, LootContextParamSets.BLOCK),
+                Pair.of(PickpocketLootTables::new, LootContextParamSets.SELECTOR),
+                Pair.of(ModEntityLootTables::new, LootContextParamSets.ENTITY)
         );
     }
 
     @Override
-    protected void validate(Map<ResourceLocation, LootTable> map, ValidationTracker validationtracker) {
+    protected void validate(Map<ResourceLocation, LootTable> map, ValidationContext validationtracker) {
         final Set<ResourceLocation> modLootTableIds =
-                LootTables
+                BuiltInLootTables
                         .all()
                         .stream()
                         .filter(lootTable -> lootTable.getNamespace().equals(Skyrimcraft.MODID))
@@ -46,7 +53,7 @@ public class BaseLootTableProvider extends LootTableProvider
             validationtracker.reportProblem("Missing mod loot table: " + id);
 
         map.forEach((id, lootTable) ->
-                LootTableManager.validate(validationtracker, id, lootTable));
+                LootTables.validate(validationtracker, id, lootTable));
     }
 
     @Override

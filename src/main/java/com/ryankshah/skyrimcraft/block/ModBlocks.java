@@ -3,19 +3,19 @@ package com.ryankshah.skyrimcraft.block;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.item.SkyrimBlockItem;
 import com.ryankshah.skyrimcraft.util.IngredientEffect;
-import net.minecraft.block.Block;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.core.Direction;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.item.Item;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ModBlocks
 {
@@ -76,33 +76,33 @@ public class ModBlocks
     public static final RegistryObject<Item> BLACKSMITH_FORGE_ITEM = BLOCK_ITEMS.register("blacksmith_forge", () -> new SkyrimBlockItem(BLACKSMITH_FORGE.get(), new Item.Properties().tab(Skyrimcraft.TAB_BLOCKS), "Blacksmith Forge"));
 
     public static void blockRenders() {
-        RenderTypeLookup.setRenderLayer(ModBlocks.SILVER_ORE.get(), RenderType.solid());
-        RenderTypeLookup.setRenderLayer(ModBlocks.QUICKSILVER_ORE.get(), RenderType.solid());
-        RenderTypeLookup.setRenderLayer(ModBlocks.ORICHALCUM_ORE.get(), RenderType.solid());
-        RenderTypeLookup.setRenderLayer(ModBlocks.MOONSTONE_ORE.get(), RenderType.solid());
-        RenderTypeLookup.setRenderLayer(ModBlocks.MALACHITE_ORE.get(), RenderType.solid());
-        RenderTypeLookup.setRenderLayer(ModBlocks.EBONY_ORE.get(), RenderType.solid());
-        RenderTypeLookup.setRenderLayer(ModBlocks.CORUNDUM_ORE.get(), RenderType.solid());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.SILVER_ORE.get(), RenderType.solid());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.QUICKSILVER_ORE.get(), RenderType.solid());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.ORICHALCUM_ORE.get(), RenderType.solid());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.MOONSTONE_ORE.get(), RenderType.solid());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.MALACHITE_ORE.get(), RenderType.solid());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.EBONY_ORE.get(), RenderType.solid());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.CORUNDUM_ORE.get(), RenderType.solid());
 
         // Flowers
-        RenderTypeLookup.setRenderLayer(ModBlocks.RED_MOUNTAIN_FLOWER.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.BLUE_MOUNTAIN_FLOWER.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.YELLOW_MOUNTAIN_FLOWER.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.PURPLE_MOUNTAIN_FLOWER.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.RED_MOUNTAIN_FLOWER.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.BLUE_MOUNTAIN_FLOWER.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.YELLOW_MOUNTAIN_FLOWER.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.PURPLE_MOUNTAIN_FLOWER.get(), RenderType.cutout());
 
         // Crops
-        RenderTypeLookup.setRenderLayer(ModBlocks.TOMATO_CROP.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.GARLIC_CROP.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.TOMATO_CROP.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.GARLIC_CROP.get(), RenderType.cutout());
 
-        RenderTypeLookup.setRenderLayer(ModBlocks.OVEN.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.OVEN.get(), RenderType.cutoutMipped());
 
-        RenderTypeLookup.setRenderLayer(ModBlocks.SHOUT_BLOCK.get(), RenderType.solid());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.SHOUT_BLOCK.get(), RenderType.solid());
 
-        RenderTypeLookup.setRenderLayer(ModBlocks.ALCHEMY_TABLE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.ALCHEMY_TABLE.get(), RenderType.cutoutMipped());
 
-        RenderTypeLookup.setRenderLayer(ModBlocks.BLACKSMITH_FORGE.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.BLACKSMITH_FORGE.get(), RenderType.cutoutMipped());
 
-        RenderTypeLookup.setRenderLayer(ModBlocks.SALT_DEPOSIT.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.SALT_DEPOSIT.get(), RenderType.cutoutMipped());
     }
 
     public static class BlockStates extends BlockStateProvider {

@@ -15,14 +15,14 @@ import com.ryankshah.skyrimcraft.network.spell.PacketUpdateShoutCooldownOnServer
 import com.ryankshah.skyrimcraft.util.CompassFeature;
 import com.ryankshah.skyrimcraft.util.ModAttributes;
 import com.ryankshah.skyrimcraft.worldgen.structure.ModStructures;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -48,9 +48,9 @@ public class PlayerEvents
 
     @SubscribeEvent
     public static void onRenderPlayer(RenderPlayerEvent event) {
-        ClientPlayerEntity player = (ClientPlayerEntity)event.getPlayer();
+        LocalPlayer player = (LocalPlayer)event.getPlayer();
         if(!hasLayer) {
-            event.getRenderer().addLayer(new SpectralLayerRenderer(event.getRenderer(), event.getLight()));
+            event.getRenderer().addLayer(new SpectralLayerRenderer(event.getRenderer(), event.getPackedLight()));
             event.getRenderer().addLayer(new RaceLayerRenderer(event.getRenderer()));
             hasLayer = true;
         }
@@ -60,17 +60,17 @@ public class PlayerEvents
             player.setInvisible(true);
             flag = false;
         } else {
-            player.setInvisible(player.hasEffect(Effects.INVISIBILITY));
+            player.setInvisible(player.hasEffect(MobEffects.INVISIBILITY));
         }
 
         if(player.getMainHandItem().getItem() instanceof SkyrimTwoHandedWeapon) {
-            event.getRenderer().getModel().rightArmPose = BipedModel.ArmPose.CROSSBOW_HOLD;
+            event.getRenderer().getModel().rightArmPose = HumanoidModel.ArmPose.CROSSBOW_HOLD;
         }
     }
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        PlayerEntity playerEntity = event.player;
+        Player playerEntity = event.player;
         if(!playerEntity.isAlive())
             return;
 
@@ -92,9 +92,9 @@ public class PlayerEvents
             if(cap.getMagicka() < cap.getMaxMagicka())
                 cap.replenishMagicka(0.005f * (float)playerEntity.getAttributeValue(ModAttributes.MAGICKA_REGEN.get()));
 
-            if(playerEntity instanceof ServerPlayerEntity && event.side == LogicalSide.SERVER) {
-                ServerPlayerEntity player = (ServerPlayerEntity) playerEntity;
-                ServerWorld world = (ServerWorld) player.level;
+            if(playerEntity instanceof ServerPlayer && event.side == LogicalSide.SERVER) {
+                ServerPlayer player = (ServerPlayer) playerEntity;
+                ServerLevel world = (ServerLevel) player.level;
                 List<CompassFeature> playerCompassFeatures = cap.getCompassFeatures();
 
                 // TODO: see below...
@@ -103,10 +103,10 @@ public class PlayerEvents
 //                }
 
                 // TODO: We should do this check after we do the player bounds check...
-                for (Structure<?> structure : ForgeRegistries.STRUCTURE_FEATURES.getValues()) {
-                    if (structure == Structure.VILLAGE || structure == Structure.NETHER_BRIDGE
-                            || structure == ModStructures.SHOUT_WALL.get() || structure == Structure.MINESHAFT
-                            || structure == Structure.SHIPWRECK) {
+                for (StructureFeature<?> structure : ForgeRegistries.STRUCTURE_FEATURES.getValues()) {
+                    if (structure == StructureFeature.VILLAGE || structure == StructureFeature.NETHER_BRIDGE
+                            || structure == ModStructures.SHOUT_WALL.get() || structure == StructureFeature.MINESHAFT
+                            || structure == StructureFeature.SHIPWRECK) {
                         BlockPos featureStartPos = locateFeatureStartChunkFromPlayerBlockPos(world, player.blockPosition(), structure);
                         if (featureStartPos != null) {
                             CompassFeature compassFeature = new CompassFeature(UUID.randomUUID(), structure.getRegistryName(), featureStartPos);
@@ -126,7 +126,7 @@ public class PlayerEvents
         }
     }
 
-    private static BlockPos locateFeatureStartChunkFromPlayerBlockPos(ServerWorld world, BlockPos pos, Structure<?> feature) {
+    private static BlockPos locateFeatureStartChunkFromPlayerBlockPos(ServerLevel world, BlockPos pos, StructureFeature<?> feature) {
         // use 2 since based on min spacing, or we can use 7 in case user makes village spacing at every chunk..
         BlockPos blockpos1 = world.findNearestMapFeature(feature, pos, 2, true);
         if (blockpos1 != null) {
@@ -139,18 +139,11 @@ public class PlayerEvents
     // Open the character creation screen if first login / world created
     @SubscribeEvent
     public static void playerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        PlayerEntity player = event.getPlayer();
+        Player player = event.getPlayer();
         ISkyrimPlayerData cap = player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("player events logged in event"));
         if(!cap.hasSetup()) {
-            Networking.sendToClient(new PacketOpenCharacterCreationScreen(cap.hasSetup()), (ServerPlayerEntity) player);
-            cap.setHasSetup(true);
+            Networking.sendToClient(new PacketOpenCharacterCreationScreen(cap.hasSetup()), (ServerPlayer) player);
+            cap.setHasSetup(true); // TODO: ensure this always syncs to the client as well..
         }
     }
-
-//    @SubscribeEvent
-//    public static void renderPlayerHand(RenderHandEvent event) {
-//        if(event.getHand() == Hand.OFF_HAND) {
-//            event.setCanceled(true);
-//        }
-//    }
 }

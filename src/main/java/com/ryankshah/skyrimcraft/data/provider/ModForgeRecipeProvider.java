@@ -8,11 +8,11 @@ import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.item.ModItems;
 import com.ryankshah.skyrimcraft.util.ForgeRecipe;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DirectoryCache;
-import net.minecraft.data.IDataProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.data.HashCache;
+import net.minecraft.data.DataProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class ModForgeRecipeProvider implements IDataProvider, IConditionBuilder
+public class ModForgeRecipeProvider implements DataProvider, IConditionBuilder
 {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
@@ -42,7 +42,7 @@ public class ModForgeRecipeProvider implements IDataProvider, IConditionBuilder
     }
 
     @Override
-    public void run(DirectoryCache p_200398_1_) throws IOException {
+    public void run(HashCache p_200398_1_) throws IOException {
         Path path = this.generator.getOutputFolder();
         Set<ResourceLocation> set = Sets.newHashSet();
         Consumer<ForgeRecipe> consumer = (p_204017_3_) -> {
@@ -52,7 +52,7 @@ public class ModForgeRecipeProvider implements IDataProvider, IConditionBuilder
                 Path path1 = createPath(path, p_204017_3_);
 
                 try {
-                    IDataProvider.save(GSON, p_200398_1_, p_204017_3_.deconstruct().serializeToJson(), path1);
+                    DataProvider.save(GSON, p_200398_1_, p_204017_3_.deconstruct().serializeToJson(), path1);
                 } catch (IOException ioexception) {
                     LOGGER.error("Couldn't save forge recipe {}", path1, ioexception);
                 }

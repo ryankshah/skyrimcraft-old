@@ -2,21 +2,21 @@ package com.ryankshah.skyrimcraft.item;
 
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
+import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.network.spell.PacketAddToKnownSpells;
-import com.ryankshah.skyrimcraft.character.magic.ISpell;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -45,32 +45,32 @@ public class SpellBook extends SkyrimItem
     }
 
     @Override
-    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
 
         // Dont run on server side
         if(!worldIn.isClientSide) {
-            return ActionResult.pass(itemstack);
+            return InteractionResultHolder.pass(itemstack);
         }
 
         ISkyrimPlayerData cap = playerIn.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("spellbook use"));
         if(!cap.getKnownSpells().contains(spell.get())) {
             Networking.sendToServer(new PacketAddToKnownSpells(spell.get()));
-            playerIn.displayClientMessage(new TranslationTextComponent("spellbook.learn", new TranslationTextComponent(spell.get().getName()).withStyle(TextFormatting.RED)), false);
+            playerIn.displayClientMessage(new TranslatableComponent("spellbook.learn", new TranslatableComponent(spell.get().getName()).withStyle(ChatFormatting.RED)), false);
             playerIn.awardStat(Stats.ITEM_USED.get(this));
             itemstack.shrink(1);
         } else {
-            playerIn.displayClientMessage(new TranslationTextComponent("spellbook.known"), false);
+            playerIn.displayClientMessage(new TranslatableComponent("spellbook.known"), false);
         }
 
 
 
-        return ActionResult.sidedSuccess(itemstack, worldIn.isClientSide());
+        return InteractionResultHolder.sidedSuccess(itemstack, worldIn.isClientSide());
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TranslationTextComponent("spellbook.tooltip", new TranslationTextComponent(spell.get().getName()).withStyle(TextFormatting.RED)));
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+        tooltip.add(new TranslatableComponent("spellbook.tooltip", new TranslatableComponent(spell.get().getName()).withStyle(ChatFormatting.RED)));
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 }

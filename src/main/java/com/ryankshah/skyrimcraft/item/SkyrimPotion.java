@@ -1,26 +1,19 @@
 package com.ryankshah.skyrimcraft.item;
 
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.Rarity;
-import net.minecraft.item.UseAction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.DrinkHelper;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import net.minecraft.item.Item.Properties;
 
 public class SkyrimPotion extends SkyrimItem implements IPotion
 {
@@ -39,49 +32,49 @@ public class SkyrimPotion extends SkyrimItem implements IPotion
 //    }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving) {
-        PlayerEntity playerEntity = entityLiving instanceof PlayerEntity ? (PlayerEntity) entityLiving : null;
+    public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
+        Player playerEntity = entityLiving instanceof Player ? (Player) entityLiving : null;
 
-        if(playerEntity instanceof ServerPlayerEntity)
-            CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayerEntity)playerEntity, stack);
+        if(playerEntity instanceof ServerPlayer)
+            CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayer)playerEntity, stack);
 
         if (playerEntity != null) {
             playerEntity.awardStat(Stats.ITEM_USED.get(this));
-            if (!playerEntity.abilities.instabuild) {
+            if (!playerEntity.getAbilities().instabuild) {
                 stack.shrink(1);
             }
         }
 
-        if (playerEntity == null || !playerEntity.abilities.instabuild) {
+        if (playerEntity == null || !playerEntity.getAbilities().instabuild) {
             if (stack.isEmpty()) {
                 return new ItemStack(Items.GLASS_BOTTLE);
             }
 
             if (playerEntity != null) {
-                playerEntity.inventory.add(new ItemStack(Items.GLASS_BOTTLE));
+                playerEntity.getInventory().add(new ItemStack(Items.GLASS_BOTTLE));
             }
         }
 
         return stack;
     }
     @Override
-    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        return DrinkHelper.useDrink(worldIn, playerIn, handIn);
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+        return ItemUtils.startUsingInstantly(worldIn, playerIn, handIn);
     }
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
     @Override
-    public UseAction getUseAnimation(ItemStack stack) {
-        return UseAction.DRINK;
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return UseAnim.DRINK;
     }
     @Override
     public int getUseDuration(ItemStack stack) {
         return 32;
     }
     @Override
-    public void releaseUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
+    public void releaseUsing(ItemStack stack, Level worldIn, LivingEntity entityLiving, int timeLeft) {
         super.releaseUsing(stack, worldIn, entityLiving, timeLeft);
     }
     @Override

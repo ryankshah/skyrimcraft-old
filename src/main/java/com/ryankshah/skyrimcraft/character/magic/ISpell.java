@@ -8,12 +8,12 @@ import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.network.skill.PacketAddXpToSkillOnServer;
 import com.ryankshah.skyrimcraft.network.spell.PacketConsumeMagicka;
 import com.ryankshah.skyrimcraft.network.spell.PacketUpdateShoutCooldownOnServer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.List;
@@ -26,7 +26,7 @@ import java.util.List;
 public abstract class ISpell extends ForgeRegistryEntry<ISpell>
 {
     private int identifier;
-    private PlayerEntity caster;
+    private Player caster;
 
     public ISpell(int identifier) {
         this.identifier = identifier;
@@ -62,7 +62,7 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
         return null;
     }
 
-    public void setCaster(PlayerEntity playerEntity) {
+    public void setCaster(Player playerEntity) {
         this.caster = playerEntity;
     }
 
@@ -70,7 +70,7 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
      * Get the player entity who casted the spell
      * @return {@link PlayerEntity}
      */
-    public PlayerEntity getCaster() {
+    public Player getCaster() {
         return this.caster;
     }
 
@@ -149,7 +149,7 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
         if(canCast() == CastResult.SUCCESS) {
             onCast();
         }  else {
-            getCaster().displayClientMessage(new StringTextComponent(TextFormatting.RED + (canCast() == CastResult.MAGICKA ? "Not enough magicka!" : "This shout is still on cooldown!") + TextFormatting.RESET), false);
+            getCaster().displayClientMessage(new TextComponent(ChatFormatting.RED + (canCast() == CastResult.MAGICKA ? "Not enough magicka!" : "This shout is still on cooldown!") + ChatFormatting.RESET), false);
         }
     }
 
@@ -177,7 +177,7 @@ public abstract class ISpell extends ForgeRegistryEntry<ISpell>
             else
                 Networking.sendToServer(new PacketConsumeMagicka(getCost()));
         }
-        caster.getCommandSenderWorld().playSound(null, caster.getX(), caster.getY(), caster.getZ(), getSound(), SoundCategory.PLAYERS, 1f, 1f);
+        caster.getCommandSenderWorld().playSound(null, caster.getX(), caster.getY(), caster.getZ(), getSound(), SoundSource.PLAYERS, 1f, 1f);
     }
 
     public enum SpellType {

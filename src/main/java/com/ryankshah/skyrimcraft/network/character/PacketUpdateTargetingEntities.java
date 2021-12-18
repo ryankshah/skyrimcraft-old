@@ -2,11 +2,11 @@ package com.ryankshah.skyrimcraft.network.character;
 
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.LogicalSidedProvider;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,7 +20,7 @@ public class PacketUpdateTargetingEntities
     private List<Integer> targetEntities = new ArrayList<>();
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public PacketUpdateTargetingEntities(PacketBuffer buf) {
+    public PacketUpdateTargetingEntities(FriendlyByteBuf buf) {
         int size = buf.readVarInt();
         for(int i = 0; i < size; i++)
             targetEntities.add(buf.readVarInt());
@@ -30,7 +30,7 @@ public class PacketUpdateTargetingEntities
         this.targetEntities = targetEntities;
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeVarInt(targetEntities.size());
         for(Integer i : targetEntities)
             buf.writeVarInt(i);
@@ -45,7 +45,7 @@ public class PacketUpdateTargetingEntities
             LOGGER.warn("PacketUpdateTargetingEntities received on wrong side:" + context.getDirection().getReceptionSide());
             return false;
         }
-        Optional<ClientWorld> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
+        Optional<Level> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
         if (!clientWorld.isPresent()) {
             LOGGER.warn("PacketUpdateTargetingEntities context could not provide a ClientWorld.");
             return false;

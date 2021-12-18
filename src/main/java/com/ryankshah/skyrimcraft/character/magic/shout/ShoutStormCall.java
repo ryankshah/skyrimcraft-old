@@ -3,16 +3,16 @@ package com.ryankshah.skyrimcraft.character.magic.shout;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.util.RayTraceUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.LightningBoltEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.ArrayList;
@@ -76,7 +76,7 @@ public class ShoutStormCall extends ISpell implements IForgeRegistryEntry<ISpell
     @Override
     public void onCast() {
         // call lightning storm on target
-        World world = getCaster().level;
+        Level world = getCaster().level;
         Entity rayTracedEntity = RayTraceUtil.rayTrace(world, getCaster(), 20D);
         if(rayTracedEntity instanceof LivingEntity) {
             double x = rayTracedEntity.getX();
@@ -86,16 +86,16 @@ public class ShoutStormCall extends ISpell implements IForgeRegistryEntry<ISpell
             //Networking.sendToAllClients(() -> world.getChunkAt(new BlockPos(x, y, z)), new PacketStormCallOnClient(x, y, z));
 
             // Add lightning
-            LightningBoltEntity lightning = new LightningBoltEntity(EntityType.LIGHTNING_BOLT, world);
+            LightningBolt lightning = new LightningBolt(EntityType.LIGHTNING_BOLT, world);
             //lightning.setVisualOnly(true);
             lightning.setRemainingFireTicks(0);
-            lightning.setCause((ServerPlayerEntity) getCaster());
+            lightning.setCause((ServerPlayer) getCaster());
             lightning.moveTo(x, y, z);
             world.addFreshEntity(lightning);
 
             super.onCast();
         } else {
-            getCaster().displayClientMessage(new StringTextComponent("There is nothing there to cast this shout on!"), false);
+            getCaster().displayClientMessage(new TextComponent("There is nothing there to cast this shout on!"), false);
         }
     }
 

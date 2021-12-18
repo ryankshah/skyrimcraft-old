@@ -3,11 +3,11 @@ package com.ryankshah.skyrimcraft.network.map;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,22 +16,22 @@ import java.util.function.Supplier;
 public class PacketUpdatePlayerMapOnServer
 {
     private static final Logger LOGGER = LogManager.getLogger();
-    private ObjectList<WorldRenderer.LocalRenderInformationContainer> mapChunks = new ObjectArrayList<>(69696);
+    private ObjectList<LevelRenderer.RenderChunkInfo> mapChunks = new ObjectArrayList<>(69696);
 
-    public PacketUpdatePlayerMapOnServer(PacketBuffer buf) {
+    public PacketUpdatePlayerMapOnServer(FriendlyByteBuf buf) {
         int size = buf.readInt();
         for(int i = 0; i < size; i++) {
 
         }
     }
 
-    public PacketUpdatePlayerMapOnServer(ObjectList<WorldRenderer.LocalRenderInformationContainer> mapChunks) {
+    public PacketUpdatePlayerMapOnServer(ObjectList<LevelRenderer.RenderChunkInfo> mapChunks) {
         this.mapChunks = mapChunks;
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeInt(mapChunks.size());
-        for(WorldRenderer.LocalRenderInformationContainer chunk : mapChunks) {
+        for(LevelRenderer.RenderChunkInfo chunk : mapChunks) {
         }
     }
 
@@ -49,7 +49,7 @@ public class PacketUpdatePlayerMapOnServer
         //  that the ctx handler is a serverhandler, and that ServerPlayerEntity exists
         // Packets received on the client side must be handled differently!  See MessageHandlerOnClient
 
-        final ServerPlayerEntity sendingPlayer = context.getSender();
+        final ServerPlayer sendingPlayer = context.getSender();
         if (sendingPlayer == null) {
             LOGGER.warn("ServerPlayerEntity was null when PacketUpdatePlayerMapOnServer was received");
             return false;

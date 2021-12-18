@@ -1,48 +1,46 @@
 package com.ryankshah.skyrimcraft.goal;
 
 import com.ryankshah.skyrimcraft.effect.ModEffects;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityPredicate;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.pathfinding.Path;
-import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
 import java.util.function.Predicate;
 
-import net.minecraft.entity.ai.goal.Goal.Flag;
-
 public class UndeadFleeGoal extends Goal
 {
-    private CreatureEntity fleeingEntity;
+    private PathfinderMob fleeingEntity;
     private final double walkSpeedModifier;
     private final double sprintSpeedModifier;
     protected LivingEntity toAvoid;
     protected final float maxDist;
     protected Path path;
-    protected final PathNavigator pathNav;
+    protected final PathNavigation pathNav;
     protected final Predicate<LivingEntity> avoidPredicate;
     protected final Predicate<LivingEntity> predicateOnAvoidEntity;
-    private final EntityPredicate avoidEntityTargeting;
+    private final TargetingConditions avoidEntityTargeting;
 
     private boolean shouldFlee;
 
-    public UndeadFleeGoal(CreatureEntity p_i50037_1_, float p_i50037_3_, double p_i50037_4_, double p_i50037_6_) {
+    public UndeadFleeGoal(PathfinderMob p_i50037_1_, float p_i50037_3_, double p_i50037_4_, double p_i50037_6_) {
         this(p_i50037_1_, (p_200828_0_) -> {
             return true;
-        }, p_i50037_3_, p_i50037_4_, p_i50037_6_, EntityPredicates.NO_CREATIVE_OR_SPECTATOR::test);
+        }, p_i50037_3_, p_i50037_4_, p_i50037_6_, EntitySelector.NO_CREATIVE_OR_SPECTATOR::test);
         this.fleeingEntity = p_i50037_1_;
         shouldFlee = false;
     }
 
-    public UndeadFleeGoal(CreatureEntity p_i48859_1_, Predicate<LivingEntity> p_i48859_3_, float p_i48859_4_, double p_i48859_5_, double p_i48859_7_, Predicate<LivingEntity> p_i48859_9_) {
+    public UndeadFleeGoal(PathfinderMob p_i48859_1_, Predicate<LivingEntity> p_i48859_3_, float p_i48859_4_, double p_i48859_5_, double p_i48859_7_, Predicate<LivingEntity> p_i48859_9_) {
         this.fleeingEntity = p_i48859_1_;
         this.avoidPredicate = p_i48859_3_;
         this.maxDist = p_i48859_4_;
@@ -51,10 +49,10 @@ public class UndeadFleeGoal extends Goal
         this.predicateOnAvoidEntity = p_i48859_9_;
         this.pathNav = p_i48859_1_.getNavigation();
         this.setFlags(EnumSet.of(Goal.Flag.MOVE));
-        this.avoidEntityTargeting = (new EntityPredicate()).range((double)p_i48859_4_).selector(p_i48859_9_.and(p_i48859_3_));
+        this.avoidEntityTargeting = TargetingConditions.forCombat(); // (new TargetingConditions(true)).range((double)p_i48859_4_).selector(p_i48859_9_.and(p_i48859_3_));
     }
 
-    public UndeadFleeGoal(CreatureEntity p_i48860_1_, PlayerEntity p_i48860_2_, float p_i48860_3_, double p_i48860_4_, double p_i48860_6_, Predicate<LivingEntity> p_i48860_8_) {
+    public UndeadFleeGoal(PathfinderMob p_i48860_1_, Player p_i48860_2_, float p_i48860_3_, double p_i48860_4_, double p_i48860_6_, Predicate<LivingEntity> p_i48860_8_) {
         this(p_i48860_1_, (p_203782_0_) -> {
             return true;
         }, p_i48860_3_, p_i48860_4_, p_i48860_6_, p_i48860_8_);
@@ -75,7 +73,7 @@ public class UndeadFleeGoal extends Goal
         if (this.toAvoid == null || !this.toAvoid.hasEffect(ModEffects.UNDEAD_FLEE.get())) {
             return false;
         } else {
-            Vector3d vector3d = RandomPositionGenerator.getPosAvoid(this.fleeingEntity, 16, 7, this.toAvoid.position());
+            Vec3 vector3d = DefaultRandomPos.getPosAway(this.fleeingEntity, 16, 7, this.toAvoid.position());
             if (vector3d == null) {
                 return false;
             } else if (this.toAvoid.distanceToSqr(vector3d.x, vector3d.y, vector3d.z) < this.toAvoid.distanceToSqr(this.fleeingEntity)) {
@@ -109,8 +107,8 @@ public class UndeadFleeGoal extends Goal
             {
                 double z = Math.cos(phi) * 0.8;
                 double x = Math.sin(phi) * 0.8;
-                if(fleeingEntity.level instanceof ServerWorld)
-                    ((ServerWorld) fleeingEntity.level).sendParticles(ParticleTypes.SMOKE, fleeingEntity.getX() + x, fleeingEntity.getY() + fleeingEntity.getEyeHeight(), fleeingEntity.getZ() + z, 1, 0D, 0D, 0D, 0); // set amount to 0 so particles don't fly off and stays in place
+                if(fleeingEntity.level instanceof ServerLevel)
+                    ((ServerLevel) fleeingEntity.level).sendParticles(ParticleTypes.SMOKE, fleeingEntity.getX() + x, fleeingEntity.getY() + fleeingEntity.getEyeHeight(), fleeingEntity.getZ() + z, 1, 0D, 0D, 0D, 0); // set amount to 0 so particles don't fly off and stays in place
             }
 
 //            for(double y = 0; y <= fleeingEntity.getEyeHeight(); y+=0.05) {
