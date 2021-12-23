@@ -86,6 +86,7 @@ public class LangGenerator extends LanguageProvider
         add("entity.skyrimcraft.sabre_cat", "Sabre Cat");
         add("entity.skyrimcraft.snowy_sabre_cat", "Snowy Sabre Cat");
         add("entity.skyrimcraft.giant", "Giant");
+        add("entity.skyrimcraft.dragon", "Dragon");
 
         // Damage Source
         add("death.attack.death.skyrimcraft.conjuredfamiliar", "Your conjured %1$s familiar has vanished!");

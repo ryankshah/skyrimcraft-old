@@ -4,6 +4,7 @@ import com.ryankshah.skyrimcraft.client.gui.screen.BlacksmithForgeScreen;
 import com.ryankshah.skyrimcraft.data.ModRecipeType;
 import com.ryankshah.skyrimcraft.util.ForgeRecipe;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -49,7 +50,8 @@ public class BlacksmithForgeBlock extends SkyrimBlock
     @Override
     public InteractionResult use(BlockState p_225533_1_, Level p_225533_2_, BlockPos p_225533_3_, Player p_225533_4_, InteractionHand p_225533_5_, BlockHitResult p_225533_6_) {
         List<ForgeRecipe> recipes = p_225533_2_.getRecipeManager().getAllRecipesFor(ModRecipeType.FORGE);
-        Minecraft.getInstance().setScreen(new BlacksmithForgeScreen(recipes));
+        if(p_225533_4_ instanceof AbstractClientPlayer)
+            Minecraft.getInstance().setScreen(new BlacksmithForgeScreen(recipes));
 
         return InteractionResult.SUCCESS;
     }

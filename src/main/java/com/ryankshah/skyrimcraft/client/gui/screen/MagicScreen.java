@@ -177,7 +177,7 @@ public class MagicScreen extends Screen
         drawGradientRect(matrixStack, 40, (this.height) / 2 - 20, 200, (this.height) / 2 + 60, 0xAA000000, 0xAA000000, 0xFF6E6B64);
         fillGradient(matrixStack, 50, (this.height) / 2, 190, (this.height) / 2 + 1, 0xFF6E6B64, 0xFF6E6B64); // Line under spell name
 
-        minecraft.getTextureManager().bindForSetup(GuiComponent.GUI_ICONS_LOCATION);
+        RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
         drawCenteredString(matrixStack, font, spell.getName(), 120, (this.height) / 2 - 10, 0x00FFFFFF); // Spell name
         for(int i = 1; i < spell.getDescription().size()+1; i++)
             drawCenteredString(matrixStack, font, spell.getDescription().get(i-1), 120, (this.height) / 2 + (8 * i), 0x00FFFFFF); // Spell description
@@ -189,17 +189,17 @@ public class MagicScreen extends Screen
             drawString(matrixStack, font, "Cooldown: " + (int)spell.getCooldown(), 50, (this.height) / 2 + 40, 0x00FFFFFF);
 
         // Draw the spell entity?
-        minecraft.getTextureManager().bindForSetup(spell.getDisplayAnimation());
+        RenderSystem.setShaderTexture(0, spell.getDisplayAnimation());
         currentSpellFrame = (int)(lastTick + (currentTick - lastTick) * partialTicks) / 64;
         int uOffset = 64 * (currentSpellFrame % 5), vOffset = 0;
         matrixStack.pushPose();
             blit(matrixStack, 88, (this.height / 2) - 94, uOffset, vOffset, 64, 64, 320, 64);
         matrixStack.popPose();
-        minecraft.getTextureManager().bindForSetup(GuiComponent.GUI_ICONS_LOCATION);
+        RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
     }
 
     private void renderMagicka(PoseStack matrixStack) {
-        minecraft.getTextureManager().bindForSetup(OVERLAY_ICONS);
+        RenderSystem.setShaderTexture(0, OVERLAY_ICONS);
         minecraft.player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent(cap -> {
             float magickaPercentage = cap.getMagicka() / cap.getMaxMagicka();
             float magickaBarWidth = 80.0f * magickaPercentage;
@@ -207,7 +207,7 @@ public class MagicScreen extends Screen
             TextureDrawer.drawGuiTexture(matrixStack, this.width - 120, this.height - 25, 0, 51, 102, 10);
             TextureDrawer.drawGuiTexture(matrixStack, width - 109, this.height - 23, 11 + ((80 - magickaBarWidth) / 2.0f), 64, 80 * magickaPercentage, 6);
         });
-        minecraft.getTextureManager().bindForSetup(GuiComponent.GUI_ICONS_LOCATION);
+        RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
     }
 
     @Override

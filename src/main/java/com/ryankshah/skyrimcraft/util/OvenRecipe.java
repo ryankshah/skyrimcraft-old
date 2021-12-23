@@ -3,7 +3,7 @@ package com.ryankshah.skyrimcraft.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
-import com.ryankshah.skyrimcraft.data.ModRecipeSerializers;
+import com.ryankshah.skyrimcraft.data.serializer.ModSerializers;
 import com.ryankshah.skyrimcraft.data.ModRecipeType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -69,7 +69,7 @@ public class OvenRecipe implements Recipe<IOvenInventory>
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipeSerializers.OVEN_RECIPE_SERIALIZER.get();
+        return ModSerializers.OVEN_RECIPE_SERIALIZER.get();
     }
 
     @Override

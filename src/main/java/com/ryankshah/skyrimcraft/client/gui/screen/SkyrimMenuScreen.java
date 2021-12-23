@@ -34,13 +34,13 @@ public class SkyrimMenuScreen extends Screen
 
     @Override
     public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        minecraft.getTextureManager().bindForSetup(MENU_ICONS);
+        RenderSystem.setShaderTexture(0, MENU_ICONS);
         RenderSystem.clearColor(1.0F, 1.0F, 1.0F, 1.0F);
         this.renderBackground(matrixStack);
 
         blit(matrixStack, this.width / 2 - 103, this.height / 2 - 50, 24, 81, 207, 100);
 
-        //minecraft.getTextureManager().bindForSetup(MENU_ICONS);
+        // RenderSystem.setShaderTexture(0, MENU_ICONS);
 
         if(currentDirection == Direction.NORTH) {
             blit(matrixStack, this.width / 2 - 9, this.height / 2 - 90 - 9, 0, 0, 18, 17);
@@ -73,7 +73,7 @@ public class SkyrimMenuScreen extends Screen
             drawCenteredString(matrixStack, font, MAGIC, this.width / 2 - 103 - font.width(MAGIC), this.height / 2 - 4, 0x00FFFFFF);
         }
 
-        minecraft.getTextureManager().bindForSetup(GuiComponent.GUI_ICONS_LOCATION);
+        RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
@@ -100,10 +100,10 @@ public class SkyrimMenuScreen extends Screen
                 // minecraft.setScreen(null);
                 // minecraft.player.displayClientMessage(new TranslationTextComponent("skyrimcraft.menu.option.unavailable"), false);
             } else if(currentDirection == Direction.SOUTH) {
-                minecraft.setScreen(null);
-                minecraft.setScreen(new MapScreen());
                 // minecraft.setScreen(null);
-                // minecraft.player.displayClientMessage(new TranslationTextComponent("skyrimcraft.menu.option.unavailable"), false);
+                // minecraft.setScreen(new MapScreen());
+                // minecraft.setScreen(null);
+                minecraft.player.displayClientMessage(new TranslatableComponent("skyrimcraft.menu.option.unavailable"), false);
             } else if(currentDirection == Direction.WEST) {
                 minecraft.setScreen(null);
                 minecraft.setScreen(new QuestScreen()); // We have moved this to be quests. Used to be: `InventoryScreen(minecraft.player)`

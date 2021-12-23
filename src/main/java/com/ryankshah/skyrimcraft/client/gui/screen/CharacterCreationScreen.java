@@ -69,7 +69,7 @@ public class CharacterCreationScreen extends Screen
         this.panorama.render(partialTicks, Mth.clamp(f, 0.0F, 1.0F));
         int i = 274;
         int j = this.width / 2 + 40;
-        this.minecraft.getTextureManager().bindForSetup(PANORAMA_OVERLAY);
+        RenderSystem.setShaderTexture(0, PANORAMA_OVERLAY);
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         RenderSystem.clearColor(1.0F, 1.0F, 1.0F, this.fading ? (float)Mth.ceil(Mth.clamp(f, 0.0F, 1.0F)) : 1.0F);

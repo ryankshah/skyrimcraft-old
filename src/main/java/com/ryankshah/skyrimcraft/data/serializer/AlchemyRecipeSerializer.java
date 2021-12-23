@@ -1,4 +1,4 @@
-package com.ryankshah.skyrimcraft.data;
+package com.ryankshah.skyrimcraft.data.serializer;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

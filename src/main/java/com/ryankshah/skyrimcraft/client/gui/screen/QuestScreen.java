@@ -1,5 +1,6 @@
 package com.ryankshah.skyrimcraft.client.gui.screen;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -26,7 +27,7 @@ public class QuestScreen extends Screen
 
         fill(matrixStack, this.width / 2 - 70, this.height / 2 - 60, this.width / 2 - 69, this.height / 2 + 40, 0xFF6E6B64);
 
-        minecraft.textureManager.bindForSetup(QUEST_ICONS);
+        RenderSystem.setShaderTexture(0, QUEST_ICONS);
         blit(matrixStack, this.width / 2 - 20, this.height / 2 - 60, 1, 14, 79, 18);
 
         // time

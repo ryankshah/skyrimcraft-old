@@ -36,18 +36,18 @@ public class PacketUpdateMagicka
         context.setPacketHandled(true);
 
         if (sideReceived != LogicalSide.CLIENT) {
-            LOGGER.warn("TargetEffectMessageToClient received on wrong side:" + context.getDirection().getReceptionSide());
+            LOGGER.warn("PacketUpdateMagicka received on wrong side:" + context.getDirection().getReceptionSide());
             return false;
         }
         Optional<Level> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
         if (!clientWorld.isPresent()) {
-            LOGGER.warn("TargetEffectMessageToClient context could not provide a ClientWorld.");
+            LOGGER.warn("PacketUpdateMagicka context could not provide a ClientWorld.");
             return false;
         }
 
         ctx.get().enqueueWork(() -> {
             Minecraft.getInstance().player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((cap) -> {
-                cap.setMagicka(this.magicka);
+                cap.setMagicka(magicka);
             });
         });
         return true;

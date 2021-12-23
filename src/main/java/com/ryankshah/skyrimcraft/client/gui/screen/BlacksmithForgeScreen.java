@@ -2,9 +2,10 @@ package com.ryankshah.skyrimcraft.client.gui.screen;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
@@ -19,16 +20,15 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-import com.mojang.math.Vector3f;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -75,7 +75,7 @@ public class BlacksmithForgeScreen extends Screen
     public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         RenderSystem.clearColor(1.0F, 1.0F, 1.0F, 1.0F);
         this.renderBackground(matrixStack);
-
+        //this.fillGradient(matrixStack, 0, 0, this.width, this.height, -1072689136, -804253680);
         if(!this.categoryChosen) {
             fillGradient(matrixStack, 10, 0, 80, this.height - 2, 0xAA000000, 0xAA555555);
             fillGradient(matrixStack, 12, 2, 13, this.height - 2, 0xFF6E6B64, 0xFF6E6B64);
@@ -275,8 +275,8 @@ public class BlacksmithForgeScreen extends Screen
 
     private void drawItemImage(PoseStack matrixStack, ItemStack is, int xPos, int yPos, float spin) {
         matrixStack.pushPose();
-        minecraft.getTextureManager().bindForSetup(TextureAtlas.LOCATION_BLOCKS);
-        minecraft.getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
+        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+        minecraft.getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS).setFilter(false, false);
         //RenderSystem.enableRescaleNormal();
         //RenderSystem.enableAlphaTest();
         //RenderSystem.defaultAlphaFunc();
@@ -357,7 +357,7 @@ public class BlacksmithForgeScreen extends Screen
 
 
     private void renderLevel(PoseStack matrixStack) {
-        minecraft.getTextureManager().bindForSetup(OVERLAY_ICONS);
+        RenderSystem.setShaderTexture(0, OVERLAY_ICONS);
 
         ISkyrimPlayerData cap = minecraft.player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalStateException("Skyrimcraft BlacksmithForgeScreen renderLevel"));
         ISkill smithing = cap.getSkills().get(SkillRegistry.SMITHING.getID());
@@ -370,7 +370,7 @@ public class BlacksmithForgeScreen extends Screen
         drawString(matrixStack, font, curLevel, width - 140 - 6 - font.width(curLevel), height - 23, 0x00FFFFFF);
         drawString(matrixStack, font, nextLevel, width - 18 - font.width(nextLevel), height - 23, 0x00FFFFFF);
 
-        minecraft.getTextureManager().bindForSetup(GuiComponent.GUI_ICONS_LOCATION);
+        RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
     }
 
     private void drawBorderedGradientRect(PoseStack matrixStack, int startX, int startY, int endX, int endY, int colorStart, int colorEnd, int borderColor) {

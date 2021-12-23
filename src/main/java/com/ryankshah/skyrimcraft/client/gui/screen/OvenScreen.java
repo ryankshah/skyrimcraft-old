@@ -2,9 +2,10 @@ package com.ryankshah.skyrimcraft.client.gui.screen;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.client.gui.TextureDrawer;
 import com.ryankshah.skyrimcraft.util.OvenRecipe;
@@ -13,16 +14,15 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-import com.mojang.math.Vector3f;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -267,8 +267,8 @@ public class OvenScreen extends Screen
 
     private void drawItemImage(PoseStack matrixStack, ItemStack is, int xPos, int yPos, float spin) {
         matrixStack.pushPose();
-        minecraft.getTextureManager().bindForSetup(TextureAtlas.LOCATION_BLOCKS);
-        minecraft.getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
+        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+        minecraft.getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS).setFilter(false, false);
         //RenderSystem.enableRescaleNormal();
         //RenderSystem.enableAlphaTest();
         //RenderSystem.defaultAlphaFunc();
@@ -345,12 +345,12 @@ public class OvenScreen extends Screen
     }
 
     private void renderHealth(PoseStack matrixStack) {
-        minecraft.getTextureManager().bindForSetup(OVERLAY_ICONS);
+        RenderSystem.setShaderTexture(0, OVERLAY_ICONS);
         float healthPercentage = minecraft.player.getHealth() / minecraft.player.getMaxHealth();
         float healthBarWidth = 80.0f * healthPercentage;
         TextureDrawer.drawGuiTexture(matrixStack, this.width - 120, this.height - 25, 0, 51, 102, 10);
         TextureDrawer.drawGuiTexture(matrixStack, width - 109, this.height - 23, 11 + ((80 - healthBarWidth) / 2.0f), 72, 80 * healthPercentage, 6);
-        minecraft.getTextureManager().bindForSetup(GuiComponent.GUI_ICONS_LOCATION);
+        RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
     }
 
     private void drawBorderedGradientRect(PoseStack matrixStack, int startX, int startY, int endX, int endY, int colorStart, int colorEnd, int borderColor) {

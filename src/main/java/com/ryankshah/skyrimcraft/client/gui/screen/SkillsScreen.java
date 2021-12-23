@@ -43,6 +43,7 @@ public class SkillsScreen extends Screen
 
     private ISkyrimPlayerData playerCap;
     private Map<Integer, ISkill> skillsList;
+    private ISkill selectedSkillObject;
     private Minecraft minecraft;
     private LocalPlayer player;
     private float cubeMapPosition = 0.0f;
@@ -61,6 +62,7 @@ public class SkillsScreen extends Screen
 
         this.skillsList = playerCap.getSkills();
         this.levelUpdates = playerCap.getLevelUpdates();
+        this.selectedSkillObject = null;
     }
 
     @Override
@@ -105,7 +107,7 @@ public class SkillsScreen extends Screen
                 Networking.sendToServer(new PacketUpdateExtraStatOnServer(currentUpdateSelection));
             } else if(!skillSelected) {
                 skillSelected = true;
-                ISkill currentSkillObj = skillsList.get(currentSkill);
+                selectedSkillObject = skillsList.get(currentSkill);
             } else {
                 // Skill panel is open, interact with it.
             }
@@ -115,6 +117,7 @@ public class SkillsScreen extends Screen
                 return true;
             } else {
                 // If skill is selected, close the skill's panel and go back to the main skills screen
+                selectedSkillObject = null;
                 skillSelected = false;
             }
         } else if (keyCode == 258) {
@@ -135,7 +138,7 @@ public class SkillsScreen extends Screen
 
         SKILL_NEBULA_CUBE_MAP.render(this.minecraft, Mth.sin(cubeMapPosition * 0.001F) * 5.0F + 25.0F, -cubeMapPosition * 0.1F, 1.0f);
 
-        minecraft.getTextureManager().bindForSetup(SKILL_ICONS);
+        RenderSystem.setShaderTexture(0, SKILL_ICONS);
 
         TextureDrawer.drawGuiTexture(matrixStack, width / 2 - 110, 10, 0, 209, 221, 14);
 
@@ -143,13 +146,13 @@ public class SkillsScreen extends Screen
         fillGradient(matrixStack, 0, this.height * 3 / 4 + 20, this.width, this.height, 0xAA000000, 0xAA000000);
         fillGradient(matrixStack, 0, this.height * 3 / 4 + 22, this.width, this.height * 3 / 4 + 23, 0xFF6E6B64, 0xFF6E6B64);
 
-        minecraft.getTextureManager().bindForSetup(SKILL_ICONS);
+        RenderSystem.setShaderTexture(0, SKILL_ICONS);
 
         renderHealth(matrixStack, width, height);
         renderStamina(matrixStack, width, height);
         renderMagicka(matrixStack, width, height);
 
-        minecraft.getTextureManager().bindForSetup(GuiComponent.GUI_ICONS_LOCATION);
+        RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
         // If no skill is selected, show skill icons etc.
         if(!skillSelected) {
             for (Map.Entry<Integer, ISkill> skillEntry : skillsList.entrySet()) {
@@ -207,7 +210,7 @@ public class SkillsScreen extends Screen
         float skillProgress = skill.getXpProgress();
         //float skillBarWidth = SKILL_BAR_WIDTH * skillProgress;
 
-        minecraft.getTextureManager().bindForSetup(SKILL_ICONS);
+        RenderSystem.setShaderTexture(0, SKILL_ICONS);
 
         blit(matrixStack, x - (SKILL_BAR_CONTAINER_WIDTH / 2), y + 48 + (SKILL_BAR_CONTAINER_HEIGHT / 2), SKILL_BAR_CONTAINER_U, SKILL_BAR_CONTAINER_V, SKILL_BAR_CONTAINER_WIDTH, SKILL_BAR_CONTAINER_HEIGHT, 512, 512);
         blit(matrixStack, x - (SKILL_BAR_CONTAINER_WIDTH / 2) + 7, y + 49 + (SKILL_BAR_CONTAINER_HEIGHT / 2) + SKILL_BAR_HEIGHT, SKILL_BAR_U, SKILL_BAR_V, (int)(SKILL_BAR_WIDTH * skillProgress), SKILL_BAR_HEIGHT, 512, 512);

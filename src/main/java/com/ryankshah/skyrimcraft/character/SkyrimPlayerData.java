@@ -249,7 +249,7 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
         this.characterTotalXp += amount;
         if(getCharacterLevel() > level) {
             incrementLevelUpdates();
-            Networking.sendToClient(new PacketAddToLevelUpdates(new LevelUpdate("characterLevel", getCharacterLevel(), 200)), playerEntity);
+            Networking.sendToClient(new PacketAddToLevelUpdates(new LevelUpdate("characterLevel", getCharacterLevel(), 2000)), playerEntity);
         }
     }
 
@@ -274,7 +274,7 @@ public class SkyrimPlayerData implements ISkyrimPlayerData
         if(skill.getLevel() > oldSkillLevel) {
             // The skill has leveled up, so send packet to client to add to the skyrim ingame gui levelUpdates list.
             addCharacterXp(skill.getLevel(), playerEntity);
-            Networking.sendToClient(new PacketAddToLevelUpdates(new LevelUpdate(skill.getName(), skill.getLevel(), 200)), playerEntity);
+            Networking.sendToClient(new PacketAddToLevelUpdates(new LevelUpdate(skill.getName(), skill.getLevel(), 2000)), playerEntity);
         }
 
         //skills.put(skill.getID(), skill);

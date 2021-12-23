@@ -15,7 +15,7 @@ import com.ryankshah.skyrimcraft.client.entity.creature.GiantEntity;
 import com.ryankshah.skyrimcraft.client.entity.creature.SabreCatEntity;
 import com.ryankshah.skyrimcraft.client.entity.passive.flying.BlueButterfly;
 import com.ryankshah.skyrimcraft.client.entity.passive.flying.TorchBug;
-import com.ryankshah.skyrimcraft.data.ModRecipeSerializers;
+import com.ryankshah.skyrimcraft.data.serializer.ModSerializers;
 import com.ryankshah.skyrimcraft.data.ModRecipeType;
 import com.ryankshah.skyrimcraft.data.loot_table.condition.type.ModLootConditionTypes;
 import com.ryankshah.skyrimcraft.data.provider.ModGlobalLootTableProvider;
@@ -62,6 +62,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * The main class for the Skyrimcraft mod.
+ *
  * TODO:
  *   - Continue working on the shouts and spells system:
  *     - Add more shouts and spells :)
@@ -80,7 +82,7 @@ import java.util.Map;
  *     - Add more ingredients
  *       - Add sabre cat pelt and sabre cat snow pelt -- add these + tooth for sabre cat drops
  *     - Sort out how ingredients will be obtainable (i.e. giants toes and others currently
- *       tradeable by villagers or gen in structures, but we need giants, mobs, etc.)
+ *       tradeable by villagers or gen in structures, but we need giants and other mobs)
  *   - Add more oven recipes:
  *     - Apple Dumpling
  *     - Braided Bread (?)
@@ -101,15 +103,20 @@ import java.util.Map;
  *     - Skills system is ready, but need to tinker with the xp rates and add in how XP gains for rest of skills.
  *     - Need to work on skills GUI
  *   - Start working on a quest system
- *     - Certain quests require a character level of either 2, 5, 10, 15, 17, 20, 25, 30, or 80 to start them.
+ *     - Certain quests require a character level of either 2, 5, 10, 15, 17, 20, 25, 30, or 80 to start them
+ *       - This is a future consideration...
+ *     - Need to write the reload listener to retrieve the quest jsons..
  *   - Start working on a faction system
- *   - Get some dragons and implement a dragon souls system for the shoutss
+ *   - We have a dragon! Now to implement its fight and flight mechanics
+ *     - Once this is done, add in the dragon souls mechanic to unlock shout stages
+ *     - Also.. work on shout stages (haha!)
  */
 @Mod(Skyrimcraft.MODID)
 public class Skyrimcraft
 {
-    // Directly reference a log4j logger.
+    // Skyrimcraft's mod identifier
     public static final String MODID = "skyrimcraft";
+    // Directly reference a Log4J logger.
     public static final Logger LOGGER = LogManager.getLogger();
 
     public Skyrimcraft() {
@@ -125,7 +132,7 @@ public class Skyrimcraft
         ModSounds.SOUND_EVENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
         SpellRegistry.SPELLS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModRecipeType.register();
-        ModRecipeSerializers.SERIALIZERS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ModSerializers.RECIPE_SERIALIZERS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModEffects.EFFECTS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModStructures.STRUCTURES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModGlobalLootTableProvider.LOOT_MODIFIERS.register(FMLJavaModLoadingContext.get().getModEventBus());
@@ -156,6 +163,8 @@ public class Skyrimcraft
 
             ModStructures.setupStructures();
             ModConfiguredStructures.registerConfiguredStructures();
+
+            WorldGen.registerPlacements();
         });
     }
 
@@ -225,9 +234,8 @@ public class Skyrimcraft
         if(event.getWorld() instanceof ServerLevel serverLevel){
             ChunkGenerator chunkGenerator = serverLevel.getChunkSource().getGenerator();
             // Skip superflat to prevent issues with it. Plus, users don't want structures clogging up their superflat worlds.
-            if (chunkGenerator instanceof FlatLevelSource && serverLevel.dimension().equals(Level.OVERWORLD)) {
+            if (chunkGenerator instanceof FlatLevelSource && serverLevel.dimension().equals(Level.OVERWORLD))
                 return;
-            }
 
             StructureSettings worldStructureConfig = chunkGenerator.getSettings();
 
@@ -246,9 +254,8 @@ public class Skyrimcraft
                 // Skip all ocean, end, nether, and none category biomes.
                 // You can do checks for other traits that the biome has.
                 Biome.BiomeCategory biomeCategory = biomeEntry.getValue().getBiomeCategory();
-                if(biomeCategory != Biome.BiomeCategory.OCEAN && biomeCategory != Biome.BiomeCategory.THEEND && biomeCategory != Biome.BiomeCategory.NETHER && biomeCategory != Biome.BiomeCategory.NONE) {
+                if(biomeCategory != Biome.BiomeCategory.OCEAN && biomeCategory != Biome.BiomeCategory.THEEND && biomeCategory != Biome.BiomeCategory.NETHER && biomeCategory != Biome.BiomeCategory.NONE)
                     associateBiomeToConfiguredStructure(STStructureToMultiMap, ModConfiguredStructures.CONFIGURED_SHOUT_WALL, biomeEntry.getKey());
-                }
             }
 
             // Alternative way to add our structures to a fixed set of biomes by creating a set of biome resource keys.
@@ -300,9 +307,8 @@ public class Skyrimcraft
              * Also that vanilla superflat is really tricky and buggy to work with in my experience.
              */
             if(chunkGenerator instanceof FlatLevelSource &&
-                    serverLevel.dimension().equals(Level.OVERWORLD)){
+                    serverLevel.dimension().equals(Level.OVERWORLD))
                 return;
-            }
 
             /*
              * putIfAbsent so people can override the spacing with dimension datapacks themselves if they wish to customize spacing more precisely per dimension.
@@ -335,8 +341,6 @@ public class Skyrimcraft
                     biomeRegistryKey
             );
         }
-        else{
-            configuredStructureToBiomeMultiMap.put(configuredStructureFeature, biomeRegistryKey);
-        }
+        else configuredStructureToBiomeMultiMap.put(configuredStructureFeature, biomeRegistryKey);
     }
 }

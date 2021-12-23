@@ -2,6 +2,7 @@ package com.ryankshah.skyrimcraft.event;
 
 import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.block.ModBlocks;
+import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.client.entity.ModEntityType;
 import com.ryankshah.skyrimcraft.data.ModRecipes;
 import com.ryankshah.skyrimcraft.data.lang.LangGenerator;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -42,6 +44,8 @@ public class ModClientEvents
             gen.addProvider(new ModOvenRecipeProvider(gen));
             // Quests
             gen.addProvider(new ModQuestProvider(gen));
+            // Tags
+            gen.addProvider(new ModBlockTagsProvider(gen, Skyrimcraft.MODID, event.getExistingFileHelper()));
         }
         if(event.includeClient()) {
             // BlockStates
@@ -53,6 +57,11 @@ public class ModClientEvents
             // Lang
             gen.addProvider(new LangGenerator(gen, Skyrimcraft.MODID, "en_us"));
         }
+    }
+
+    @SubscribeEvent
+    public static void capabilityRegister(RegisterCapabilitiesEvent event) {
+        event.register(ISkyrimPlayerData.class);
     }
 
     @SubscribeEvent

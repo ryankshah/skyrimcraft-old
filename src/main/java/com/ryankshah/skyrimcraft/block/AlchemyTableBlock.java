@@ -4,6 +4,7 @@ import com.ryankshah.skyrimcraft.client.gui.screen.AlchemyScreen;
 import com.ryankshah.skyrimcraft.data.ModRecipeType;
 import com.ryankshah.skyrimcraft.util.AlchemyRecipe;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -46,7 +47,8 @@ public class AlchemyTableBlock extends SkyrimBlock
     @Override
     public InteractionResult use(BlockState p_225533_1_, Level p_225533_2_, BlockPos p_225533_3_, Player p_225533_4_, InteractionHand p_225533_5_, BlockHitResult p_225533_6_) {
         List<AlchemyRecipe> recipes = p_225533_2_.getRecipeManager().getAllRecipesFor(ModRecipeType.ALCHEMY);
-        Minecraft.getInstance().setScreen(new AlchemyScreen(recipes));
+        if(p_225533_4_ instanceof AbstractClientPlayer)
+            Minecraft.getInstance().setScreen(new AlchemyScreen(recipes));
 
         return InteractionResult.SUCCESS;
     }

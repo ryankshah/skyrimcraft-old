@@ -8,11 +8,13 @@ import com.ryankshah.skyrimcraft.Skyrimcraft;
 import com.ryankshah.skyrimcraft.character.quest.Quest;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.KilledTrigger;
+import net.minecraft.advancements.critereon.UsedTotemTrigger;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.HashCache;
 import net.minecraft.data.DataProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -72,10 +74,17 @@ public class ModQuestProvider implements DataProvider
 
     static class Quests implements Consumer<Consumer<Quest>> {
         public void accept(Consumer<Quest> consumer) {
-            QUESTS.put("kill_spider", Quest.Builder.quest().name("Kill Spider").description("Kill a spider!").category(Quest.QuestCategory.ACTIVITY)
-                    .step(Quest.QuestStep.Builder.step().priority(1).description("Kill a Spider").criteria(KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(EntityType.SPIDER))).build())
-                    .step(Quest.QuestStep.Builder.step().priority(2).description("Kill a Spider").criteria(KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(EntityType.SPIDER))).build())
-                    .save(consumer, Skyrimcraft.MODID + ":quests/kill_spider"));
+            QUESTS.put("kill_spider", Quest.Builder.quest().name("Kill Spiders").description("Kill 2 spiders!").category(Quest.QuestCategory.ACTIVITY)
+                    .step(Quest.QuestStep.Builder.step().priority(1).description("Kill a spider").criteria(KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(EntityType.SPIDER))).build())
+                    .step(Quest.QuestStep.Builder.step().priority(2).description("Kill a spider").criteria(KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(EntityType.SPIDER))).build())
+                    .save(consumer, Skyrimcraft.MODID + ":quests/kill_spiders"));
+            QUESTS.put("complete_raid", Quest.Builder.quest().name("Complete a Raid").description("Successfully finish an entire raid").category(Quest.QuestCategory.ADVENTURE)
+                    .step(Quest.QuestStep.Builder.step().priority(1).description("Complete a raid of any level")
+                            .criteria().build())
+                    .save(consumer, Skyrimcraft.MODID + ":quests/complete_raid"));
+            QUESTS.put("cheat_death", Quest.Builder.quest().name("Cheating Death").description("Defy the laws of life by cheating death...").category(Quest.QuestCategory.ACTIVITY)
+                    .step(Quest.QuestStep.Builder.step().priority(1).description("Use a totem of undying to cheat death").criteria(UsedTotemTrigger.TriggerInstance.usedTotem(Items.TOTEM_OF_UNDYING)).build())
+                    .save(consumer, Skyrimcraft.MODID + ":quests/cheat_death"));
         }
     }
 }

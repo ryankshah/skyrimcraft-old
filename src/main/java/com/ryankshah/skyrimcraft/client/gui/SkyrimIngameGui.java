@@ -388,7 +388,7 @@ public class SkyrimIngameGui extends GuiComponent //implements IIngameOverlay
 
             int j = height / 2 - 7 + 16;
             int k = width / 2 - 8;
-            mc.textureManager.bindForSetup(GuiComponent.GUI_ICONS_LOCATION);
+            RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
             if (flag) {
                 TextureDrawer.drawGuiTexture(matrixStack, k, j, 68, 94, 16, 16);
             } else if (f < 1.0F) {

@@ -4,6 +4,7 @@ import com.ryankshah.skyrimcraft.client.gui.screen.OvenScreen;
 import com.ryankshah.skyrimcraft.data.ModRecipeType;
 import com.ryankshah.skyrimcraft.util.OvenRecipe;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -50,7 +51,8 @@ public class OvenBlock extends SkyrimBlock
     @Override
     public InteractionResult use(BlockState p_225533_1_, Level p_225533_2_, BlockPos p_225533_3_, Player p_225533_4_, InteractionHand p_225533_5_, BlockHitResult p_225533_6_) {
         List<OvenRecipe> recipes = p_225533_2_.getRecipeManager().getAllRecipesFor(ModRecipeType.OVEN);
-        Minecraft.getInstance().setScreen(new OvenScreen(recipes));
+        if(p_225533_4_ instanceof AbstractClientPlayer)
+            Minecraft.getInstance().setScreen(new OvenScreen(recipes));
 
         return InteractionResult.SUCCESS;
     }
