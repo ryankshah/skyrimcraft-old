@@ -42,8 +42,6 @@ public class ModClientEvents
             gen.addProvider(new ModAlchemyRecipeProvider(gen));
             // Oven Recipes
             gen.addProvider(new ModOvenRecipeProvider(gen));
-            // Quests
-            gen.addProvider(new ModQuestProvider(gen));
             // Tags
             gen.addProvider(new ModBlockTagsProvider(gen, Skyrimcraft.MODID, event.getExistingFileHelper()));
         }

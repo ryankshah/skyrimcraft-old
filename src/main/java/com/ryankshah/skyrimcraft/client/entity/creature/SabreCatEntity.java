@@ -48,7 +48,8 @@ public class SabreCatEntity extends PathfinderMob implements IAnimatable
 
     private static final List<ResourceKey<Biome>> SNOWY_BIOMES = Arrays.asList(
             Biomes.SNOWY_SLOPES, Biomes.SNOWY_TAIGA, Biomes.SNOWY_BEACH,
-            Biomes.SNOWY_PLAINS
+            Biomes.SNOWY_PLAINS, Biomes.FROZEN_PEAKS, Biomes.JAGGED_PEAKS,
+            Biomes.GROVE, Biomes.ICE_SPIKES
     );
 
     private MeleeAttackGoal meleeGoal;
@@ -213,7 +214,7 @@ public class SabreCatEntity extends PathfinderMob implements IAnimatable
     @Override
     @Nullable
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_213386_1_, DifficultyInstance p_213386_2_, MobSpawnType p_213386_3_, @Nullable SpawnGroupData p_213386_4_, @Nullable CompoundTag p_213386_5_) {
-        p_213386_1_.getBiomeName(this.blockPosition()).ifPresent(this::setBiomeType);
+        p_213386_1_.getBiome(this.blockPosition()).unwrapKey().ifPresent(this::setBiomeType);
         this.setAnimationState(0);
         this.setPrevAnimationState(0);
         return super.finalizeSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_, p_213386_5_);

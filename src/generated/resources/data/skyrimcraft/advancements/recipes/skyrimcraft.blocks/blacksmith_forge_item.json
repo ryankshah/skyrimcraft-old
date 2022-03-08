@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "skyrimcraft:blacksmith_forge"
+      "skyrimcraft:blacksmith_forge_item"
     ]
   },
   "criteria": {
@@ -21,7 +21,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "skyrimcraft:blacksmith_forge"
+        "recipe": "skyrimcraft:blacksmith_forge_item"
       }
     }
   },

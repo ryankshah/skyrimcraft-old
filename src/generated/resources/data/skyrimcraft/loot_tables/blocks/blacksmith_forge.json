@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "skyrimcraft:blacksmith_forge"
+          "name": "skyrimcraft:blacksmith_forge_item"
         }
       ],
       "conditions": [

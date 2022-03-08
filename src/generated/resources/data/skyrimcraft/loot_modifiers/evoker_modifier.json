@@ -87,7 +87,7 @@
       "useLooting": true
     },
     {
-      "item": "skyrimcraft:red_mountain_flower",
+      "item": "skyrimcraft:red_mountain_flower_item",
       "minItem": 1,
       "maxItem": 2,
       "chance": 0.475,

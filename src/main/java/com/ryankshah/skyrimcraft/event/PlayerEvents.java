@@ -10,7 +10,6 @@ import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.item.SkyrimTwoHandedWeapon;
 import com.ryankshah.skyrimcraft.network.Networking;
 import com.ryankshah.skyrimcraft.network.character.PacketAddToCompassFeaturesOnClient;
-import com.ryankshah.skyrimcraft.network.character.PacketOpenCharacterCreationScreen;
 import com.ryankshah.skyrimcraft.network.spell.PacketUpdateShoutCooldownOnServer;
 import com.ryankshah.skyrimcraft.util.CompassFeature;
 import com.ryankshah.skyrimcraft.util.ModAttributes;
@@ -18,18 +17,21 @@ import com.ryankshah.skyrimcraft.worldgen.structure.ModStructures;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.Map;
@@ -103,13 +105,16 @@ public class PlayerEvents
 //                }
 
                 // TODO: We should do this check after we do the player bounds check...
-                for (StructureFeature<?> structure : ForgeRegistries.STRUCTURE_FEATURES.getValues()) {
-                    if (structure == StructureFeature.VILLAGE || structure == StructureFeature.NETHER_BRIDGE
-                            || structure == ModStructures.SHOUT_WALL.get() || structure == StructureFeature.MINESHAFT
-                            || structure == StructureFeature.SHIPWRECK) {
-                        BlockPos featureStartPos = locateFeatureStartChunkFromPlayerBlockPos(world, player.blockPosition(), structure);
-                        if (featureStartPos != null) {
-                            CompassFeature compassFeature = new CompassFeature(UUID.randomUUID(), structure.getRegistryName(), featureStartPos);
+//                Registry<ConfiguredStructureFeature<?,?>> configuredStructureFeatureRegistry = world.registryAccess().registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY);
+//                for (Holder<ConfiguredStructureFeature<?, ?>> configuredStructureFeature : configuredStructureFeatureRegistry.getTag().get()) {
+//                    LocationTrigger
+//                }
+                Registry<ConfiguredStructureFeature<?,?>> configuredStructureFeatureRegistry = world.registryAccess().registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY);
+                for(Map.Entry<ResourceKey<ConfiguredStructureFeature<?,?>>, ConfiguredStructureFeature<?, ?>> structureFeatureEntry : configuredStructureFeatureRegistry.entrySet()) {
+                    if(structureFeatureEntry.getKey().equals(BuiltinStructures.FORTRESS) || structureFeatureEntry.getKey().equals(BuiltinStructures.VILLAGE_PLAINS) || structureFeatureEntry.getKey().equals(BuiltinStructures.VILLAGE_DESERT) ||
+                       structureFeatureEntry.getKey().equals(BuiltinStructures.VILLAGE_SAVANNA) || structureFeatureEntry.getKey().equals(BuiltinStructures.VILLAGE_SNOWY) || structureFeatureEntry.getKey().equals(BuiltinStructures.VILLAGE_TAIGA) || structureFeatureEntry.getKey().equals(BuiltinStructures.SHIPWRECK) || structureFeatureEntry.getKey().equals(BuiltinStructures.SHIPWRECK_BEACHED) || structureFeatureEntry.getKey().equals(BuiltinStructures.MINESHAFT) || structureFeatureEntry.getKey().equals(BuiltinStructures.MINESHAFT_MESA) || structureFeatureEntry.getKey().equals(ModStructures.SHOUT_WALL)) {
+                        if(world.structureFeatureManager().getStructureWithPieceAt(player.blockPosition(), BuiltinStructures.FORTRESS).isValid()) {
+                            CompassFeature compassFeature = new CompassFeature(UUID.randomUUID(), structureFeatureEntry.getKey().location(), player.blockPosition());
                             if (playerCompassFeatures.stream().noneMatch(feature -> feature.equals(compassFeature))) {
                                 Networking.sendToClient(new PacketAddToCompassFeaturesOnClient(compassFeature), player);
                             }
@@ -126,7 +131,7 @@ public class PlayerEvents
         }
     }
 
-    private static BlockPos locateFeatureStartChunkFromPlayerBlockPos(ServerLevel world, BlockPos pos, StructureFeature<?> feature) {
+    private static BlockPos locateFeatureStartChunkFromPlayerBlockPos(ServerLevel world, BlockPos pos, TagKey<ConfiguredStructureFeature<?,?>> feature) {
         // use 2 since based on min spacing, or we can use 7 in case user makes village spacing at every chunk..
         BlockPos blockpos1 = world.findNearestMapFeature(feature, pos, 2, true);
         if (blockpos1 != null) {
@@ -139,11 +144,11 @@ public class PlayerEvents
     // Open the character creation screen if first login / world created
     @SubscribeEvent
     public static void playerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        Player player = event.getPlayer();
-        ISkyrimPlayerData cap = player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("player events logged in event"));
-        if(!cap.hasSetup()) {
-            Networking.sendToClient(new PacketOpenCharacterCreationScreen(cap.hasSetup()), (ServerPlayer) player);
-            cap.setHasSetup(true); // TODO: ensure this always syncs to the client as well..
-        }
+//        Player player = event.getPlayer();
+//        ISkyrimPlayerData cap = player.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("player events logged in event"));
+//        if(!cap.hasSetup()) {
+//            Networking.sendToClient(new PacketOpenCharacterCreationScreen(cap.hasSetup()), (ServerPlayer) player);
+//            cap.setHasSetup(true); // TODO: ensure this always syncs to the client as well..
+//        }
     }
 }

@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "skyrimcraft:corundum_ore"
+          "name": "skyrimcraft:corundum_ore_item"
         }
       ],
       "conditions": [

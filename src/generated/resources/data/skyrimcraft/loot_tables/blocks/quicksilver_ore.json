@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "skyrimcraft:quicksilver_ore"
+          "name": "skyrimcraft:quicksilver_ore_item"
         }
       ],
       "conditions": [

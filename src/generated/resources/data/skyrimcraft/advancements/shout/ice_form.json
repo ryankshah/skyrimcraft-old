@@ -2,7 +2,7 @@
   "parent": "skyrimcraft:shout/root",
   "display": {
     "icon": {
-      "item": "skyrimcraft:shout_block"
+      "item": "skyrimcraft:shout_block_item"
     },
     "title": {
       "text": "Ice Form"

@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "skyrimcraft:moonstone_ore"
+          "name": "skyrimcraft:moonstone_ore_item"
         }
       ],
       "conditions": [

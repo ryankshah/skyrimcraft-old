@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "skyrimcraft:oven"
+          "name": "skyrimcraft:oven_item"
         }
       ],
       "conditions": [

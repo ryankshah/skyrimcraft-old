@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "skyrimcraft:silver_ore"
+          "name": "skyrimcraft:silver_ore_item"
         }
       ],
       "conditions": [

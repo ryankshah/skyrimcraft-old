@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "skyrimcraft:red_mountain_flower"
+          "name": "skyrimcraft:red_mountain_flower_item"
         }
       ],
       "conditions": [

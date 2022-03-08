@@ -1,7 +1,7 @@
 {
   "type": "minecraft:blasting",
   "ingredient": {
-    "item": "skyrimcraft:malachite_ore"
+    "item": "skyrimcraft:malachite_ore_item"
   },
   "result": "skyrimcraft:malachite_ingot",
   "experience": 0.7,

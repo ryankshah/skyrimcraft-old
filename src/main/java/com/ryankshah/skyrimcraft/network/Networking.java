@@ -197,6 +197,12 @@ public class Networking
                 .decoder(PacketUpdateExtraStats::new)
                 .consumer(PacketUpdateExtraStats::handle)
                 .add();
+
+        INSTANCE.messageBuilder(PacketSyncClient.class, nextID())
+                .encoder(PacketSyncClient::toBytes)
+                .decoder(PacketSyncClient::new)
+                .consumer(PacketSyncClient::handle)
+                .add();
     }
 
     public static void sendToClient(Object packet, ServerPlayer player) {

@@ -25,7 +25,7 @@
                   }
                 }
               ],
-              "name": "skyrimcraft:salt_deposit"
+              "name": "skyrimcraft:salt_deposit_item"
             },
             {
               "type": "minecraft:item",

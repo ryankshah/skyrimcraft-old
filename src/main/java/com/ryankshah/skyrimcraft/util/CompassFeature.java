@@ -38,7 +38,7 @@ public class CompassFeature
     public AbstractMap.SimpleEntry<Integer, Integer> getIconUV() {
         if(feature.equals(StructureFeature.VILLAGE.getRegistryName())) {
             return new AbstractMap.SimpleEntry<>(0, 124);
-        } else if(feature.equals(StructureFeature.NETHER_BRIDGE.getRegistryName())) {
+        } else if(feature.equals(StructureFeature.FORTRESS.getRegistryName())) {
             return new AbstractMap.SimpleEntry<>(16, 124);
         } else if(feature.equals(ModStructures.SHOUT_WALL.getId())) {
             return new AbstractMap.SimpleEntry<>(29, 124);

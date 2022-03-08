@@ -1,7 +1,7 @@
 {
   "type": "minecraft:blasting",
   "ingredient": {
-    "item": "skyrimcraft:moonstone_ore"
+    "item": "skyrimcraft:moonstone_ore_item"
   },
   "result": "skyrimcraft:moonstone_ingot",
   "experience": 0.7,

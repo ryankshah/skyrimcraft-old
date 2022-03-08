@@ -25,6 +25,7 @@ public class ModBlockLootTables extends BlockLoot
     protected void addTables() {
         dropSelf(ModBlocks.CORUNDUM_ORE.get());
         dropSelf(ModBlocks.EBONY_ORE.get());
+        dropSelf(ModBlocks.EBONY_ORE_DEEPSLATE.get());
         dropSelf(ModBlocks.MALACHITE_ORE.get());
         dropSelf(ModBlocks.MOONSTONE_ORE.get());
         dropSelf(ModBlocks.QUICKSILVER_ORE.get());

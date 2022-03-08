@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "skyrimcraft:alchemy_table"
+          "name": "skyrimcraft:alchemy_table_item"
         }
       ],
       "conditions": [

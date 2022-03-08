@@ -2,17 +2,17 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "skyrimcraft:oven"
+      "skyrimcraft:alchemy_table_item"
     ]
   },
   "criteria": {
-    "has_stone_brick": {
+    "has_planks": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:stone_bricks"
+              "minecraft:oak_planks"
             ]
           }
         ]
@@ -21,13 +21,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "skyrimcraft:oven"
+        "recipe": "skyrimcraft:alchemy_table_item"
       }
     }
   },
   "requirements": [
     [
-      "has_stone_brick",
+      "has_planks",
       "has_the_recipe"
     ]
   ]

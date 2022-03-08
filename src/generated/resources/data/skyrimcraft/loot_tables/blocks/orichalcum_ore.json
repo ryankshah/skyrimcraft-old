@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "skyrimcraft:orichalcum_ore"
+          "name": "skyrimcraft:orichalcum_ore_item"
         }
       ],
       "conditions": [

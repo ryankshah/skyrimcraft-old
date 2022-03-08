@@ -86,6 +86,8 @@ public class LangGenerator extends LanguageProvider
         add("entity.skyrimcraft.sabre_cat", "Sabre Cat");
         add("entity.skyrimcraft.snowy_sabre_cat", "Snowy Sabre Cat");
         add("entity.skyrimcraft.giant", "Giant");
+        add("entity.skyrimcraft.blue_butterfly", "Blue Butterfly");
+        add("entity.skyrimcraft.torchbug", "Torchbug");
         add("entity.skyrimcraft.dragon", "Dragon");
 
         // Damage Source

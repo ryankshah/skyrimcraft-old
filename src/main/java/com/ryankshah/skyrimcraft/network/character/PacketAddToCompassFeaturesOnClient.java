@@ -29,8 +29,6 @@ public class PacketAddToCompassFeaturesOnClient
         int z = buf.readInt();
         BlockPos pos = new BlockPos(x, y, z);
         compassFeature = new CompassFeature(id, structure, pos);
-        //ResourceLocation rl = buf.readResourceLocation();
-        //this.spell = SpellRegistry.SPELLS_REGISTRY.get().getValue(rl);
     }
 
     public PacketAddToCompassFeaturesOnClient(CompassFeature compassFeature) {
@@ -43,7 +41,6 @@ public class PacketAddToCompassFeaturesOnClient
         buf.writeInt(compassFeature.getBlockPos().getX());
         buf.writeInt(compassFeature.getBlockPos().getY());
         buf.writeInt(compassFeature.getBlockPos().getZ());
-        //buf.writeResourceLocation(SpellRegistry.SPELLS_REGISTRY.get().getKey(spell));
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
