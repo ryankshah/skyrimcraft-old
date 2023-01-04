@@ -1,12 +1,13 @@
 package com.ryankshah.skyrimcraft.util;
 
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.Level;
 
 import java.util.function.Predicate;
 
@@ -17,7 +18,9 @@ public class RayTraceUtil
         Vec3 cam1 = player.getLookAngle();
         Vec3 cam2 = cam1.add(cam1.x * range, cam1.y * range, cam1.z * range);
         AABB aabb = player.getBoundingBox().expandTowards(cam1.scale(range)).inflate(1.0F, 1.0F, 1.0F);
-        HitResult ray = findEntity(world, player, pos, cam2, aabb, null, range);
+        HitResult ray = findEntity(world, player, pos, cam2, aabb, (e) -> {
+            return e instanceof LivingEntity && e.isAlive();
+        }, range);
 
         if(ray != null) {
             if(ray.getType() == HitResult.Type.ENTITY && ray instanceof EntityHitResult) {

@@ -6,6 +6,7 @@ import com.ryankshah.skyrimcraft.block.ModBlocks;
 import com.ryankshah.skyrimcraft.character.magic.ISpell;
 import com.ryankshah.skyrimcraft.character.magic.SpellRegistry;
 import com.ryankshah.skyrimcraft.client.entity.ModEntityType;
+import com.ryankshah.skyrimcraft.client.entity.ModVillagerProfessions;
 import com.ryankshah.skyrimcraft.client.entity.boss.dragon.SkyrimDragon;
 import com.ryankshah.skyrimcraft.client.entity.creature.GiantEntity;
 import com.ryankshah.skyrimcraft.client.entity.creature.SabreCatEntity;
@@ -53,10 +54,6 @@ import software.bernie.geckolib3.GeckoLib;
  *       - Wellbeing potions
  *       - Regenerate magicka, and stamina
  *       - etc.
- *   - Merchants
- *     - Fix the merchant entity taking existing vanilla POI types...
- *     - Work on the merchant trading system (uses villager trading, but will have 1 level)
- *     - Work on merchant work times (like skyrim, some can be all day, some can be Xam-Ypm, etc.)
  *   - Work on the alchemy system
  *     - World generation for creep clusters and other ingredients
  *     - Add more ingredients
@@ -123,6 +120,9 @@ public class Skyrimcraft
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::createEntityAttributes);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::addEntityAttributes);
 
+        ModVillagerProfessions.POIS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ModVillagerProfessions.PROFESSIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
+
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -142,6 +142,10 @@ public class Skyrimcraft
 
     public void createEntityAttributes(EntityAttributeCreationEvent event) {
         event.put(ModEntityType.BLUE_BUTTERFLY.get(), BlueButterfly.createAttributes().build());
+        event.put(ModEntityType.MONARCH_BUTTERFLY.get(), BlueButterfly.createAttributes().build());
+        event.put(ModEntityType.LUNAR_MOTH.get(), BlueButterfly.createAttributes().build());
+        event.put(ModEntityType.BLUE_DARTWING.get(), BlueButterfly.createAttributes().build());
+        event.put(ModEntityType.ORANGE_DARTWING.get(), BlueButterfly.createAttributes().build());
         event.put(ModEntityType.TORCHBUG.get(), TorchBug.createAttributes().build());
         event.put(ModEntityType.SABRE_CAT.get(), SabreCatEntity.createAttributes().build());
         event.put(ModEntityType.GIANT.get(), GiantEntity.createAttributes().build());

@@ -1,0 +1,40 @@
+{
+  "parent": "skyrimcraft:quests/root",
+  "display": {
+    "icon": {
+      "item": "skyrimcraft:dragonbone_sword",
+      "nbt": "{Damage:0}"
+    },
+    "title": {
+      "text": "Dragon Slayer"
+    },
+    "description": {
+      "text": "Kill your first Skyrim dragon!"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": true
+  },
+  "criteria": {
+    "kill_dragon": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "predicate": {
+              "type": "skyrimcraft:dragon"
+            },
+            "entity": "this"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "kill_dragon"
+    ]
+  ]
+}

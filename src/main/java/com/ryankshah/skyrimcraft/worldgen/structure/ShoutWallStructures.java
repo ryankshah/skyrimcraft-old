@@ -25,16 +25,9 @@ public class ShoutWallStructures extends StructureFeature<JigsawConfiguration> {
         super(JigsawConfiguration.CODEC, context -> createPiecesGenerator(context), PostPlacementProcessor.NONE);
     }
 
-    /**
-     * : WARNING!!! DO NOT FORGET THIS METHOD!!!! :
-     * If you do not override step method, your structure WILL crash the biome as it is being parsed!
-     * <p>
-     * Generation step for when to generate the structure. there are 10 stages you can pick from!
-     * This surface structure stage places the structure before plants and ores are generated.
-     */
     @Override
     public GenerationStep.Decoration step() {
-        return GenerationStep.Decoration.UNDERGROUND_STRUCTURES;
+        return GenerationStep.Decoration.SURFACE_STRUCTURES;
     }
 
     public static Optional<PieceGenerator<JigsawConfiguration>> createPiecesGenerator(PieceGeneratorSupplier.Context<JigsawConfiguration> context) {

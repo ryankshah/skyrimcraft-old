@@ -1,0 +1,37 @@
+{
+  "parent": "skyrimcraft:quests/root",
+  "display": {
+    "icon": {
+      "item": "skyrimcraft:ebony_ingot"
+    },
+    "title": {
+      "text": "Ebony Dreams"
+    },
+    "description": {
+      "text": "Smelt your first Ebony Ingot"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": true
+  },
+  "criteria": {
+    "smelt_ebony_ingot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "skyrimcraft:ebony_ingot"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "smelt_ebony_ingot"
+    ]
+  ]
+}

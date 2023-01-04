@@ -95,9 +95,9 @@ public class CapabilityHandler
     public static void onPlayerClone(PlayerEvent.Clone event) {
         if(event.isWasDeath()) { // check death and not returning from end
             if(event.getOriginal() instanceof ServerPlayer) {
-                Player originalPlayer = event.getOriginal();
+                ServerPlayer originalPlayer = (ServerPlayer) event.getOriginal();
                 ServerPlayer newPlayer = (ServerPlayer)event.getPlayer();
-                ISkyrimPlayerData originalPlayerCapability = ((ServerPlayer) originalPlayer).getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("at clone event"));
+                ISkyrimPlayerData originalPlayerCapability = originalPlayer.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).orElseThrow(() -> new IllegalArgumentException("at clone event"));
 
                 // For the new player add the existing cap data
                 newPlayer.getCapability(ISkyrimPlayerDataProvider.SKYRIM_PLAYER_DATA_CAPABILITY).ifPresent((ISkyrimPlayerData newCap) -> {

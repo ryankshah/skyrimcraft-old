@@ -43,7 +43,7 @@ public class TorchBug extends PathfinderMob implements IAnimatable
         this.lookControl = new LookControl(this);
         this.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, -1.0F);
         // Avoid water instead...
-        this.setPathfindingMalus(BlockPathTypes.WATER, -1.0F);
+        //this.setPathfindingMalus(BlockPathTypes.WATER, -1.0F);
         this.setPathfindingMalus(BlockPathTypes.WATER_BORDER, 16.0F);
         this.setPathfindingMalus(BlockPathTypes.COCOA, -1.0F);
         this.setPathfindingMalus(BlockPathTypes.FENCE, -1.0F);
@@ -60,8 +60,8 @@ public class TorchBug extends PathfinderMob implements IAnimatable
     }
 
     @Override
-    public float getWalkTargetValue(BlockPos p_27788_, LevelReader p_27789_) {
-        return p_27789_.getBlockState(p_27788_).isAir() ? 10.0F : 0.0F;
+    public float getWalkTargetValue(BlockPos blockPos, LevelReader levelReader) {
+        return levelReader.getBlockState(blockPos).isAir() ? 10.0F : 0.0F;
     }
 
     protected void registerGoals() {

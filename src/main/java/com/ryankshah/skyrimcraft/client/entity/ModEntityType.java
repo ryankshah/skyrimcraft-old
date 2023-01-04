@@ -15,10 +15,8 @@ import com.ryankshah.skyrimcraft.client.entity.creature.GiantEntity;
 import com.ryankshah.skyrimcraft.client.entity.creature.SabreCatEntity;
 import com.ryankshah.skyrimcraft.client.entity.creature.render.GiantRenderer;
 import com.ryankshah.skyrimcraft.client.entity.creature.render.SabreCatRenderer;
-import com.ryankshah.skyrimcraft.client.entity.passive.flying.BlueButterfly;
-import com.ryankshah.skyrimcraft.client.entity.passive.flying.TorchBug;
-import com.ryankshah.skyrimcraft.client.entity.passive.flying.render.BlueButterflyRenderer;
-import com.ryankshah.skyrimcraft.client.entity.passive.flying.render.TorchBugRenderer;
+import com.ryankshah.skyrimcraft.client.entity.passive.flying.*;
+import com.ryankshah.skyrimcraft.client.entity.passive.flying.render.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -115,11 +113,27 @@ public class ModEntityType
 
     // Mobs
     public static final RegistryObject<EntityType<BlueButterfly>> BLUE_BUTTERFLY = ENTITY_TYPES.register("blue_butterfly",
-            () -> EntityType.Builder.of(BlueButterfly::new, MobCategory.CREATURE)
+            () -> EntityType.Builder.of(BlueButterfly::new, MobCategory.AMBIENT)
                     .sized(1.0f, 1.0f) // Hitbox Size
                     .build(new ResourceLocation(Skyrimcraft.MODID, "blue_butterfly").toString()));
+    public static final RegistryObject<EntityType<MonarchButterfly>> MONARCH_BUTTERFLY = ENTITY_TYPES.register("monarch_butterfly",
+            () -> EntityType.Builder.of(MonarchButterfly::new, MobCategory.AMBIENT)
+                    .sized(1.0f, 1.0f) // Hitbox Size
+                    .build(new ResourceLocation(Skyrimcraft.MODID, "monarch_butterfly").toString()));
+    public static final RegistryObject<EntityType<BlueDartwing>> BLUE_DARTWING = ENTITY_TYPES.register("blue_dartwing",
+            () -> EntityType.Builder.of(BlueDartwing::new, MobCategory.AMBIENT)
+                    .sized(1.0f, 1.0f) // Hitbox Size
+                    .build(new ResourceLocation(Skyrimcraft.MODID, "blue_dartwing").toString()));
+    public static final RegistryObject<EntityType<OrangeDartwing>> ORANGE_DARTWING = ENTITY_TYPES.register("orange_dartwing",
+            () -> EntityType.Builder.of(OrangeDartwing::new, MobCategory.AMBIENT)
+                    .sized(1.0f, 1.0f) // Hitbox Size
+                    .build(new ResourceLocation(Skyrimcraft.MODID, "orange_dartwing").toString()));
+    public static final RegistryObject<EntityType<LunarMoth>> LUNAR_MOTH = ENTITY_TYPES.register("lunar_moth",
+            () -> EntityType.Builder.of(LunarMoth::new, MobCategory.AMBIENT)
+                    .sized(1.0f, 1.0f) // Hitbox Size
+                    .build(new ResourceLocation(Skyrimcraft.MODID, "lunar_moth").toString()));
     public static final RegistryObject<EntityType<TorchBug>> TORCHBUG = ENTITY_TYPES.register("torchbug",
-            () -> EntityType.Builder.of(TorchBug::new, MobCategory.CREATURE)
+            () -> EntityType.Builder.of(TorchBug::new, MobCategory.AMBIENT)
                     .sized(1.0f, 1.0f) // Hitbox Size
                     .build(new ResourceLocation(Skyrimcraft.MODID, "torchbug").toString()));
     public static final RegistryObject<EntityType<SabreCatEntity>> SABRE_CAT = ENTITY_TYPES.register("sabre_cat",
@@ -131,7 +145,7 @@ public class ModEntityType
                     .sized(1.0f, 1.0f) // Hitbox Size
                     .build(new ResourceLocation(Skyrimcraft.MODID, "giant").toString()));
     public static final RegistryObject<EntityType<SkyrimDragon>> DRAGON = ENTITY_TYPES.register("dragon",
-            () -> EntityType.Builder.of(SkyrimDragon::new, MobCategory.CREATURE)
+            () -> EntityType.Builder.of(SkyrimDragon::new, MobCategory.MONSTER)
                     .sized(1.0f, 1.0f) // Hitbox Size
                     .build(new ResourceLocation(Skyrimcraft.MODID, "dragon").toString()));
 
@@ -154,6 +168,10 @@ public class ModEntityType
 
         // Mobs
         event.registerEntityRenderer(BLUE_BUTTERFLY.get(), BlueButterflyRenderer::new);
+        event.registerEntityRenderer(MONARCH_BUTTERFLY.get(), MonarchButterflyRenderer::new);
+        event.registerEntityRenderer(LUNAR_MOTH.get(), LunarMothRenderer::new);
+        event.registerEntityRenderer(BLUE_DARTWING.get(), BlueDartwingRenderer::new);
+        event.registerEntityRenderer(ORANGE_DARTWING.get(), OrangeDartwingRenderer::new);
         event.registerEntityRenderer(TORCHBUG.get(), TorchBugRenderer::new);
         event.registerEntityRenderer(SABRE_CAT.get(), SabreCatRenderer::new);
         event.registerEntityRenderer(GIANT.get(), GiantRenderer::new);

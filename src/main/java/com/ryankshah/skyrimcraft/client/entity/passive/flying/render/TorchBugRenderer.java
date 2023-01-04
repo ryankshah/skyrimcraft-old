@@ -35,7 +35,7 @@ public class TorchBugRenderer extends GeoEntityRenderer<TorchBug>
         public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, TorchBug entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
             ResourceLocation eyes = new ResourceLocation(Skyrimcraft.MODID, "textures/entity/torchbug_e.png");
 
-            if(entitylivingbaseIn.level.getDayTime() > 12542) {
+            if(entitylivingbaseIn.level.getMaxLocalRawBrightness(entitylivingbaseIn.blockPosition()) < 10) { // test: < 3  |  original: .getDayTime() > 12542) {
                 VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderType.eyes(eyes));
                 this.entityIGeoRenderer.render(getEntityModel().getModel(getGeoModelProvider().getModelLocation(entitylivingbaseIn)), entitylivingbaseIn, partialTicks, RenderType.eyes(eyes), matrixStackIn, bufferIn, ivertexbuilder, 15728640, OverlayTexture.NO_OVERLAY, 1.0f, 1.0f, 1.0f, 1.0f);
             }

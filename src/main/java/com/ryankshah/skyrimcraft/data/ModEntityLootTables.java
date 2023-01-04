@@ -23,6 +23,10 @@ public class ModEntityLootTables extends EntityLoot
     @Override
     protected void addTables() {
         this.add(ModEntityType.BLUE_BUTTERFLY.get(), LootTable.lootTable());
+        this.add(ModEntityType.BLUE_DARTWING.get(), LootTable.lootTable());
+        this.add(ModEntityType.ORANGE_DARTWING.get(), LootTable.lootTable());
+        this.add(ModEntityType.LUNAR_MOTH.get(), LootTable.lootTable());
+        this.add(ModEntityType.MONARCH_BUTTERFLY.get(), LootTable.lootTable());
         this.add(ModEntityType.TORCHBUG.get(), LootTable.lootTable());//.withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(ModItems.TORCHBUG_THORAX.get()).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F))).apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(1.0F, 2.0F))))));
         this.add(ModEntityType.SABRE_CAT.get(), LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(ModItems.SABRE_CAT_TOOTH.get()).apply(SetItemCountFunction.setCount(UniformGenerator.between(-1.0F, 1.0F))).apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F))))).withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(Items.BONE).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F))).apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F))))).withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(ModItems.EYE_OF_SABRE_CAT.get())).when(LootItemKilledByPlayerCondition.killedByPlayer()).when(LootItemRandomChanceWithLootingCondition.randomChanceAndLootingBoost(0.1F, 0.2F))));
         this.add(ModEntityType.GIANT.get(), LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(ModItems.GIANTS_TOE.get()).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F))).apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(1.0F, 2.0F))))));

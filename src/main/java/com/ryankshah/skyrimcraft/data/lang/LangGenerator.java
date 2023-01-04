@@ -80,13 +80,17 @@ public class LangGenerator extends LanguageProvider
         add("skill.pickpocket.success", "You successfully pick the %s's pockets and get some loot!");
 
         // Mobs
+        add("entity.minecraft.villager.skyrimcraft.skyrim_blacksmith", "Blacksmith");
         add("entity.minecraft.villager.skyrimcraft.alchemist", "Alchemist");
-        add("entity.minecraft.villager.skyrimcraft.food_merchant", "Food Merchant");
-        add("entity.minecraft.villager.skyrimcraft.blacksmith", "Blacksmith");
+        add("entity.minecraft.villager.skyrimcraft.cook", "Food Merchant");
         add("entity.skyrimcraft.sabre_cat", "Sabre Cat");
         add("entity.skyrimcraft.snowy_sabre_cat", "Snowy Sabre Cat");
         add("entity.skyrimcraft.giant", "Giant");
         add("entity.skyrimcraft.blue_butterfly", "Blue Butterfly");
+        add("entity.skyrimcraft.monarch_butterfly", "Monarch Butterfly");
+        add("entity.skyrimcraft.blue_dartwing", "Blue Dartwing");
+        add("entity.skyrimcraft.orange_dartwing", "Orange Dartwing");
+        add("entity.skyrimcraft.lunar_moth", "Lunar Moth");
         add("entity.skyrimcraft.torchbug", "Torchbug");
         add("entity.skyrimcraft.dragon", "Dragon");
 

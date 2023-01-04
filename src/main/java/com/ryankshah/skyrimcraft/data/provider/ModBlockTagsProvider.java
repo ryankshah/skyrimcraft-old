@@ -17,12 +17,14 @@ public class ModBlockTagsProvider extends BlockTagsProvider
 
     @Override
     protected void addTags() {
-        this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.EBONY_ORE.get(), ModBlocks.EBONY_ORE_DEEPSLATE.get(), ModBlocks.ORICHALCUM_ORE.get(),
-                ModBlocks.CORUNDUM_ORE.get(), ModBlocks.MALACHITE_ORE.get(), ModBlocks.MOONSTONE_ORE.get(),
-                ModBlocks.SILVER_ORE.get(), ModBlocks.QUICKSILVER_ORE.get(), ModBlocks.BLACKSMITH_FORGE.get());
-        this.tag(BlockTags.NEEDS_STONE_TOOL).add(ModBlocks.EBONY_ORE.get(), ModBlocks.EBONY_ORE_DEEPSLATE.get(), ModBlocks.ORICHALCUM_ORE.get(),
-                ModBlocks.CORUNDUM_ORE.get(), ModBlocks.MALACHITE_ORE.get(), ModBlocks.MOONSTONE_ORE.get(),
-                ModBlocks.SILVER_ORE.get(), ModBlocks.QUICKSILVER_ORE.get(), ModBlocks.BLACKSMITH_FORGE.get());
+        this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.EBONY_ORE.get(), ModBlocks.EBONY_ORE_DEEPSLATE.get(), ModBlocks.ORICHALCUM_ORE.get(), ModBlocks.ORICHALCUM_ORE_DEEPSLATE.get(),
+                ModBlocks.CORUNDUM_ORE.get(), ModBlocks.CORUNDUM_ORE_DEEPSLATE.get(), ModBlocks.MALACHITE_ORE.get(), ModBlocks.MALACHITE_ORE_DEEPSLATE.get(), ModBlocks.MOONSTONE_ORE.get(),
+                ModBlocks.MOONSTONE_ORE_DEEPSLATE.get(), ModBlocks.SILVER_ORE.get(), ModBlocks.SILVER_ORE_DEEPSLATE.get(), ModBlocks.QUICKSILVER_ORE.get(), ModBlocks.QUICKSILVER_ORE_DEEPSLATE.get(),
+                ModBlocks.BLACKSMITH_FORGE.get());
+        this.tag(BlockTags.NEEDS_STONE_TOOL).add(ModBlocks.EBONY_ORE.get(), ModBlocks.EBONY_ORE_DEEPSLATE.get(), ModBlocks.ORICHALCUM_ORE.get(), ModBlocks.ORICHALCUM_ORE_DEEPSLATE.get(),
+                ModBlocks.CORUNDUM_ORE.get(), ModBlocks.CORUNDUM_ORE_DEEPSLATE.get(), ModBlocks.MALACHITE_ORE.get(), ModBlocks.MALACHITE_ORE_DEEPSLATE.get(), ModBlocks.MOONSTONE_ORE.get(),
+                ModBlocks.MOONSTONE_ORE_DEEPSLATE.get(), ModBlocks.SILVER_ORE.get(), ModBlocks.SILVER_ORE_DEEPSLATE.get(), ModBlocks.QUICKSILVER_ORE.get(), ModBlocks.QUICKSILVER_ORE_DEEPSLATE.get(),
+                ModBlocks.BLACKSMITH_FORGE.get());
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.ryankshah.skyrimcraft.character.ISkyrimPlayerData;
 import com.ryankshah.skyrimcraft.character.ISkyrimPlayerDataProvider;
 import com.ryankshah.skyrimcraft.character.skill.SkillRegistry;
 import com.ryankshah.skyrimcraft.client.entity.ModEntityType;
+import com.ryankshah.skyrimcraft.client.entity.ModVillagerProfessions;
 import com.ryankshah.skyrimcraft.data.PickpocketLootTables;
 import com.ryankshah.skyrimcraft.effect.ModEffects;
 import com.ryankshah.skyrimcraft.goal.UndeadFleeGoal;
@@ -147,6 +148,8 @@ public class EntityEvents
         }
     }
 
+
+
     /**
      * Used to add mod items, etc. to existing villager trades
      */
@@ -156,7 +159,7 @@ public class EntityEvents
             event.getTrades().get(3).add(new RandomTradeBuilder(1, 10, 0.125F).setEmeraldPrice(18, 30).setForSale(ModItems.FIREBALL_SPELLBOOK.get(), 1, 1).build());
             event.getTrades().get(3).add(new RandomTradeBuilder(1, 10, 0.125F).setEmeraldPrice(18, 30).setForSale(ModItems.TURN_UNDEAD_SPELLBOOK.get(), 1, 1).build());
         }
-        if(event.getType() == VillagerProfession.CLERIC) {
+        if(event.getType() == ModVillagerProfessions.ALCHEMIST.get()) {
             event.getTrades().get(1).add(new RandomTradeBuilder(8, 4, 0.125F).setEmeraldPrice(2, 4).setForSale(ModItems.MINOR_MAGICKA_POTION.get(), 1, 3).build());
             event.getTrades().get(1).add(new RandomTradeBuilder(5, 4, 0.125F).setEmeraldPrice(3, 6).setForSale(ModItems.MAGICKA_POTION.get(), 1, 2).build());
             event.getTrades().get(2).add(new RandomTradeBuilder(3, 6, 0.2F).setEmeraldPrice(4, 7).setForSale(ModItems.PLENTIFUL_MAGICKA_POTION.get(), 1, 1).build());
@@ -174,7 +177,7 @@ public class EntityEvents
             event.getTrades().get(2).add(new RandomTradeBuilder(3, 6, 0.275F).setEmeraldPrice(14, 32).setForSale(ModItems.FIRE_SALTS.get(), 1, 2).build());
             event.getTrades().get(3).add(new RandomTradeBuilder(1, 10, 0.675F).setEmeraldPrice(26, 45).setForSale(ModItems.GIANTS_TOE.get(), 1, 1).build());
         }
-        if(event.getType() == VillagerProfession.FARMER) {
+        if(event.getType() == ModVillagerProfessions.COOK.get()) {
             event.getTrades().get(1).add(new RandomTradeBuilder(8, 3, 0.125F).setEmeraldPrice(1, 4).setForSale(ModBlocks.TOMATO_SEEDS.get(), 1, 3).build());
             event.getTrades().get(1).add(new RandomTradeBuilder(8, 3, 0.125F).setEmeraldPrice(2, 5).setForSale(ModBlocks.GARLIC.get(), 1, 2).build());
             event.getTrades().get(2).add(new RandomTradeBuilder(4, 5, 0.2F).setEmeraldPrice(3, 6).setForSale(ModItems.GARLIC_BREAD.get(), 1, 1).build());
@@ -183,7 +186,15 @@ public class EntityEvents
             event.getTrades().get(1).add(new RandomTradeBuilder(3, 4, 0.175F).setEmeraldPrice(5, 11).setForSale(ModItems.CREEP_CLUSTER.get(), 1, 2).build());
             event.getTrades().get(1).add(new RandomTradeBuilder(8, 4, 0.175F).setEmeraldPrice(4, 7).setForSale(ModItems.BRIAR_HEART.get(), 1, 2).build());
         }
-        if(event.getType() == VillagerProfession.LEATHERWORKER) {
+        if(event.getType() == ModVillagerProfessions.SKYRIM_BLACKSMITH.get()) {
+            event.getTrades().get(1).add(new RandomTradeBuilder(8, 3, 0.125F).setEmeraldPrice(1, 3).setForSale(ModItems.STEEL_INGOT.get(), 2, 4).build());
+            event.getTrades().get(1).add(new RandomTradeBuilder(4, 3, 0.125F).setEmeraldPrice(2, 4).setForSale(ModItems.SILVER_INGOT.get(), 1, 3).build());
+            event.getTrades().get(3).add(new RandomTradeBuilder(2, 10, 0.125F).setEmeraldPrice(12, 25).setForSale(ModItems.EBONY_INGOT.get(), 1, 2).build());
+            event.getTrades().get(2).add(new RandomTradeBuilder(5, 3, 0.125F).setEmeraldPrice(4, 6).setForSale(ModItems.CORUNDUM_INGOT.get(), 2, 3).build());
+            event.getTrades().get(2).add(new RandomTradeBuilder(5, 3, 0.125F).setEmeraldPrice(4, 6).setForSale(ModItems.MALACHITE_INGOT.get(), 1, 3).build());
+            event.getTrades().get(3).add(new RandomTradeBuilder(5, 3, 0.125F).setEmeraldPrice(6, 10).setForSale(ModItems.DWARVEN_METAL_INGOT.get(), 1, 3).build());
+        }
+        if(event.getType() == VillagerProfession.LEATHERWORKER || event.getType() == ModVillagerProfessions.SKYRIM_BLACKSMITH.get()) {
             event.getTrades().get(2).add(new RandomTradeBuilder(4, 4, 0.125F).setEmeraldPrice(4, 6).setForSale(ModItems.LEATHER_STRIPS.get(), 1, 2).build());
         }
     }

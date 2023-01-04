@@ -1,0 +1,29 @@
+{
+  "parent": "skyrimcraft:root",
+  "display": {
+    "icon": {
+      "item": "skyrimcraft:iron_helmet",
+      "nbt": "{Damage:0}"
+    },
+    "title": {
+      "text": "Quests"
+    },
+    "description": {
+      "text": "Skyrimcraft Quests"
+    },
+    "frame": "challenge",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": true
+  },
+  "criteria": {
+    "quests_list": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "quests_list"
+    ]
+  ]
+}

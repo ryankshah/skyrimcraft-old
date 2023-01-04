@@ -36,6 +36,8 @@ public class ModClientEvents
             gen.addProvider(new ModGlobalLootTableProvider(gen));
             // Advancements
             gen.addProvider(new ModAdvancementProvider(gen));
+            // Quests
+            gen.addProvider(new ModQuestAdvancementProvider(gen));
             // Forge Recipes
             gen.addProvider(new ModForgeRecipeProvider(gen));
             // Alchemy Recipes
